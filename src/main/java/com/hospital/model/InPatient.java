@@ -14,60 +14,115 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "inPatient")
 public class InPatient implements Serializable {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)	
-	private Integer inpatient_id;
-	@OneToOne(targetEntity=Patient.class,cascade=CascadeType.ALL)
-	@JoinColumn(name="patientt_id",referencedColumnName="patient_id",foreignKey=@ForeignKey(name="patient_Inpatient_FK"))
-	private  Patient  patient;
-	@Column
-	private Integer patient_roomno;
-	
-	@Column
-	private String doctorreference;
-	@Column
-	private String nursedetails;
-	@Column
-	private String emr;
-	
-	public Integer getInpatient_id() {
-		return inpatient_id;
-	}
-	public void setInpatient_id(Integer inpatient_id) {
-		this.inpatient_id = inpatient_id;
-	}
-	public Patient getPatient() {
-		return patient;
-	}
-	public void setPatient(Patient patient) {
-		this.patient = patient;
-	}
-	public Integer getPatient_roomno() {
-		return patient_roomno;
-	}
-	public void setPatient_roomno(Integer patient_roomno) {
-		this.patient_roomno = patient_roomno;
-	}
-	public String getDoctorreference() {
-		return doctorreference;
-	}
-	public void setDoctorreference(String doctorreference) {
-		this.doctorreference = doctorreference;
-	}
-	public String getNursedetails() {
-		return nursedetails;
-	}
-	public void setNursedetails(String nursedetails) {
-		this.nursedetails = nursedetails;
-	}
-	public String getEmr() {
-		return emr;
-	}
-	public void setEmr(String emr) {
-		this.emr = emr;
-	}
-	
+	@Column(name = "in_patient_id")
+	private Integer inPatientId;
 
+	@Column(name = "appointed_doctor")
+	private String appointedDoctor;
+	
+	@Column(name = "doctor_reference")
+	private String doctorReference;
+	
+	@Column(name = "in_patient_description")
+	private String inPatientDescription;
+	
+	@OneToOne(targetEntity = Ward.class)
+	@JoinColumn(name = "ward_id", referencedColumnName = "ward_id", foreignKey = @ForeignKey(name = "ward_INP_FK"))
+	private Ward ward;
+
+	/**
+	 * Get the inPatientId of InPatient.
+	 *
+	 * @return the inPatientId
+	 */
+	public Integer getInPatientId() {
+		return inPatientId;
+	}
+
+	/**
+	 * Set the inPatientId of InPatient.
+	 *
+	 * @param inPatientId the inPatientId to set
+	 */
+	public void setInPatientId(Integer inPatientId) {
+		this.inPatientId = inPatientId;
+	}
+
+	/**
+	 * Get the appointedDoctor of InPatient.
+	 *
+	 * @return the appointedDoctor
+	 */
+	public String getAppointedDoctor() {
+		return appointedDoctor;
+	}
+
+	/**
+	 * Set the appointedDoctor of InPatient.
+	 *
+	 * @param appointedDoctor the appointedDoctor to set
+	 */
+	public void setAppointedDoctor(String appointedDoctor) {
+		this.appointedDoctor = appointedDoctor;
+	}
+
+	/**
+	 * Get the doctorReference of InPatient.
+	 *
+	 * @return the doctorReference
+	 */
+	public String getDoctorReference() {
+		return doctorReference;
+	}
+
+	/**
+	 * Set the doctorReference of InPatient.
+	 *
+	 * @param doctorReference the doctorReference to set
+	 */
+	public void setDoctorReference(String doctorReference) {
+		this.doctorReference = doctorReference;
+	}
+
+	/**
+	 * Get the inPatientDescription of InPatient.
+	 *
+	 * @return the inPatientDescription
+	 */
+	public String getInPatientDescription() {
+		return inPatientDescription;
+	}
+
+	/**
+	 * Set the inPatientDescription of InPatient.
+	 *
+	 * @param inPatientDescription the inPatientDescription to set
+	 */
+	public void setInPatientDescription(String inPatientDescription) {
+		this.inPatientDescription = inPatientDescription;
+	}
+
+	/**
+	 * Get the ward of InPatient.
+	 *
+	 * @return the ward
+	 */
+	public Ward getWard() {
+		return ward;
+	}
+
+	/**
+	 * Set the ward of InPatient.
+	 *
+	 * @param ward the ward to set
+	 */
+	public void setWard(Ward ward) {
+		this.ward = ward;
+	}
+	
 }

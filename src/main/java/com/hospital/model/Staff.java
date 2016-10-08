@@ -74,6 +74,10 @@ public class Staff {
 	@JoinColumn(name = "houseKeeper_id", referencedColumnName = "houseKeeper_id", foreignKey = @ForeignKey(name = "house_keeping_STF_FK"))
 	private HouseKeeping houseKeeping;
 
+	@OneToOne(targetEntity = Driver.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "driver_id", referencedColumnName = "driver_id", foreignKey = @ForeignKey(name = "driver_STF_FK"))
+	private Driver driver;
+	
 	/**
 	 * Get the staffId of Staff.
 	 *
@@ -306,6 +310,24 @@ public class Staff {
 	 */
 	public void setHouseKeeping(HouseKeeping houseKeeping) {
 		this.houseKeeping = houseKeeping;
+	}
+
+	/**
+	 * Get the driver of Staff.
+	 *
+	 * @return the driver
+	 */
+	public Driver getDriver() {
+		return driver;
+	}
+
+	/**
+	 * Set the driver of Staff.
+	 *
+	 * @param driver the driver to set
+	 */
+	public void setDriver(Driver driver) {
+		this.driver = driver;
 	}
 	
 	

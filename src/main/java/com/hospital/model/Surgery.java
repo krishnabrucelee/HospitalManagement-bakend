@@ -55,6 +55,10 @@ public class Surgery {
 	
 	@Column(name = "surgery_description")
 	private String surgeryDescription;
+	
+	@OneToOne(targetEntity = Cssd.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "cssd_id", referencedColumnName = "cssd_id", foreignKey = @ForeignKey(name = "cssd_SUR_FK"))
+	private Cssd cssd;
 
 	/**
 	 * Get the surgeryId of Surgery.
@@ -180,6 +184,24 @@ public class Surgery {
 	 */
 	public void setSurgeryDescription(String surgeryDescription) {
 		this.surgeryDescription = surgeryDescription;
+	}
+
+	/**
+	 * Get the cssd of Surgery.
+	 *
+	 * @return the cssd
+	 */
+	public Cssd getCssd() {
+		return cssd;
+	}
+
+	/**
+	 * Set the cssd of Surgery.
+	 *
+	 * @param cssd the cssd to set
+	 */
+	public void setCssd(Cssd cssd) {
+		this.cssd = cssd;
 	}
 	
 }

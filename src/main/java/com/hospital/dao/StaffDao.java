@@ -3,20 +3,15 @@
  */
 package com.hospital.dao;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import com.hospital.model.Doctor.DoctorType;
+import com.hospital.model.Driver;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,8 +19,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Staff;
 import com.hospital.service.DoctorService;
+import com.hospital.service.DriverService;
 import com.hospital.service.HouseKeepingService;
 import com.hospital.service.NurseService;
+import com.hospital.util.DateUtil;
 import com.hospital.model.Department;
 import com.hospital.model.Doctor;
 import com.hospital.model.HouseKeeping;
@@ -54,6 +51,9 @@ public class StaffDao {
 	
 	@Autowired
 	private HouseKeepingService houseKeepingService;
+	
+	@Autowired
+	private DriverService driverService;
 
 	static {
 		System.out.println("class StaffDao executed");
@@ -79,8 +79,8 @@ public class StaffDao {
 				Map<String, Object> staff1 = (Map<String, Object>) jsonArray.get(i);
 				Doctor doctor = new Doctor();
 				doctor.setDoctorRegId((Integer) staff1.get("doctorRegId"));
-				doctor.setAppointmentEndTime(this.dateTimeUtil(staff1.get("appointmentStartTime").toString()));
-				doctor.setAppointmentStartTime(this.dateTimeUtil(staff1.get("appointmentEndTime").toString()));
+				doctor.setAppointmentEndTime(DateUtil.dateTimeUtil(staff1.get("appointmentStartTime").toString()));
+				doctor.setAppointmentStartTime(DateUtil.dateTimeUtil(staff1.get("appointmentEndTime").toString()));
 				
 				//Load Department 
 				Department departmentDetails = session.load(Department.class, (Integer) staff1.get("department_id"));
@@ -116,7 +116,7 @@ public class StaffDao {
 				Map<String, Object> staff1 = (Map<String, Object>) jsonArray.get(i);
 				Nurse nurse = new Nurse();
 				nurse.setNurseRegId((Integer) staff1.get("nurseRegId"));
-				nurse.setNurseDob(this.dateUtil(staff1.get("nurseDob").toString()));
+				nurse.setNurseDob(DateUtil.dateUtil(staff1.get("nurseDob").toString()));
 				nurse.setNurseEmail(staff1.get("nurseEmail").toString());
 				nurse.setNursePhoneNumber((Integer) staff1.get("nursePhoneNumber"));
 				nurse.setNurseShift(staff1.get("nurseShift").toString());
@@ -148,7 +148,7 @@ public class StaffDao {
 				Department departmentDetails = session.load(Department.class, (Integer) staff1.get("department_id"));
 				houseKeeping.setDepartment(departmentDetails);
 				
-				houseKeeping.setHouseKeeperDob(this.dateUtil(staff1.get("houseKeeperDob").toString()));
+				houseKeeping.setHouseKeeperDob(DateUtil.dateUtil(staff1.get("houseKeeperDob").toString()));
 				houseKeeping.setHouseKeeperEmail(staff1.get("houseKeeperEmail").toString());
 				
 				houseKeeping.setHouseKeeperRegId((Integer) staff1.get("houseKeeperRegId"));
@@ -163,12 +163,26 @@ public class StaffDao {
 				appoint.setEmployeeId(houseKeepingDetails.getHouseKeeperRegId().toString());
 //				nurse.setStaffId(appoint.getStaffId().toString());
 			}
+			System.out.println(jsonArray);
+		
+		} else if (staff.containsKey("Driver")) {
+			List<Object> jsonArray = (List<Object>) staff.get("Driver");
 			
+			for (int i = 0; i < jsonArray.size(); i++) {
+				Map<String, Object> staff1 = (Map<String, Object>) jsonArray.get(i);
+				Driver driver = new Driver();
+				driver.setDriverRegId((Integer) staff1.get("driverRegId"));
+				//Load Department 
+				Department departmentDetails = session.load(Department.class, (Integer) staff1.get("department_id"));
+				driver.setDepartment(departmentDetails);
+				Driver driverDetails = driverService.addDriverFromStaff(driver);
+				// Load driver
+				appoint.setDriver(driverDetails);
+				appoint.setEmployeeId(driverDetails.getDriverRegId().toString());
+//				driver.setStaffId(appoint.getStaffId().toString());
+			}
 			
 			System.out.println(jsonArray);
-			
-			
-		
 		}
 
 		try {
@@ -259,30 +273,6 @@ public class StaffDao {
 			e.printStackTrace();
 		}
 		return status;
-	}
-
-	public Date dateUtil (String dateInString) {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-		Date date = null;
-		try {
-			date = formatter.parse(dateInString);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		return date;
-	}
-	
-	private Date dateTimeUtil(String dateInString) {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		Date date = null;
-		try {
-			date = formatter.parse(dateInString);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		return date;
 	}
 
 }

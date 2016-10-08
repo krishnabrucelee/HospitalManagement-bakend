@@ -8,7 +8,7 @@
     <session-factory>  
     
     <!-- database properties -->
-        <property name="connection.url">jdbc:mysql://localhost:3306/hospitalmgt</property>  
+        <property name="connection.url">jdbc:mysql://localhost:3306/hospitalmanagement</property>  
         <property name="connection.username">root</property>  
         <property name="connection.password">mysql</property>  
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>  
@@ -19,17 +19,109 @@
         <property name="hibernate.show_sql">true</property>
         <property name="current_session_context_class">thread</property>
           <!-- mapping properties -->
-        <mapping class="com.hospital.model.Patient"/>
 		<mapping class="com.hospital.model.Department" />
 		<mapping class="com.hospital.model.Doctor" /> 
-        <!--  <mapping class="com.hospital.model.InPatient"/> 
-             <mapping class="com.hospital.model.Room"/>  
-                <mapping class="com.hospital.model.Appointment"/>   
-                <mapping class="com.hospital.model.Timeschedule"/> 
-                 <mapping class="com.hospital.model.EMedicalReport"/>  
-                 <mapping class="com.hospital.model.MedicalReport"/>  
-                 <mapping class="com.hospital.model.Outpatient"/>   
-                 <mapping class="com.hospital.model.OperationTheater"/>      -->
+		<mapping class="com.hospital.model.Appointment" />
+		<mapping class="com.hospital.model.BloodBank" />
+		<mapping class="com.hospital.model.BloodRequest" />
+		<mapping class="com.hospital.model.BloodReturn" />
+		<mapping class="com.hospital.model.CashCounter" />
+		<mapping class="com.hospital.model.Cost" />
+		<mapping class="com.hospital.model.CostLog" />
+		<mapping class="com.hospital.model.Cssd" />
+		<mapping class="com.hospital.model.CssdItemList" />
+		<mapping class="com.hospital.model.Donor" />
+		<mapping class="com.hospital.model.Diet" />
+		<mapping class="com.hospital.model.DietList" />
+		<mapping class="com.hospital.model.EMedicalReport" />
+		<mapping class="com.hospital.model.Emergency" />
+		<mapping class="com.hospital.model.ExpenseApproval" />
+		<mapping class="com.hospital.model.HouseKeeping" />
+		<mapping class="com.hospital.model.InterBloodTransfusion" />
+		<mapping class="com.hospital.model.InPatient" />
+		<mapping class="com.hospital.model.Laboratory" />
+		<mapping class="com.hospital.model.LaboratoryBilling" />
+		<mapping class="com.hospital.model.LaboratoryTest" />
+		<mapping class="com.hospital.model.MedicineList" />
+		<mapping class="com.hospital.model.Nurse" />
+		<mapping class="com.hospital.model.OuterBloodTransfusion" />
+		<mapping class="com.hospital.model.Patient" />
+		<mapping class="com.hospital.model.PatientBilling" />
+		<mapping class="com.hospital.model.Payment" />
+		<mapping class="com.hospital.model.PettyCash" />
+		<mapping class="com.hospital.model.PharmacyMedicine" />
+		<mapping class="com.hospital.model.PurchaseBilling" />
+		<mapping class="com.hospital.model.PurchaseOrder" />
+		<mapping class="com.hospital.model.Staff" />
+		<mapping class="com.hospital.model.StockLedger" />
+		<mapping class="com.hospital.model.Surgery" />
+		<mapping class="com.hospital.model.TransferDoctorDetails" />
+		<mapping class="com.hospital.model.WantedStock" />
+		<mapping class="com.hospital.model.WantedStockList" />
+		<mapping class="com.hospital.model.Ward" />
+		<mapping class="com.hospital.model.Ambulance" />
+		<mapping class="com.hospital.model.Tariff" />
+		<mapping class="com.hospital.model.Driver" />
+		<mapping class="com.hospital.model.AmbulanceRequest" />
+		
+		
+		
+		
+					                            
+	<mapping class="com.hospital.model.PharmacyOrder" />
+	<mapping class="com.hospital.model.SupplierInformation" />
+	<mapping class="com.hospital.model.MedicineRequest" />
+	<mapping class="com.hospital.model.MedicineRequestToMaster" />
+	<mapping class="com.hospital.model.MedicineRequestByPharmacy" />
+	<mapping class="com.hospital.model.MedicineIssueToPharmacy" />
+	<mapping class="com.hospital.model.MedicineIssued" />
+	<mapping class="com.hospital.model.Pharmacy" />
+	<mapping class="com.hospital.model.Medicine" />
+	<mapping class="com.hospital.model.InvetoryMedicine" />
+	<mapping class="com.hospital.model.PatientData" />
+	<mapping class="com.hospital.model.MedicineToPatient" />
+	<mapping class="com.hospital.model.MedicineTypes" />
+	<mapping class="com.hospital.model.MedicineMaster" />
+	<mapping class="com.hospital.model.MedicineEntryMaster" />
+	<mapping class="com.hospital.model.LabTest" />
+	<mapping class="com.hospital.model.ExternalLab" />
+	<mapping class="com.hospital.model.LabtestTypes" />
+	<mapping class="com.hospital.model.TestSubCategeries" />
+	<mapping class="com.hospital.model.LabTestName" />
+	<mapping class="com.hospital.model.NewLabRequest" />
+
+	<!-- LabrequestByPatient -->
+	<mapping class="com.hospital.model.LabrequestByPatient" />
+	<mapping class="com.hospital.model.PatientRequestLabTest" />
+	<mapping class="com.hospital.model.PatientRequestSubCatTest" />
+	<!-- PatientLabtestReport -->
+	<mapping class="com.hospital.model.PatientLabtestReportNames" />
+	<mapping class="com.hospital.model.PatientLabReportSubcategeriesNames" />
+	<!-- ExternalLabrequest -->
+	<mapping class="com.hospital.model.ExternalLabRequest" />
+	<!-- Equipment -->
+	<mapping class="com.hospital.model.EquipmentData" />
+	<!-- Equipment check final -->
+	<mapping class="com.hospital.model.EquipmentCheckRequest" />
+	<mapping class="com.hospital.model.EquipmentCheckSubCategeries" />
+
+	<!-- Equipment Name All checklist -->
+	<mapping class="com.hospital.model.EquipmentCheckData" />
+	<mapping class="com.hospital.model.EquipmentCheckSubcategry" />
+	<mapping class="com.hospital.model.MaintananceSchedule" />
+	<mapping class="com.hospital.model.OrderRepairProduct" />
+	<!-- Maintanance Schedule -->
+	<mapping class="com.hospital.model.MaintananceScheduling" />
+	<mapping class="com.hospital.model.MaintananceScheduleSubCategeries" />
+	<!-- Periodic Maintanance Schedule Data Save -->
+	<mapping class="com.hospital.model.PeriodicScheduleMaintanaceData" />
+	<mapping class="com.hospital.model.PeriodicMaintanaceSubCategeries" />
+	<!-- House Keeping Data -->
+	<mapping class="com.hospital.model.HouseKeepingItemMaster" />
+	<mapping class="com.hospital.model.LaundryProcessState" />
+	<mapping class="com.hospital.model.RequestHouseKeep" />
+	<mapping class="com.hospital.model.RequestHouseKeepSubCat" />
+		
    </session-factory>  
   
 </hibernate-configuration>  

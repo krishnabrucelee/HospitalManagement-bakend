@@ -69,7 +69,7 @@ public class PatientDao {
 		transaction = session.beginTransaction();
 		List<Patient> patientList = null;
 		try {
-			Query query = session.createQuery("FROM patient");
+			Query query = session.createQuery("FROM Patient");
 			patientList = query.list();
 			status.put("Patient", patientList);
 			status.put("result", true);

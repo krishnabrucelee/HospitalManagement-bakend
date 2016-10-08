@@ -2,6 +2,8 @@ package com.hospital.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -9,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -27,6 +30,9 @@ public class Doctor implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "doctor_id")
 	private Integer doctorId;
+	
+	@Column(name = "doctor_reg_id")
+	private Integer doctorRegId;
 	
 	@Column(name = "doctor_name")
 	private String doctorName;
@@ -55,6 +61,18 @@ public class Doctor implements Serializable {
 	@Column(name = "personal_details")
 	private String personalDetails;
 
+	@Column(name = "doctor_type")
+	private DoctorType doctorType;
+	
+	public enum DoctorType {
+		INHOUSE,
+		SURGON,
+		CONSULTANT
+	}
+	
+	@OneToMany(mappedBy="doctor")
+	private List<NewLabRequest> newLabRequest;
+	
 	/**
 	 * Get the doctorId of Doctor.
 	 *
@@ -71,6 +89,24 @@ public class Doctor implements Serializable {
 	 */
 	public void setDoctorId(Integer doctorId) {
 		this.doctorId = doctorId;
+	}
+
+	/**
+	 * Get the doctorRegId of Doctor.
+	 *
+	 * @return the doctorRegId
+	 */
+	public Integer getDoctorRegId() {
+		return doctorRegId;
+	}
+
+	/**
+	 * Set the doctorRegId of Doctor.
+	 *
+	 * @param doctorRegId the doctorRegId to set
+	 */
+	public void setDoctorRegId(Integer doctorRegId) {
+		this.doctorRegId = doctorRegId;
 	}
 
 	/**
@@ -215,6 +251,24 @@ public class Doctor implements Serializable {
 	 */
 	public void setPersonalDetails(String personalDetails) {
 		this.personalDetails = personalDetails;
+	}
+
+	/**
+	 * Get the doctorType of Doctor.
+	 *
+	 * @return the doctorType
+	 */
+	public DoctorType getDoctorType() {
+		return doctorType;
+	}
+
+	/**
+	 * Set the doctorType of Doctor.
+	 *
+	 * @param doctorType the doctorType to set
+	 */
+	public void setDoctorType(DoctorType doctorType) {
+		this.doctorType = doctorType;
 	}
 
 }
