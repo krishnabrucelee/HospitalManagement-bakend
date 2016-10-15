@@ -12,6 +12,7 @@ import org.hibernate.Transaction;
 import org.hibernate.Query;
 import org.hibernate.cfg.Configuration;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,8 @@ import com.hospital.model.Patient;
 @Repository
 public class PharmaDao {
 	
-	SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+	@Autowired
+	SessionFactory sessionFactory;
 	@SuppressWarnings("unchecked")
 	public JSONObject addMasterEntry(JSONObject masterentry) {
 		JSONObject status = new JSONObject();
