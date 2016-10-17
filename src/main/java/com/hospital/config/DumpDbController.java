@@ -36,7 +36,6 @@ public class DumpDbController {
     @RequestMapping(value = "/dumpDb", method = RequestMethod.POST)
     public @ResponseBody JSONObject dumpDb(@RequestBody JSONObject dbName) throws Exception {
         synchronized (this.monitor) {
-        	
      	   
      	   Connection conn = null;
      	   Statement stmt = null;
@@ -44,66 +43,8 @@ public class DumpDbController {
         	String dbNameValue = jsonObject.get("dbName").toString();
         	Boolean status = dbCreation(dbNameValue, conn, stmt);
 			if (status == true) {
-//				Resource dump = new ClassPathResource("HospitalDump.sql");
-//				if(dump.isReadable()) {
-//					System.out.println(dump.getFile());
-//				}
-//				if (dump.exists()) {
-//					dump.
-//				}
-//				this.jdbcTemplate.execute("script '" + dump.getFile() + "'");
-				
-				
-//				try {
-//	        	    BufferedReader bf = new BufferedReader(new FileReader(dump.getFile()));
-//	        	        String line = null;
-//	        	        line = bf.readLine();
-//	        	        while (line != null) {
-//	        	            q = q + line + "\n";
-//	        	            line = bf.readLine();
-//	        	        }
-//	        	    } catch (Exception ex) {
-//	        	        ex.printStackTrace();
-//	        	    }
-//	        	// Now we have the content of the dumpfile in 'q'.
-//	        	// We must separate the queries, so they can be executed. And Java Simply does this:
-//	        	String[] commands = q.split(";");
-//	
-//	        	try {
-//	        		stmt = conn.createStatement();
-//	        	    for (String s : commands) {
-//	        	    	stmt.execute(s);
-//	        	    }
-//	        	} catch (Exception ex) {
-//	        		ex.printStackTrace();
-//	        	}
+				System.out.println("Tables created...");
 			}
-        	
-//        	File dump = new File("/resources/dbDump/HospitalDump.sql");
-//        	try {
-//        	    BufferedReader bf = new BufferedReader(new FileReader(dump));
-//        	        String line = null;
-//        	        line = bf.readLine();
-//        	        while (line != null) {
-//        	            q = q + line + "\n";
-//        	            line = bf.readLine();
-//        	        }
-//        	    } catch (Exception ex) {
-//        	        ex.printStackTrace();
-//        	    }
-//        	// Now we have the content of the dumpfile in 'q'.
-//        	// We must separate the queries, so they can be executed. And Java Simply does this:
-//        	String[] commands = q.split(";");
-//
-//        	try {
-//        		stmt = conn.createStatement();
-//        	    for (String s : commands) {
-//        	    	stmt.execute(s);
-//        	    }
-//        	} catch (Exception ex) {
-//        	}
-        	
-        	
         }
 		return dbName;
     }
@@ -139,17 +80,11 @@ public class DumpDbController {
     	      
     	      System.out.println("Database created successfully...");
     	      
-    	      
     	      Resource dump = new ClassPathResource("HospitalDump.sql");
 				if(dump.isReadable()) {
 					System.out.println(dump.getFile());
 				}
-//				if (dump.exists()) {
-//					dump.
-//				}
-//				this.jdbcTemplate.execute("script '" + dump.getFile() + "'");
-				
-				
+						
 				try {
 	        	    BufferedReader bf = new BufferedReader(new FileReader(dump.getFile()));
 	        	        String line = null;
