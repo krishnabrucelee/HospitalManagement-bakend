@@ -56,9 +56,11 @@
 		<mapping class="com.hospital.model.Tariff" />
 		<mapping class="com.hospital.model.Driver" />
 		<mapping class="com.hospital.model.AmbulanceRequest" />
-		
-		
-		
+		<mapping class="com.hospital.model.LabTechnician" />
+		<mapping class="com.hospital.model.Pharmacist" />
+		<mapping class="com.hospital.model.Role" />
+		<mapping class="com.hospital.model.Permission" />
+		<mapping class="com.hospital.model.Users" />
 		
 					                            
 	<mapping class="com.hospital.model.PharmacyOrder" />

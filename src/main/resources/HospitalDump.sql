@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: hospitalmanagement
+-- Host: localhost    Database: hospitalmanagement
 -- ------------------------------------------------------
 -- Server version	5.6.31
 
@@ -1581,10 +1581,15 @@ CREATE TABLE `doctor` (
   `doctor_type` int(11) DEFAULT NULL,
   `gender` varchar(255) DEFAULT NULL,
   `personal_details` varchar(255) DEFAULT NULL,
+  `user_type` int(11) DEFAULT NULL,
   `dept_id` int(11) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `doctor_email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`doctor_id`),
   KEY `department_doctor_FK` (`dept_id`),
-  CONSTRAINT `department_doctor_FK` FOREIGN KEY (`dept_id`) REFERENCES `department` (`department_id`)
+  KEY `role_doctor_FK` (`role_id`),
+  CONSTRAINT `department_doctor_FK` FOREIGN KEY (`dept_id`) REFERENCES `department` (`department_id`),
+  CONSTRAINT `role_doctor_FK` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1614,12 +1619,12 @@ CREATE TABLE `donor` (
   `donor_address` varchar(255) DEFAULT NULL,
   `donor_age` int(11) DEFAULT NULL,
   `donor_blood_group` varchar(255) DEFAULT NULL,
+  `donor_email_id` varchar(255) DEFAULT NULL,
   `donor_gender` varchar(255) DEFAULT NULL,
   `donor_name` varchar(255) DEFAULT NULL,
   `donor_phone_number` int(11) DEFAULT NULL,
   `donor_reg_id` int(11) DEFAULT NULL,
   `donor_signature` varchar(255) DEFAULT NULL,
-  `donor_email_id` varchar(255) DEFAULT NULL,
   `donor_fainting_spells` bit(1) DEFAULT NULL,
   `donor_hyper_tension_diabates` bit(1) DEFAULT NULL,
   `donor_jaundice` bit(1) DEFAULT NULL,
@@ -1647,10 +1652,15 @@ DROP TABLE IF EXISTS `driver`;
 CREATE TABLE `driver` (
   `driver_id` int(11) NOT NULL,
   `driver_reg_id` int(11) DEFAULT NULL,
+  `user_type` int(11) DEFAULT NULL,
   `dept_id` int(11) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `driver_email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`driver_id`),
   KEY `department_driver_FK` (`dept_id`),
-  CONSTRAINT `department_driver_FK` FOREIGN KEY (`dept_id`) REFERENCES `department` (`department_id`)
+  KEY `role_driver_FK` (`role_id`),
+  CONSTRAINT `department_driver_FK` FOREIGN KEY (`dept_id`) REFERENCES `department` (`department_id`),
+  CONSTRAINT `role_driver_FK` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1809,7 +1819,7 @@ CREATE TABLE `hibernate_sequence` (
 
 LOCK TABLES `hibernate_sequence` WRITE;
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1);
+INSERT INTO `hibernate_sequence` VALUES (1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1),(1);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1831,12 +1841,16 @@ CREATE TABLE `houseKeeping` (
   `houseKeeper_type` varchar(255) DEFAULT NULL,
   `houseKeeper_ward_number` int(11) DEFAULT NULL,
   `staff_id` varchar(255) DEFAULT NULL,
+  `user_type` int(11) DEFAULT NULL,
   `dept_id` int(11) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
   `ward_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`houseKeeper_id`),
   KEY `department_houseKeeping_FK` (`dept_id`),
+  KEY `role_houseKeeping_FK` (`role_id`),
   KEY `ward_houseKeeping_FK` (`ward_id`),
   CONSTRAINT `department_houseKeeping_FK` FOREIGN KEY (`dept_id`) REFERENCES `department` (`department_id`),
+  CONSTRAINT `role_houseKeeping_FK` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`),
   CONSTRAINT `ward_houseKeeping_FK` FOREIGN KEY (`ward_id`) REFERENCES `ward` (`ward_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1907,6 +1921,40 @@ CREATE TABLE `interBloodTransfusion` (
 LOCK TABLES `interBloodTransfusion` WRITE;
 /*!40000 ALTER TABLE `interBloodTransfusion` DISABLE KEYS */;
 /*!40000 ALTER TABLE `interBloodTransfusion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `labTechnician`
+--
+
+DROP TABLE IF EXISTS `labTechnician`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `labTechnician` (
+  `labTechnician_id` int(11) NOT NULL,
+  `labTechnician_dob` date DEFAULT NULL,
+  `labTechnician_email` varchar(255) DEFAULT NULL,
+  `labTechnician_phone` int(11) DEFAULT NULL,
+  `labTechnician_reg_id` int(11) DEFAULT NULL,
+  `staff_id` int(11) DEFAULT NULL,
+  `user_type` int(11) DEFAULT NULL,
+  `dept_id` int(11) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`labTechnician_id`),
+  KEY `department_LABTECH_FK` (`dept_id`),
+  KEY `role_LABTECH_FK` (`role_id`),
+  CONSTRAINT `department_LABTECH_FK` FOREIGN KEY (`dept_id`) REFERENCES `department` (`department_id`),
+  CONSTRAINT `role_LABTECH_FK` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `labTechnician`
+--
+
+LOCK TABLES `labTechnician` WRITE;
+/*!40000 ALTER TABLE `labTechnician` DISABLE KEYS */;
+/*!40000 ALTER TABLE `labTechnician` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2087,12 +2135,16 @@ CREATE TABLE `nurse` (
   `nurse_shift` varchar(255) DEFAULT NULL,
   `nurse_type` varchar(255) DEFAULT NULL,
   `staff_id` int(11) DEFAULT NULL,
+  `user_type` int(11) DEFAULT NULL,
   `dept_id` int(11) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
   `ward_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`nurse_id`),
   KEY `department_NURSE_FK` (`dept_id`),
+  KEY `role_NURSE_FK` (`role_id`),
   KEY `ward_NURSE_FK` (`ward_id`),
   CONSTRAINT `department_NURSE_FK` FOREIGN KEY (`dept_id`) REFERENCES `department` (`department_id`),
+  CONSTRAINT `role_NURSE_FK` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`),
   CONSTRAINT `ward_NURSE_FK` FOREIGN KEY (`ward_id`) REFERENCES `ward` (`ward_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2238,6 +2290,32 @@ LOCK TABLES `payment` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `permissions`
+--
+
+DROP TABLE IF EXISTS `permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permissions` (
+  `permission_id` int(11) NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `action_key` varchar(255) NOT NULL,
+  `module` int(11) DEFAULT NULL,
+  `permission_description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`permission_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permissions`
+--
+
+LOCK TABLES `permissions` WRITE;
+/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `pettyCash`
 --
 
@@ -2259,6 +2337,40 @@ CREATE TABLE `pettyCash` (
 LOCK TABLES `pettyCash` WRITE;
 /*!40000 ALTER TABLE `pettyCash` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pettyCash` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pharmacist`
+--
+
+DROP TABLE IF EXISTS `pharmacist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pharmacist` (
+  `pharmacist_id` int(11) NOT NULL,
+  `pharmacist_dob` date DEFAULT NULL,
+  `pharmacist_email` varchar(255) DEFAULT NULL,
+  `pharmacist_phone` int(11) DEFAULT NULL,
+  `pharmacist_reg_id` int(11) DEFAULT NULL,
+  `staff_id` int(11) DEFAULT NULL,
+  `user_type` int(11) DEFAULT NULL,
+  `dept_id` int(11) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`pharmacist_id`),
+  KEY `department_PHAMCIST_FK` (`dept_id`),
+  KEY `role_PHAMCIST_FK` (`role_id`),
+  CONSTRAINT `department_PHAMCIST_FK` FOREIGN KEY (`dept_id`) REFERENCES `department` (`department_id`),
+  CONSTRAINT `role_PHAMCIST_FK` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pharmacist`
+--
+
+LOCK TABLES `pharmacist` WRITE;
+/*!40000 ALTER TABLE `pharmacist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pharmacist` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2437,6 +2549,56 @@ LOCK TABLES `requestHouseKeepSubCat` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roles` (
+  `role_id` int(11) NOT NULL,
+  `role_description` varchar(255) DEFAULT NULL,
+  `role_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles`
+--
+
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `roles_permissions`
+--
+
+DROP TABLE IF EXISTS `roles_permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roles_permissions` (
+  `Role_role_id` int(11) NOT NULL,
+  `permissionList_permission_id` int(11) NOT NULL,
+  KEY `FK3195qb50h1yhfpsulohi5u0kk` (`permissionList_permission_id`),
+  KEY `FKljubmvfdadyan0htlli4n59my` (`Role_role_id`),
+  CONSTRAINT `FK3195qb50h1yhfpsulohi5u0kk` FOREIGN KEY (`permissionList_permission_id`) REFERENCES `permissions` (`permission_id`),
+  CONSTRAINT `FKljubmvfdadyan0htlli4n59my` FOREIGN KEY (`Role_role_id`) REFERENCES `roles` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles_permissions`
+--
+
+LOCK TABLES `roles_permissions` WRITE;
+/*!40000 ALTER TABLE `roles_permissions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `roles_permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `staff`
 --
 
@@ -2457,16 +2619,22 @@ CREATE TABLE `staff` (
   `doctor_id` int(11) DEFAULT NULL,
   `driver_id` int(11) DEFAULT NULL,
   `houseKeeper_id` int(11) DEFAULT NULL,
+  `labTechnician_id` int(11) DEFAULT NULL,
   `nurse_id` int(11) DEFAULT NULL,
+  `pharmacist_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`staff_id`),
   KEY `doctor_STF_FK` (`doctor_id`),
   KEY `driver_STF_FK` (`driver_id`),
   KEY `house_keeping_STF_FK` (`houseKeeper_id`),
+  KEY `labTechnician_STF_FK` (`labTechnician_id`),
   KEY `nurse_STF_FK` (`nurse_id`),
+  KEY `pharmacist_STF_FK` (`pharmacist_id`),
   CONSTRAINT `doctor_STF_FK` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`doctor_id`),
   CONSTRAINT `driver_STF_FK` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`driver_id`),
   CONSTRAINT `house_keeping_STF_FK` FOREIGN KEY (`houseKeeper_id`) REFERENCES `houseKeeping` (`houseKeeper_id`),
-  CONSTRAINT `nurse_STF_FK` FOREIGN KEY (`nurse_id`) REFERENCES `nurse` (`nurse_id`)
+  CONSTRAINT `labTechnician_STF_FK` FOREIGN KEY (`labTechnician_id`) REFERENCES `labTechnician` (`labTechnician_id`),
+  CONSTRAINT `nurse_STF_FK` FOREIGN KEY (`nurse_id`) REFERENCES `nurse` (`nurse_id`),
+  CONSTRAINT `pharmacist_STF_FK` FOREIGN KEY (`pharmacist_id`) REFERENCES `pharmacist` (`pharmacist_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2607,6 +2775,36 @@ LOCK TABLES `transferDoctorDetails` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `user_id` bigint(20) NOT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `profession_type` varchar(255) DEFAULT NULL,
+  `user_email` varchar(255) DEFAULT NULL,
+  `user_name` varchar(255) DEFAULT NULL,
+  `user_type` varchar(255) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `role_USER_FK` (`role_id`),
+  CONSTRAINT `role_USER_FK` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `wantedStock`
 --
 
@@ -2722,4 +2920,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-15 14:12:23
+-- Dump completed on 2016-10-22 14:03:01

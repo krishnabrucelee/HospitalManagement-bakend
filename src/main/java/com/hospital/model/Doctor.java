@@ -37,6 +37,9 @@ public class Doctor implements Serializable {
 	@Column(name = "doctor_name")
 	private String doctorName;
 	
+	@Column(name = "doctor_email")
+	private String doctorEmail;
+	
 	@Column(name = "doctor_description")
 	private String doctorDescription;
 	
@@ -73,6 +76,21 @@ public class Doctor implements Serializable {
 	@OneToMany(mappedBy="doctor")
 	private List<NewLabRequest> newLabRequest;
 	
+    /** User role. */
+    @OneToOne(targetEntity = Role.class)
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id", foreignKey = @ForeignKey(name = "role_doctor_FK"))
+    private Role role;
+    
+    /** User type of the user. */
+    @Column(name = "user_type")
+    private UserType userType;
+	
+    /** Define user type. */
+    public enum UserType {
+        /** Define type constant. */
+        DOMAIN_ADMIN, ROOT_ADMIN, DOMAIN_USER, USER;
+    }
+    
 	/**
 	 * Get the doctorId of Doctor.
 	 *
@@ -143,6 +161,24 @@ public class Doctor implements Serializable {
 	 */
 	public void setDoctorDescription(String doctorDescription) {
 		this.doctorDescription = doctorDescription;
+	}
+
+	/**
+	 * Get the doctorEmail of Doctor.
+	 *
+	 * @return the doctorEmail
+	 */
+	public String getDoctorEmail() {
+		return doctorEmail;
+	}
+
+	/**
+	 * Set the doctorEmail of Doctor.
+	 *
+	 * @param doctorEmail the doctorEmail to set
+	 */
+	public void setDoctorEmail(String doctorEmail) {
+		this.doctorEmail = doctorEmail;
 	}
 
 	/**
@@ -269,6 +305,60 @@ public class Doctor implements Serializable {
 	 */
 	public void setDoctorType(DoctorType doctorType) {
 		this.doctorType = doctorType;
+	}
+
+	/**
+	 * Get the newLabRequest of Doctor.
+	 *
+	 * @return the newLabRequest
+	 */
+	public List<NewLabRequest> getNewLabRequest() {
+		return newLabRequest;
+	}
+
+	/**
+	 * Set the newLabRequest of Doctor.
+	 *
+	 * @param newLabRequest the newLabRequest to set
+	 */
+	public void setNewLabRequest(List<NewLabRequest> newLabRequest) {
+		this.newLabRequest = newLabRequest;
+	}
+
+	/**
+	 * Get the role of Doctor.
+	 *
+	 * @return the role
+	 */
+	public Role getRole() {
+		return role;
+	}
+
+	/**
+	 * Set the role of Doctor.
+	 *
+	 * @param role the role to set
+	 */
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	/**
+	 * Get the userType of Doctor.
+	 *
+	 * @return the userType
+	 */
+	public UserType getUserType() {
+		return userType;
+	}
+
+	/**
+	 * Set the userType of Doctor.
+	 *
+	 * @param userType the userType to set
+	 */
+	public void setUserType(UserType userType) {
+		this.userType = userType;
 	}
 
 }

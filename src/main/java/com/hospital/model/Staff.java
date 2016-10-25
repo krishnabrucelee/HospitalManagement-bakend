@@ -78,6 +78,14 @@ public class Staff {
 	@JoinColumn(name = "driver_id", referencedColumnName = "driver_id", foreignKey = @ForeignKey(name = "driver_STF_FK"))
 	private Driver driver;
 	
+	@OneToOne(targetEntity = LabTechnician.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "labTechnician_id", referencedColumnName = "labTechnician_id", foreignKey = @ForeignKey(name = "labTechnician_STF_FK"))
+	private LabTechnician labTechnician;
+	
+	@OneToOne(targetEntity = Pharmacist.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "pharmacist_id", referencedColumnName = "pharmacist_id", foreignKey = @ForeignKey(name = "pharmacist_STF_FK"))
+	private Pharmacist pharmacist;
+	
 	/**
 	 * Get the staffId of Staff.
 	 *
@@ -328,6 +336,42 @@ public class Staff {
 	 */
 	public void setDriver(Driver driver) {
 		this.driver = driver;
+	}
+
+	/**
+	 * Get the labTechnician of Staff.
+	 *
+	 * @return the labTechnician
+	 */
+	public LabTechnician getLabTechnician() {
+		return labTechnician;
+	}
+
+	/**
+	 * Set the labTechnician of Staff.
+	 *
+	 * @param labTechnician the labTechnician to set
+	 */
+	public void setLabTechnician(LabTechnician labTechnician) {
+		this.labTechnician = labTechnician;
+	}
+
+	/**
+	 * Get the pharmacist of Staff.
+	 *
+	 * @return the pharmacist
+	 */
+	public Pharmacist getPharmacist() {
+		return pharmacist;
+	}
+
+	/**
+	 * Set the pharmacist of Staff.
+	 *
+	 * @param pharmacist the pharmacist to set
+	 */
+	public void setPharmacist(Pharmacist pharmacist) {
+		this.pharmacist = pharmacist;
 	}
 	
 	

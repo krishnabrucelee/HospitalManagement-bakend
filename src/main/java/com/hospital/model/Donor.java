@@ -49,7 +49,7 @@ public class Donor {
 	private String donorAddress;
 	
 	@Column(name = "donor_email_id")
-	private String donoremailId;
+	private String donorEmailId;
 	
 	@Column(name = "donor_jaundice")
 	private Boolean jaundice;
@@ -232,8 +232,8 @@ public class Donor {
 	 *
 	 * @return the donoremailId
 	 */
-	public String getDonoremailId() {
-		return donoremailId;
+	public String getDonorEmailId() {
+		return donorEmailId;
 	}
 
 	/**
@@ -241,8 +241,8 @@ public class Donor {
 	 *
 	 * @param donoremailId the donoremailId to set
 	 */
-	public void setDonoremailId(String donoremailId) {
-		this.donoremailId = donoremailId;
+	public void setDonorEmailId(String donorEmailId) {
+		this.donorEmailId = donorEmailId;
 	}
 
 	/**
