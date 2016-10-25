@@ -6,6 +6,7 @@ package com.hospital.dao;
 import java.util.List;
 import java.util.Map;
 import com.hospital.model.Doctor.DoctorType;
+import com.hospital.model.Doctor.UserType;
 import com.hospital.model.Driver;
 
 import org.hibernate.Query;
@@ -18,15 +19,22 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Staff;
+import com.hospital.model.Users;
 import com.hospital.service.DoctorService;
 import com.hospital.service.DriverService;
 import com.hospital.service.HouseKeepingService;
+import com.hospital.service.LabTechnicianService;
 import com.hospital.service.NurseService;
+import com.hospital.service.PharmacistService;
+import com.hospital.service.UserService;
 import com.hospital.util.DateUtil;
+import com.hospital.model.Role;
 import com.hospital.model.Department;
 import com.hospital.model.Doctor;
 import com.hospital.model.HouseKeeping;
+import com.hospital.model.LabTechnician;
 import com.hospital.model.Nurse;
+import com.hospital.model.Pharmacist;
 
 /**
  * @author Krishna
@@ -53,7 +61,16 @@ public class StaffDao {
 	private HouseKeepingService houseKeepingService;
 	
 	@Autowired
-	private DriverService driverService;
+	private DriverService driverService; 
+	
+	@Autowired
+	private LabTechnicianService labTechService;
+	
+	@Autowired
+	private PharmacistService pharmacistService;
+	
+	@Autowired
+	private UserService userService;
 
 	static {
 		System.out.println("class StaffDao executed");
@@ -86,6 +103,23 @@ public class StaffDao {
 				Department departmentDetails = session.load(Department.class, (Integer) staff1.get("department_id"));
 				doctor.setDepartment(departmentDetails);
 				
+				//Load Role 
+				Role roleDetails = session.load(Role.class, (Integer) staff1.get("role_id"));
+				doctor.setRole(roleDetails);
+				
+				if (staff1.get("userType").toString().equals(UserType.ROOT_ADMIN.toString())) {
+					doctor.setUserType(UserType.ROOT_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(UserType.DOMAIN_ADMIN.toString())) {
+					doctor.setUserType(UserType.DOMAIN_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(UserType.DOMAIN_USER.toString())) {
+					doctor.setUserType(UserType.DOMAIN_USER);
+				}
+				if (staff1.get("userType").toString().equals(UserType.USER.toString())) {
+					doctor.setUserType(UserType.USER);
+				}
+				
 				doctor.setDoctorDescription(staff1.get("doctorDescription").toString());
 				if (staff1.get("doctorType").toString().equals(DoctorType.INHOUSE.toString())) {
 					doctor.setDoctorType(DoctorType.INHOUSE);
@@ -97,11 +131,21 @@ public class StaffDao {
 					doctor.setDoctorType(DoctorType.CONSULTANT);
 				}
 				doctor.setPersonalDetails(staff1.get("personalDetails").toString());
+				doctor.setDoctorEmail(staff1.get("doctorEmail").toString());
 				Doctor doctorDetails = doctorService.addDoctorFromStaff(doctor);
 				// Load Nurse
 				appoint.setDoctor(doctorDetails);
 				appoint.setEmployeeId(doctorDetails.getDoctorRegId().toString());
 //				nurse.setStaffId(appoint.getStaffId().toString());
+				
+				Users user = new Users();
+				user.setProfessionType("Doctor");
+				user.setPassword(staff.get("password").toString());
+				user.setUserName(staff.get("staffName").toString());
+				user.setUserEmail(staff1.get("doctorEmail").toString());
+				user.setRole(roleDetails);
+				user.setUserType(doctorDetails.getUserType().toString());
+				userService.addUser(user);
 			}
 			
 			
@@ -124,6 +168,24 @@ public class StaffDao {
 				//Load Department 
 				Department departmentDetails = session.load(Department.class, (Integer) staff1.get("department_id"));
 				nurse.setDepartment(departmentDetails);
+				
+				//Load Role 
+				Role roleDetails = session.load(Role.class, (Integer) staff1.get("role_id"));
+				nurse.setRole(roleDetails);
+				
+				if (staff1.get("userType").toString().equals(Nurse.UserType.ROOT_ADMIN.toString())) {
+					nurse.setUserType(Nurse.UserType.ROOT_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(Nurse.UserType.DOMAIN_ADMIN.toString())) {
+					nurse.setUserType(Nurse.UserType.DOMAIN_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(Nurse.UserType.DOMAIN_USER.toString())) {
+					nurse.setUserType(Nurse.UserType.DOMAIN_USER);
+				}
+				if (staff1.get("userType").toString().equals(Nurse.UserType.USER.toString())) {
+					nurse.setUserType(Nurse.UserType.USER);
+				}
+				
 				Nurse nurseDetails = nurseService.addNurseFromStaff(nurse);
 				// Load Nurse
 				appoint.setNurse(nurseDetails);
@@ -147,6 +209,23 @@ public class StaffDao {
 				//Load Department 
 				Department departmentDetails = session.load(Department.class, (Integer) staff1.get("department_id"));
 				houseKeeping.setDepartment(departmentDetails);
+				
+				//Load Role 
+				Role roleDetails = session.load(Role.class, (Integer) staff1.get("role_id"));
+				houseKeeping.setRole(roleDetails);
+				
+				if (staff1.get("userType").toString().equals(HouseKeeping.UserType.ROOT_ADMIN.toString())) {
+					houseKeeping.setUserType(HouseKeeping.UserType.ROOT_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(HouseKeeping.UserType.DOMAIN_ADMIN.toString())) {
+					houseKeeping.setUserType(HouseKeeping.UserType.DOMAIN_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(HouseKeeping.UserType.DOMAIN_USER.toString())) {
+					houseKeeping.setUserType(HouseKeeping.UserType.DOMAIN_USER);
+				}
+				if (staff1.get("userType").toString().equals(HouseKeeping.UserType.USER.toString())) {
+					houseKeeping.setUserType(HouseKeeping.UserType.USER);
+				}
 				
 				houseKeeping.setHouseKeeperDob(DateUtil.dateUtil(staff1.get("houseKeeperDob").toString()));
 				houseKeeping.setHouseKeeperEmail(staff1.get("houseKeeperEmail").toString());
@@ -172,9 +251,28 @@ public class StaffDao {
 				Map<String, Object> staff1 = (Map<String, Object>) jsonArray.get(i);
 				Driver driver = new Driver();
 				driver.setDriverRegId((Integer) staff1.get("driverRegId"));
+				driver.setDriverEmail(staff1.get("driverEmail").toString());
 				//Load Department 
 				Department departmentDetails = session.load(Department.class, (Integer) staff1.get("department_id"));
 				driver.setDepartment(departmentDetails);
+				
+				//Load Role 
+				Role roleDetails = session.load(Role.class, (Integer) staff1.get("role_id"));
+				driver.setRole(roleDetails);
+				
+				if (staff1.get("userType").toString().equals(Driver.UserType.ROOT_ADMIN.toString())) {
+					driver.setUserType(Driver.UserType.ROOT_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(Driver.UserType.DOMAIN_ADMIN.toString())) {
+					driver.setUserType(Driver.UserType.DOMAIN_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(Driver.UserType.DOMAIN_USER.toString())) {
+					driver.setUserType(Driver.UserType.DOMAIN_USER);
+				}
+				if (staff1.get("userType").toString().equals(Driver.UserType.USER.toString())) {
+					driver.setUserType(Driver.UserType.USER);
+				}
+				
 				Driver driverDetails = driverService.addDriverFromStaff(driver);
 				// Load driver
 				appoint.setDriver(driverDetails);
@@ -183,6 +281,86 @@ public class StaffDao {
 			}
 			
 			System.out.println(jsonArray);
+		} else if (staff.containsKey("LabTechnician")) {
+			List<Object> jsonArray = (List<Object>) staff.get("LabTechnician");
+			
+			for (int i = 0; i < jsonArray.size(); i++) {
+				Map<String, Object> staff1 = (Map<String, Object>) jsonArray.get(i);
+				LabTechnician labTech = new LabTechnician();
+				labTech.setLabTechnicianRegId((Integer) staff1.get("labTechnicianRegId"));
+				labTech.setLabTechnicianDob(DateUtil.dateUtil(staff1.get("labTechnicianDob").toString()));
+				labTech.setLabTechnicianEmail(staff1.get("labTechnicianEmail").toString());
+				labTech.setLabTechnicianPhoneNumber((Integer) staff1.get("labTechnicianPhoneNumber"));
+				//Load Department 
+				Department departmentDetails = session.load(Department.class, (Integer) staff1.get("department_id"));
+				labTech.setDepartment(departmentDetails);
+				
+				//Load Role 
+				Role roleDetails = session.load(Role.class, (Integer) staff1.get("role_id"));
+				labTech.setRole(roleDetails);
+				
+				if (staff1.get("userType").toString().equals(LabTechnician.UserType.ROOT_ADMIN.toString())) {
+					labTech.setUserType(LabTechnician.UserType.ROOT_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(LabTechnician.UserType.DOMAIN_ADMIN.toString())) {
+					labTech.setUserType(LabTechnician.UserType.DOMAIN_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(LabTechnician.UserType.DOMAIN_USER.toString())) {
+					labTech.setUserType(LabTechnician.UserType.DOMAIN_USER);
+				}
+				if (staff1.get("userType").toString().equals(LabTechnician.UserType.USER.toString())) {
+					labTech.setUserType(LabTechnician.UserType.USER);
+				}
+				
+				LabTechnician labTechDetails = labTechService.addLabTechnicianFromStaff(labTech);
+				// Load LabTechnician
+				appoint.setLabTechnician(labTechDetails);
+				appoint.setEmployeeId(labTechDetails.getLabTechnicianRegId().toString());
+//				nurse.setStaffId(appoint.getStaffId().toString());
+			}
+			
+			System.out.println(jsonArray);
+			
+		} else if (staff.containsKey("Pharmacist")) {
+			List<Object> jsonArray = (List<Object>) staff.get("Pharmacist");
+			
+			for (int i = 0; i < jsonArray.size(); i++) {
+				Map<String, Object> staff1 = (Map<String, Object>) jsonArray.get(i);
+				Pharmacist pharmacist = new Pharmacist();
+				pharmacist.setPharmacistRegId((Integer) staff1.get("pharmacistRegId"));
+				pharmacist.setPharmacistDob(DateUtil.dateUtil(staff1.get("pharmacistDob").toString()));
+				pharmacist.setPharmacistEmail(staff1.get("pharmacistEmail").toString());
+				pharmacist.setPharmacistPhoneNumber((Integer) staff1.get("pharmacistPhoneNumber"));
+				//Load Department 
+				Department departmentDetails = session.load(Department.class, (Integer) staff1.get("department_id"));
+				pharmacist.setDepartment(departmentDetails);
+				
+				//Load Role 
+				Role roleDetails = session.load(Role.class, (Integer) staff1.get("role_id"));
+				pharmacist.setRole(roleDetails);
+				
+				if (staff1.get("userType").toString().equals(Pharmacist.UserType.ROOT_ADMIN.toString())) {
+					pharmacist.setUserType(Pharmacist.UserType.ROOT_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(Pharmacist.UserType.DOMAIN_ADMIN.toString())) {
+					pharmacist.setUserType(Pharmacist.UserType.DOMAIN_ADMIN);
+				}
+				if (staff1.get("userType").toString().equals(Pharmacist.UserType.DOMAIN_USER.toString())) {
+					pharmacist.setUserType(Pharmacist.UserType.DOMAIN_USER);
+				}
+				if (staff1.get("userType").toString().equals(Pharmacist.UserType.USER.toString())) {
+					pharmacist.setUserType(Pharmacist.UserType.USER);
+				}
+				
+				Pharmacist pharmacistDetails = pharmacistService.addPharmacistFromStaff(pharmacist);
+				// Load Nurse
+				appoint.setPharmacist(pharmacistDetails);
+				appoint.setEmployeeId(pharmacistDetails.getPharmacistRegId().toString());
+//				nurse.setStaffId(appoint.getStaffId().toString());
+			}
+			
+			System.out.println(jsonArray);
+			
 		}
 
 		try {

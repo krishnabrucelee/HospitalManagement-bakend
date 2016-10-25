@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hospital.model.Doctor.UserType;
 
 /**
  * @author Krishna
@@ -61,6 +62,21 @@ public class Nurse {
 	@JoinColumn(name = "ward_id", referencedColumnName = "ward_id", foreignKey = @ForeignKey(name = "ward_NURSE_FK"))
 	private Ward ward;
 
+    /** User role. */
+    @OneToOne(targetEntity = Role.class)
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id", foreignKey = @ForeignKey(name = "role_NURSE_FK"))
+    private Role role;
+    
+    /** User type of the user. */
+    @Column(name = "user_type")
+    private UserType userType;
+	
+    /** Define user type. */
+    public enum UserType {
+        /** Define type constant. */
+        DOMAIN_ADMIN, ROOT_ADMIN, DOMAIN_USER, USER;
+    }
+    
 	/**
 	 * Get the nurseId of Nurse.
 	 *
@@ -241,4 +257,41 @@ public class Nurse {
 	public void setWard(Ward ward) {
 		this.ward = ward;
 	}
+
+	/**
+	 * Get the role of Nurse.
+	 *
+	 * @return the role
+	 */
+	public Role getRole() {
+		return role;
+	}
+
+	/**
+	 * Set the role of Nurse.
+	 *
+	 * @param role the role to set
+	 */
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	/**
+	 * Get the userType of Nurse.
+	 *
+	 * @return the userType
+	 */
+	public UserType getUserType() {
+		return userType;
+	}
+
+	/**
+	 * Set the userType of Nurse.
+	 *
+	 * @param userType the userType to set
+	 */
+	public void setUserType(UserType userType) {
+		this.userType = userType;
+	}
+	
 }
