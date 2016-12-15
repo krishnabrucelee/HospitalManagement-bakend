@@ -1,5 +1,8 @@
 package com.hospital.dao;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -44,10 +47,12 @@ public class PatientDao {
 		transaction = session.beginTransaction();
 		ObjectMapper om = new ObjectMapper();
 		om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		Patient user = om.convertValue(patient, Patient.class);
+		Patient patientDetails = om.convertValue(patient, Patient.class);
+		patientDetails.setPatientRefNumber(String.valueOf(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)));
+		patientDetails.setCreatedDate(new Date());
 		try {
 			System.out.println("Inside Dao11 PATIENT");
-			session.save(user);
+			session.save(patientDetails);
 			transaction.commit();
 			System.out.println("Save patients");
 			status.put("success", "User details saved");

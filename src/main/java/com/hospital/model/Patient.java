@@ -31,6 +31,9 @@ public class Patient implements Serializable {
 	@Column(name = "patient_id")
 	private Integer patientId;
 
+	@Column(name = "patient_ref_number")
+	private String patientRefNumber;
+	
 	@Column(name = "email", unique = true)
 	private String email;
 
@@ -66,6 +69,10 @@ public class Patient implements Serializable {
 	@OneToMany(mappedBy = "patient")
 	private List<MedicineToPatient> drugtopatient = new ArrayList<MedicineToPatient>();
 
+	@Column(name = "created_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createdDate;
+	
 	/**
 	 * Get the patientId of Patient.
 	 *
@@ -83,6 +90,42 @@ public class Patient implements Serializable {
 	 */
 	public void setPatientId(Integer patientId) {
 		this.patientId = patientId;
+	}
+
+	/**
+	 * Get the patientRefNumber of Patient. 
+	 *
+	 * @return the patientRefNumber
+	 */
+	public String getPatientRefNumber() {
+		return patientRefNumber;
+	}
+
+	/**
+	 * Set the patientRefNumber of Patient. 
+	 *
+	 * @param patientRefNumber the patientRefNumber to set
+	 */
+	public void setPatientRefNumber(String patientRefNumber) {
+		this.patientRefNumber = patientRefNumber;
+	}
+
+	/**
+	 * Get the drugtopatient of Patient. 
+	 *
+	 * @return the drugtopatient
+	 */
+	public List<MedicineToPatient> getDrugtopatient() {
+		return drugtopatient;
+	}
+
+	/**
+	 * Set the drugtopatient of Patient. 
+	 *
+	 * @param drugtopatient the drugtopatient to set
+	 */
+	public void setDrugtopatient(List<MedicineToPatient> drugtopatient) {
+		this.drugtopatient = drugtopatient;
 	}
 
 	/**
@@ -273,6 +316,24 @@ public class Patient implements Serializable {
 	 */
 	public void setPatientType(String patientType) {
 		this.patientType = patientType;
+	}
+
+	/**
+	 * Get the createdDate of Patient. 
+	 *
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * Set the createdDate of Patient. 
+	 *
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
 	}
 
 }
