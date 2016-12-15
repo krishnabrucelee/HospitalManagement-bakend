@@ -61,6 +61,10 @@
 		<mapping class="com.hospital.model.Role" />
 		<mapping class="com.hospital.model.Permission" />
 		<mapping class="com.hospital.model.Users" />
+		<mapping class="com.hospital.model.BioMedicalDisposalManagement" />
+		<mapping class="com.hospital.model.BioMedicalType" />
+		<mapping class="com.hospital.model.BioMedicalWaste" />
+		<mapping class="com.hospital.model.BioMedicalWasteDepartment" />
 		
 					                            
 	<mapping class="com.hospital.model.PharmacyOrder" />
