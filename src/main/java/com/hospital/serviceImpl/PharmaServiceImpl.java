@@ -11,8 +11,14 @@ public class PharmaServiceImpl implements IPharmaService {
 	
 	@Autowired
 	PharmaDao pharmadao;
+	
+	@Override
+	public JSONObject orderMasterMedicine(JSONObject orderMasterMedicine) {
+		return pharmadao.orderMasterMedicine(orderMasterMedicine);
+	}
 	@Override
 	public JSONObject issueOrder(JSONObject productdetails) {
+		
 		return pharmadao.issueOrder(productdetails);
 	}
 	@Override
@@ -30,6 +36,15 @@ public class PharmaServiceImpl implements IPharmaService {
 	@Override
 	public JSONObject listOrder() {
 		return pharmadao.listOrder();
+	}
+	
+	@Override
+	public JSONObject getMedicineId() {
+		return pharmadao.getMedicineId();
+	}
+	@Override
+	public JSONObject pharmacyMedicineRequest(JSONObject medicineRequest) {
+		return pharmadao.pharmacyMedicineRequest(medicineRequest);
 	}
 	@Override
 	public JSONObject medicineRequest(JSONObject medicineRequest) {
@@ -57,7 +72,11 @@ public class PharmaServiceImpl implements IPharmaService {
 	}
 	@Override
 	public JSONObject addMasterEntry(JSONObject masterentry) {
-		return pharmadao.addMasterEntry(masterentry);
+		return pharmadao.addMasterEntryData(masterentry);
+	}
+	@Override
+	public JSONObject listMasterEntry() {
+		return pharmadao.listMasterEntry();
 	}
 	@Override
 	public JSONObject updateMasterPharmacyReturn(JSONObject returnupdate) {
@@ -67,6 +86,10 @@ public class PharmaServiceImpl implements IPharmaService {
 	public JSONObject updatePharmacyRecived(JSONObject receiveupdate) {
 		return pharmadao.updatePharmacyRecived(receiveupdate);
 	}
+	
+	
+	
+	
 	
 	
 	
