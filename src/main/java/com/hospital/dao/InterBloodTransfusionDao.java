@@ -99,6 +99,10 @@ public class InterBloodTransfusionDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -118,6 +122,10 @@ public class InterBloodTransfusionDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -130,6 +138,10 @@ public class InterBloodTransfusionDao {
 			interBloodTrans = (InterBloodTransfusion) session.get(InterBloodTransfusion.class, interBloodTransId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (interBloodTrans != null) {
 			return interBloodTrans;
@@ -153,6 +165,10 @@ public class InterBloodTransfusionDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

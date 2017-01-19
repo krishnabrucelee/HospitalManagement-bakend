@@ -40,4 +40,10 @@ public interface PatientService {
 	 * @return patient
 	 */
 	public JSONObject deletePatient(JSONObject patientId);
+
+	/**
+	 * @param patient
+	 * @return
+	 */
+	public JSONObject getPatientDetailsById(JSONObject patient);
 }

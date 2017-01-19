@@ -96,6 +96,10 @@ public class BioMedicalWasteDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -115,6 +119,10 @@ public class BioMedicalWasteDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -127,6 +135,10 @@ public class BioMedicalWasteDao {
 			bioMedicalWaste = (BioMedicalWaste) session.get(BioMedicalWaste.class, bioMedicalWasteId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (bioMedicalWaste != null) {
 			return bioMedicalWaste;
@@ -150,6 +162,10 @@ public class BioMedicalWasteDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

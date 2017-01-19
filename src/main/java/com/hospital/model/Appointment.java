@@ -31,7 +31,6 @@ public class Appointment implements Serializable {
 	private Doctor doctor;
 	
 	@Column(name = "appoint_time")
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date appointTime;
 	

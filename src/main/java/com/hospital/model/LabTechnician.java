@@ -34,7 +34,7 @@ public class LabTechnician {
 	private Integer labTechnicianId;
 	
 	@Column(name = "labTechnician_reg_id")
-	private Integer labTechnicianRegId;
+	private String labTechnicianRegId;
 	
 	@Column(name = "staff_id")
 	private Integer staffId;
@@ -48,7 +48,7 @@ public class LabTechnician {
 	private String labTechnicianEmail;
 	
 	@Column(name = "labTechnician_phone")
-	private Integer labTechnicianPhoneNumber;
+	private String labTechnicianPhoneNumber;
 	
 	@OneToOne(targetEntity = Department.class)
 	@JoinColumn(name = "dept_id", referencedColumnName = "department_id", foreignKey = @ForeignKey(name = "department_LABTECH_FK"))
@@ -92,17 +92,17 @@ public class LabTechnician {
 	 *
 	 * @return the labTechnicianRegId
 	 */
-	public Integer getLabTechnicianRegId() {
+	public String getLabTechnicianRegId() {
 		return labTechnicianRegId;
 	}
 
 	/**
 	 * Set the labTechnicianRegId of LabTechnician.
 	 *
-	 * @param labTechnicianRegId the labTechnicianRegId to set
+	 * @param string the labTechnicianRegId to set
 	 */
-	public void setLabTechnicianRegId(Integer labTechnicianRegId) {
-		this.labTechnicianRegId = labTechnicianRegId;
+	public void setLabTechnicianRegId(String string) {
+		this.labTechnicianRegId = string;
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class LabTechnician {
 	 *
 	 * @return the labTechnicianPhoneNumber
 	 */
-	public Integer getLabTechnicianPhoneNumber() {
+	public String getLabTechnicianPhoneNumber() {
 		return labTechnicianPhoneNumber;
 	}
 
@@ -173,7 +173,7 @@ public class LabTechnician {
 	 *
 	 * @param labTechnicianPhoneNumber the labTechnicianPhoneNumber to set
 	 */
-	public void setLabTechnicianPhoneNumber(Integer labTechnicianPhoneNumber) {
+	public void setLabTechnicianPhoneNumber(String labTechnicianPhoneNumber) {
 		this.labTechnicianPhoneNumber = labTechnicianPhoneNumber;
 	}
 

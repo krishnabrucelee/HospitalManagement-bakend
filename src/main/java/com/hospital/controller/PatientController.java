@@ -68,4 +68,11 @@ public class PatientController {
 	public @ResponseBody JSONObject delete(@RequestBody JSONObject patientId) {
 		return patientService.deletePatient(patientId);
 	}
+	
+	@RequestMapping(value = "/getPatientDetailsById", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getPatientDetailsById(@RequestBody JSONObject patient) {
+	
+		System.out.println(patient);
+		return patientService.getPatientDetailsById(patient);
+	}
 }

@@ -17,7 +17,7 @@ public interface StaffService {
 	 * @param staff
 	 * @return staff
 	 */
-	public JSONObject addStaff(JSONObject staff);
+	public JSONObject addStaff(JSONObject staff) throws Exception;
 
 	/**
 	 * List Staff.

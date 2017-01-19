@@ -27,7 +27,7 @@ public class Permission implements Serializable {
     private String action;
 
     /** Action key of the Permission. */
-    @Column(name = "action_key", nullable = false)
+    @Column(name = "action_key")
     private String actionKey;
 
     /** Description of the Permission. */
@@ -142,8 +142,11 @@ public class Permission implements Serializable {
     public enum Module {
 
         Laboratory,
-        Diet,
-        Emr
+        Pharamacy,
+        Emr,
+        Finance,
+        Patient,
+        Appointment
     }
 
     @Override

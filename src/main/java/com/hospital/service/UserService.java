@@ -54,6 +54,6 @@ public interface UserService {
 	 * @param user
 	 * @return
 	 */
-	public JSONObject checkUser(JSONObject user);
+	public JSONObject checkUser(JSONObject user) throws Exception;
 
 }

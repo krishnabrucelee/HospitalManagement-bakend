@@ -32,7 +32,7 @@ public class HouseKeeping {
 	private Integer houseKeeperId;
 	
 	@Column(name = "houseKeeper_reg_id")
-	private Integer houseKeeperRegId;
+	private String houseKeeperRegId;
 	
 	@Column(name = "staff_id")
 	private String staffId;
@@ -64,9 +64,9 @@ public class HouseKeeping {
 	@JoinColumn(name = "dept_id", referencedColumnName = "department_id", foreignKey = @ForeignKey(name = "department_houseKeeping_FK"))
 	private Department department;
 	
-	@OneToOne(targetEntity = Ward.class)
-	@JoinColumn(name = "ward_id", referencedColumnName = "ward_id", foreignKey = @ForeignKey(name = "ward_houseKeeping_FK"))
-	private Ward ward;
+	@OneToOne(targetEntity = RoomManagement.class)
+	@JoinColumn(name = "room_management_id", referencedColumnName = "room_management_id", foreignKey = @ForeignKey(name = "room_management_houseKeeping_FK"))
+	private RoomManagement roomManagement;
 
     /** User role. */
     @OneToOne(targetEntity = Role.class)
@@ -106,17 +106,17 @@ public class HouseKeeping {
 	 *
 	 * @return the houseKeeperRegId
 	 */
-	public Integer getHouseKeeperRegId() {
+	public String getHouseKeeperRegId() {
 		return houseKeeperRegId;
 	}
 
 	/**
 	 * Set the houseKeeperRegId of HouseKeeping.
 	 *
-	 * @param houseKeeperRegId the houseKeeperRegId to set
+	 * @param string the houseKeeperRegId to set
 	 */
-	public void setHouseKeeperRegId(Integer houseKeeperRegId) {
-		this.houseKeeperRegId = houseKeeperRegId;
+	public void setHouseKeeperRegId(String string) {
+		this.houseKeeperRegId = string;
 	}
 
 	/**
@@ -283,21 +283,21 @@ public class HouseKeeping {
 	}
 
 	/**
-	 * Get the ward of HouseKeeping.
+	 * Get the roomManagement of HouseKeeping.
 	 *
-	 * @return the ward
+	 * @return the roomManagement
 	 */
-	public Ward getWard() {
-		return ward;
+	public RoomManagement getRoomManagement() {
+		return roomManagement;
 	}
 
 	/**
-	 * Set the ward of HouseKeeping.
+	 * Set the roomManagement of HouseKeeping.
 	 *
-	 * @param ward the ward to set
+	 * @param roomManagement the roomManagement to set
 	 */
-	public void setWard(Ward ward) {
-		this.ward = ward;
+	public void setRoomManagement(RoomManagement roomManagement) {
+		this.roomManagement = roomManagement;
 	}
 
 	/**

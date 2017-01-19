@@ -50,4 +50,10 @@ public interface DoctorService {
 	 * @return
 	 */
 	public Doctor addDoctorFromStaff(Doctor doctor);
+
+	/**
+	 * @param doctorEmail
+	 * @return
+	 */
+	public JSONObject getDoctorByEmail(JSONObject doctorEmail);
 }

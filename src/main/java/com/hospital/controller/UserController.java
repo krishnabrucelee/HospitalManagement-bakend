@@ -76,7 +76,7 @@ public class UserController {
 		 * @return user
 		 */
 		@RequestMapping(value = "/checkUser")
-		public @ResponseBody JSONObject checkUser(@RequestBody JSONObject user) {
+		public @ResponseBody JSONObject checkUser(@RequestBody JSONObject user) throws Exception {
 			return userService.checkUser(user);
 		}
 }

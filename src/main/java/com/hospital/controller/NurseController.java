@@ -69,4 +69,9 @@ public class NurseController {
 	public @ResponseBody JSONObject deleteNurse(@RequestBody JSONObject nurseId) {
 		return nurseService.deleteNurse(nurseId);
 	}
+	
+	@RequestMapping(value = "/getNurseByEmail", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getNurseByEmail(@RequestBody JSONObject nurseEmail) {
+		return nurseService.getNurseByEmail(nurseEmail);
+	}
 }

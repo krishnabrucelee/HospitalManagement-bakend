@@ -86,6 +86,18 @@ public class Staff {
 	@JoinColumn(name = "pharmacist_id", referencedColumnName = "pharmacist_id", foreignKey = @ForeignKey(name = "pharmacist_STF_FK"))
 	private Pharmacist pharmacist;
 	
+	@OneToOne(targetEntity = Receptionist.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "receptionist_id", referencedColumnName = "receptionist_id", foreignKey = @ForeignKey(name = "receptionist_STF_FK"))
+	private Receptionist receptionist;
+	
+	@OneToOne(targetEntity = Inventory.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "inventory_id", referencedColumnName = "inventory_id", foreignKey = @ForeignKey(name = "inventory_STF_FK"))
+	private Inventory inventory;
+	
+	@OneToOne(targetEntity = Finance.class, cascade = CascadeType.ALL)
+	@JoinColumn(name = "finance_id", referencedColumnName = "finance_id", foreignKey = @ForeignKey(name = "finance_STF_FK"))
+	private Finance finance;
+	
 	/**
 	 * Get the staffId of Staff.
 	 *
@@ -372,6 +384,59 @@ public class Staff {
 	 */
 	public void setPharmacist(Pharmacist pharmacist) {
 		this.pharmacist = pharmacist;
+	}
+
+	/**
+	 * Get the pharmacist of Staff.
+	 *
+	 * @return the pharmacist
+	 */
+	public Receptionist getReceptionist() {
+		return receptionist;
+	}
+	
+	/**
+	 * @param receptionist
+	 */
+	public void setReceptionist(Receptionist receptionist) {
+		this.receptionist = receptionist;
+		
+	}
+
+	/**
+	 * Get the inventory of Staff.
+	 *
+	 * @return the inventory
+	 */
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	/**
+	 * Set the inventory of Staff.
+	 *
+	 * @param inventory the inventory to set
+	 */
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
+
+	/**
+	 * Get the finance of Staff.
+	 *
+	 * @return the finance
+	 */
+	public Finance getFinance() {
+		return finance;
+	}
+
+	/**
+	 * Set the finance of Staff.
+	 *
+	 * @param finance the finance to set
+	 */
+	public void setFinance(Finance finance) {
+		this.finance = finance;
 	}
 	
 	

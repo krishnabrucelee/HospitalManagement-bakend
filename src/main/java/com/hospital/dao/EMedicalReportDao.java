@@ -3,6 +3,7 @@
  */
 package com.hospital.dao;
 
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.EMedicalReport;
 import com.hospital.model.InPatient;
+import com.hospital.model.Nurse;
 import com.hospital.model.Patient;
 import com.hospital.model.Doctor;
 
@@ -49,12 +51,22 @@ public class EMedicalReportDao {
 		ObjectMapper om = new ObjectMapper();
 		om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		EMedicalReport appoint = om.convertValue(eMedicalReport, EMedicalReport.class);
-		// Load Doctor
-		Doctor doctorDetails = session.load(Doctor.class, (Integer) eMedicalReport.get("doctor_id"));
-		appoint.setDoctor(doctorDetails);
-		// Load Patient
-		Patient patientDetails = session.load(Patient.class, (Integer) eMedicalReport.get("patient_id"));
-		appoint.setPatient(patientDetails);
+		appoint.setTimeShedule(new Date());
+		if (eMedicalReport.get("doctor_id") != null) {
+			// Load Doctor
+			Doctor doctorDetails = session.load(Doctor.class, (Integer) eMedicalReport.get("doctor_id"));
+			appoint.setDoctor(doctorDetails);
+		}
+		if (eMedicalReport.get("nurse_id") != null) {
+			// Load Doctor
+			Nurse nurseDetails = session.load(Nurse.class, (Integer) eMedicalReport.get("nurse_id"));
+			appoint.setNurse(nurseDetails);
+		}
+		if (eMedicalReport.get("patient_id") != null) {
+			// Load Patient
+			Patient patientDetails = session.load(Patient.class, (Integer) eMedicalReport.get("patient_id"));
+			appoint.setPatient(patientDetails);
+		}
 
 		try {
 			System.out.println("Inside Dao11 PATIENT");
@@ -88,6 +100,10 @@ public class EMedicalReportDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -98,8 +114,12 @@ public class EMedicalReportDao {
 		try {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
-			EMedicalReport eMedicalReportDetails = session.load(EMedicalReport.class,
+			EMedicalReport eMedicalReportDetails = session.get(EMedicalReport.class,
 					(Integer) eMedicalReport.get("eMedicalReportId"));
+//			eMedicalReportDetails.setMedicalReport(eMedicalReport.get("medicalReport").toString());
+//			eMedicalReportDetails.setPatientExamination(eMedicalReport.get("patientExamination").toString());
+//			eMedicalReportDetails.setPatientHistory(eMedicalReport.get("patientHistory").toString());
+//			eMedicalReportDetails.setPatientTreatment(eMedicalReport.get("patientTreatment").toString());
 			session.update(eMedicalReportDetails);
 			transaction.commit();
 		} catch (Exception e) {
@@ -107,18 +127,26 @@ public class EMedicalReportDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
 
-	public EMedicalReport getEMedicalReport(Integer eMedicalReportId) {
+	public EMedicalReport getEMedicalReport(Long eMedicalReportId) {
 		EMedicalReport eMedicalReport = null;
 		try {
+			session = sessionFactory.openSession();
 			session.beginTransaction();
-			session.get(EMedicalReport.class, eMedicalReportId);
-			eMedicalReport = (EMedicalReport) session.get(EMedicalReport.class, eMedicalReportId);
+			eMedicalReport = (EMedicalReport) session.load(EMedicalReport.class, eMedicalReportId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (eMedicalReport != null) {
 			return eMedicalReport;
@@ -142,6 +170,10 @@ public class EMedicalReportDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -159,7 +191,7 @@ public class EMedicalReportDao {
 		List<EMedicalReport> eMedicalReportList = null;
 		try {
 			Query query = session.createQuery("FROM EMedicalReport WHERE patient_id = :id");
-			query.setParameter("id", (Integer) patientId.get("patient_id"));
+			query.setParameter("id", patientId.get("id"));
 			eMedicalReportList = query.list();
 			status.put("EMedicalReport", eMedicalReportList);
 			status.put("result", true);
@@ -167,6 +199,10 @@ public class EMedicalReportDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

@@ -49,4 +49,9 @@ public class NurseServiceImpl implements NurseService {
 		return nursedao.addNurseFromStaff(nurse);
 	}
 
+	@Override
+	public JSONObject getNurseByEmail(JSONObject nurseEmail) {
+		return nursedao.getNurseByEmail(nurseEmail);
+	}
+
 }

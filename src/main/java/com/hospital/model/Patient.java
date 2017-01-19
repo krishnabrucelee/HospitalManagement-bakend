@@ -60,6 +60,9 @@ public class Patient implements Serializable {
 	@Column(name = "patient_guardian")
 	private String patientGuardian;
 
+	@Column(name = "ward_number")
+	private String wardNumber;
+	
 	@Column(name = "blood_group")
 	private String bloodGroup;
 
@@ -334,6 +337,24 @@ public class Patient implements Serializable {
 	 */
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	/**
+	 * Get the wardNumber of Patient.
+	 *
+	 * @return the wardNumber
+	 */
+	public String getWardNumber() {
+		return wardNumber;
+	}
+
+	/**
+	 * Set the wardNumber of Patient.
+	 *
+	 * @param wardNumber the wardNumber to set
+	 */
+	public void setWardNumber(String wardNumber) {
+		this.wardNumber = wardNumber;
 	}
 
 }

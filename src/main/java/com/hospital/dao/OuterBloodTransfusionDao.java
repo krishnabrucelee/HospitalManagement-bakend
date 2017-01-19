@@ -93,6 +93,10 @@ public class OuterBloodTransfusionDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -112,6 +116,10 @@ public class OuterBloodTransfusionDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -124,6 +132,10 @@ public class OuterBloodTransfusionDao {
 			outerBloodTrans = (OuterBloodTransfusion) session.get(OuterBloodTransfusion.class, outerBloodTransId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (outerBloodTrans != null) {
 			return outerBloodTrans;
@@ -147,6 +159,10 @@ public class OuterBloodTransfusionDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

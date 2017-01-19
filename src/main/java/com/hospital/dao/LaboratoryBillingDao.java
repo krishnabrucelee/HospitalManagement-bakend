@@ -90,6 +90,10 @@ public class LaboratoryBillingDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -109,6 +113,10 @@ public class LaboratoryBillingDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -121,6 +129,10 @@ public class LaboratoryBillingDao {
 			laboratoryBilling = (LaboratoryBilling) session.get(LaboratoryBilling.class, laboratoryBillingId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (laboratoryBilling != null) {
 			return laboratoryBilling;
@@ -144,6 +156,10 @@ public class LaboratoryBillingDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
