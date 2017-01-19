@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hospital.dao.EMedicalReportDao;
+import com.hospital.model.EMedicalReport;
 import com.hospital.service.EMedicalReportService;
 
 /**
@@ -25,7 +26,11 @@ public class EMedicalReportServiceImpl implements EMedicalReportService {
 	
 	@Override
 	public JSONObject addEMedicalReport(JSONObject eMedicalReport) {
-		return eMedicalReportdao.addEMedicalReport(eMedicalReport);
+//		if (eMedicalReport.get("eMedicalReportId") != null) {
+//			return updateEMedicalReport(eMedicalReport);
+//		} else {
+			return eMedicalReportdao.addEMedicalReport(eMedicalReport);
+//		}
 	}
 
 	@Override

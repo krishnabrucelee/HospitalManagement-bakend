@@ -94,6 +94,10 @@ public class PatientBillingDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -113,6 +117,10 @@ public class PatientBillingDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -125,6 +133,10 @@ public class PatientBillingDao {
 			patientBilling = (PatientBilling) session.get(PatientBilling.class, patientBillingId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (patientBilling != null) {
 			return patientBilling;
@@ -148,6 +160,10 @@ public class PatientBillingDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

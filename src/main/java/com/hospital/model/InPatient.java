@@ -31,9 +31,9 @@ public class InPatient implements Serializable {
 	@Column(name = "in_patient_description")
 	private String inPatientDescription;
 	
-	@OneToOne(targetEntity = Ward.class)
-	@JoinColumn(name = "ward_id", referencedColumnName = "ward_id", foreignKey = @ForeignKey(name = "ward_INP_FK"))
-	private Ward ward;
+	@OneToOne(targetEntity = RoomManagement.class)
+	@JoinColumn(name = "room_management_id", referencedColumnName = "room_management_id", foreignKey = @ForeignKey(name = "room_management_INP_FK"))
+	private RoomManagement roomManagement;
 
 	/**
 	 * Get the inPatientId of InPatient.
@@ -108,21 +108,22 @@ public class InPatient implements Serializable {
 	}
 
 	/**
-	 * Get the ward of InPatient.
+	 * Get the roomManagement of InPatient.
 	 *
-	 * @return the ward
+	 * @return the roomManagement
 	 */
-	public Ward getWard() {
-		return ward;
+	public RoomManagement getRoomManagement() {
+		return roomManagement;
 	}
 
 	/**
-	 * Set the ward of InPatient.
+	 * Set the roomManagement of InPatient.
 	 *
-	 * @param ward the ward to set
+	 * @param roomManagement the roomManagement to set
 	 */
-	public void setWard(Ward ward) {
-		this.ward = ward;
+	public void setRoomManagement(RoomManagement roomManagement) {
+		this.roomManagement = roomManagement;
 	}
-	
+
+
 }

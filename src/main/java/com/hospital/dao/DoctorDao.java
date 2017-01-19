@@ -3,6 +3,9 @@
  */
 package com.hospital.dao;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -15,6 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Department;
 import com.hospital.model.Doctor;
+import com.hospital.model.Patient;
 
 /**
  * @author Krishna
@@ -50,6 +54,8 @@ public class DoctorDao {
 		//Load Department 
 		Department departmentDetails = session.load(Department.class, (Integer) doctor.get("department_id"));
 		user.setDepartment(departmentDetails);
+//		departmentDetails.setPatientRefNumber(String.valueOf(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)));
+//		departmentDetails.setCreatedDate(new Date());
 		try {
 			System.out.println("Inside Dao11 PATIENT");
 			session.save(user);
@@ -82,6 +88,10 @@ public class DoctorDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -104,6 +114,10 @@ public class DoctorDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -116,6 +130,10 @@ public class DoctorDao {
 			doctor = (Doctor) session.get(Doctor.class, doctorId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (doctor != null) {
 			return doctor;
@@ -138,6 +156,10 @@ public class DoctorDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -154,8 +176,42 @@ public class DoctorDao {
 			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return doctor;
+	}
+
+	/**
+	 * @param doctorEmail
+	 * @return
+	 */
+	public JSONObject getDoctorByEmail(JSONObject doctorEmail) {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		List<Doctor> doctorDetailsList = null;
+		try {
+			Query query = session.createQuery("FROM Doctor WHERE doctor_email = :email");
+			query.setParameter("email", doctorEmail.get("email").toString());
+			doctorDetailsList = query.list();
+			status.put("Doctor", doctorDetailsList.iterator());
+			System.out.println(" Inside Rest DAO Bus Status="+status);
+			transaction.commit();
+			return status;	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+		return status;
 	}
 
 }

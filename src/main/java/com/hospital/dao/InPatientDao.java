@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Doctor;
 import com.hospital.model.InPatient;
-import com.hospital.model.Ward;
+import com.hospital.model.RoomManagement;
 
 /**
  * @author Krishna
@@ -52,8 +52,8 @@ public class InPatientDao {
 		InPatient user = om.convertValue(inPatient, InPatient.class);
 
 		// Load Ward
-		Ward inWardDetails = session.load(Ward.class, (Integer) inPatient.get("Ward_id"));
-		user.setWard(inWardDetails);
+		RoomManagement inWardDetails = session.load(RoomManagement.class, (Integer) inPatient.get("room_management_id"));
+		user.setRoomManagement(inWardDetails);
 				
 		try {
 			System.out.println("Inside Dao11 PATIENT");
@@ -87,6 +87,10 @@ public class InPatientDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -106,6 +110,10 @@ public class InPatientDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -118,6 +126,10 @@ public class InPatientDao {
 			inPatient = (InPatient) session.get(InPatient.class, inPatientId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (inPatient != null) {
 			return inPatient;
@@ -141,6 +153,10 @@ public class InPatientDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

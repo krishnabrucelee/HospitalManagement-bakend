@@ -51,7 +51,8 @@
 		<mapping class="com.hospital.model.TransferDoctorDetails" />
 		<mapping class="com.hospital.model.WantedStock" />
 		<mapping class="com.hospital.model.WantedStockList" />
-		<mapping class="com.hospital.model.Ward" />
+		<mapping class="com.hospital.model.Floor" />
+		<mapping class="com.hospital.model.RoomManagement" />
 		<mapping class="com.hospital.model.Ambulance" />
 		<mapping class="com.hospital.model.Tariff" />
 		<mapping class="com.hospital.model.Driver" />
@@ -65,7 +66,19 @@
 		<mapping class="com.hospital.model.BioMedicalType" />
 		<mapping class="com.hospital.model.BioMedicalWaste" />
 		<mapping class="com.hospital.model.BioMedicalWasteDepartment" />
-		
+		<mapping class="com.hospital.model.Receptionist" />
+		<mapping class="com.hospital.model.Inventory" />
+		<mapping class="com.hospital.model.Finance" />
+		<mapping class="com.hospital.model.PatientDiagnosis" />
+		<mapping class="com.hospital.model.PatientTreatment" />
+		<mapping class="com.hospital.model.PatientExamination" />
+		<mapping class="com.hospital.model.PatientHistory" />
+		<mapping class="com.hospital.model.AdmitPatient" />
+		<mapping class="com.hospital.model.BillingMaster" />
+		<mapping class="com.hospital.model.BillingChart" />
+		<mapping class="com.hospital.model.InventoryItems" />
+		<mapping class="com.hospital.model.AccountCategoryChart" />			                            
+					                            
 					                            
 	<mapping class="com.hospital.model.PharmacyOrder" />
 	<mapping class="com.hospital.model.SupplierInformation" />

@@ -91,6 +91,10 @@ public class PurchaseOrderDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -110,6 +114,10 @@ public class PurchaseOrderDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -122,6 +130,10 @@ public class PurchaseOrderDao {
 			purchaseOrder = (PurchaseOrder) session.get(PurchaseOrder.class, purchaseOrderId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (purchaseOrder != null) {
 			return purchaseOrder;
@@ -145,6 +157,10 @@ public class PurchaseOrderDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

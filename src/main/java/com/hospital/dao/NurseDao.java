@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Nurse;
-import com.hospital.model.Doctor;
+import com.hospital.model.Nurse;
 import com.hospital.model.InPatient;
 
 /**
@@ -83,6 +83,10 @@ public class NurseDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -102,6 +106,10 @@ public class NurseDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -114,6 +122,10 @@ public class NurseDao {
 			nurse = (Nurse) session.get(Nurse.class, nurseId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (nurse != null) {
 			return nurse;
@@ -137,6 +149,10 @@ public class NurseDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -154,8 +170,42 @@ public class NurseDao {
 			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return nurse;
+	}
+
+	/**
+	 * @param nurseEmail
+	 * @return
+	 */
+	public JSONObject getNurseByEmail(JSONObject nurseEmail) {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		List<Nurse> nurseDetailsList = null;
+		try {
+			Query query = session.createQuery("FROM Nurse WHERE nurse_email = :email");
+			query.setParameter("email", nurseEmail.get("email").toString());
+			nurseDetailsList = query.list();
+			status.put("Nurse", nurseDetailsList.iterator());
+			System.out.println(" Inside Rest DAO Bus Status="+status);
+			transaction.commit();
+			return status;	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+		return status;
 	}
 
 }

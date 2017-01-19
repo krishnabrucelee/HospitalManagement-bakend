@@ -33,7 +33,7 @@ public class StaffController {
 	 * @return staff
 	 */
 	@RequestMapping(value = "/addStaff", method = RequestMethod.POST)
-	public @ResponseBody JSONObject addStaff(@RequestBody JSONObject staff) {
+	public @ResponseBody JSONObject addStaff(@RequestBody JSONObject staff) throws Exception {
 		return staffService.addStaff(staff);
 	}
 

@@ -2,7 +2,9 @@ package com.hospital.dao;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -11,9 +13,18 @@ import org.hibernate.Transaction;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.hospital.model.AdmitPatient;
+import com.hospital.model.Floor;
 import com.hospital.model.Patient;
+import com.hospital.model.RoomManagement;
+import com.hospital.service.AdmitPatientService;
+import com.hospital.service.FloorService;
+import com.hospital.service.RoomManagementService;
 
 /**
  * Patient Dao
@@ -31,6 +42,15 @@ public class PatientDao {
 	 */
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	@Autowired
+	private AdmitPatientService admitPatientService;
+	
+	@Autowired
+	private RoomManagementService roomManagementService;
+	
+	@Autowired
+	private FloorService floorService;
 
 	static {
 		System.out.println("class PatientDao executed");
@@ -50,6 +70,26 @@ public class PatientDao {
 		Patient patientDetails = om.convertValue(patient, Patient.class);
 		patientDetails.setPatientRefNumber(String.valueOf(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)));
 		patientDetails.setCreatedDate(new Date());
+		
+		AdmitPatient admission = new AdmitPatient();
+		admission.setPatientId(patientDetails.getPatientRefNumber());
+		admission.setWardNumber(patientDetails.getWardNumber());
+		admission.setCreatedDate(patientDetails.getCreatedDate());
+		admitPatientService.addAdmission(admission);
+		
+		List<Floor> floorList = floorService.getRoomDetailsByWardNumber(patient);
+		
+		for(Floor floor : floorList) {
+			System.out.println(floor.getRoomManagement());
+			for(RoomManagement room : floor.getRoomManagement()) {
+				System.out.println(room);
+				if (room.getWardNumber().equals(patient.get("wardNumber"))) {
+					room.setIsAvailable(true);
+					roomManagementService.addRoomManagement(room);
+				}
+			}
+		}
+		
 		try {
 			System.out.println("Inside Dao11 PATIENT");
 			session.save(patientDetails);
@@ -82,6 +122,10 @@ public class PatientDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -101,6 +145,10 @@ public class PatientDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -113,6 +161,10 @@ public class PatientDao {
 			patient = (Patient) session.get(Patient.class, patientId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (patient != null) {
 			return patient;
@@ -135,6 +187,58 @@ public class PatientDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * @param patient
+	 * @return
+	 */
+	public JSONObject getPatientDetailsById(JSONObject patient) {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		List<Patient> patientDetailsList = null;
+//		  ObjectMapper mapper = new ObjectMapper();
+//        SimpleModule module = new SimpleModule();        
+//        module.addSerializer(com.monitorjbl.json.JsonView.class,new JsonViewSerializer());
+//        mapper.registerModule(module);
+		Integer patientId = Integer.parseInt(patient.get("id").toString());
+		try {
+			Query query = session.createQuery("FROM Patient WHERE patient_id = :id");
+			query.setParameter("id", patientId);
+			patientDetailsList = query.list();
+//			String json = mapper.writeValueAsString(JsonView.with(patientDetailsList)
+//					.onClass(BusAvailability.class,com.monitorjbl.json.Match.match().exclude("busDetails")));  
+//			
+//			
+//			System.out.println(json);
+//             ArrayList<Object> convertedValue = mapper.readValue(json,new TypeReference<ArrayList<Object>>() {});
+//                   
+//			if(convertedValue.isEmpty() | convertedValue == null)
+//			{
+//				status.put("status",false);
+//				return status;
+//			}		
+//			status.put("Buses", convertedValue.iterator());
+			status.put("Patient", patientDetailsList.iterator());
+			System.out.println(" Inside Rest DAO Bus Status="+status);
+			transaction.commit();
+			return status;	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

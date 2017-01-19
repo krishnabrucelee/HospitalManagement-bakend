@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+   <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+    <c:set var="role" value='<%=session.getAttribute("role")%>'></c:set>
+<c:set var="permission" value='<%=session.getAttribute("permission")%>'></c:set>
+<c:set var="module" value='<%=session.getAttribute("module")%>'></c:set>
+<c:set var="roleList" value='<%=session.getAttribute("roleList")%>'></c:set>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -27,6 +32,7 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
+  
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">

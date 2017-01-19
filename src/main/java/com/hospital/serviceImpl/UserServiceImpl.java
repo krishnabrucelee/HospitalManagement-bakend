@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public JSONObject checkUser(JSONObject user) {
+	public JSONObject checkUser(JSONObject user) throws Exception {
 		return userdao.checkUser(user);
 	}
 

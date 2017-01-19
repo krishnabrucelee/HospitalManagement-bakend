@@ -51,4 +51,10 @@ public interface NurseService {
 	 */
 	public Nurse addNurseFromStaff(Nurse nurse);
 
+	/**
+	 * @param nurseEmail
+	 * @return
+	 */
+	public JSONObject getNurseByEmail(JSONObject nurseEmail);
+
 }

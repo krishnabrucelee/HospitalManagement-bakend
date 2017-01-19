@@ -80,6 +80,10 @@ public class BioMedicalTypeDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -99,6 +103,10 @@ public class BioMedicalTypeDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -111,6 +119,10 @@ public class BioMedicalTypeDao {
 			bioMedicalType = (BioMedicalType) session.get(BioMedicalType.class, bioMedicalTypeId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (bioMedicalType != null) {
 			return bioMedicalType;
@@ -134,6 +146,10 @@ public class BioMedicalTypeDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

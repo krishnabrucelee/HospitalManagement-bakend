@@ -32,7 +32,7 @@ public class Nurse {
 	private Integer nurseId;
 	
 	@Column(name = "nurse_reg_id")
-	private Integer nurseRegId;
+	private String nurseRegId;
 	
 	@Column(name = "staff_id")
 	private Integer staffId;
@@ -49,7 +49,7 @@ public class Nurse {
 	private String nurseEmail;
 	
 	@Column(name = "nurse_phone")
-	private Integer nursePhoneNumber;
+	private String nursePhoneNumber;
 	
 	@Column(name = "nurse_shift")
 	private String nurseShift;
@@ -58,9 +58,9 @@ public class Nurse {
 	@JoinColumn(name = "dept_id", referencedColumnName = "department_id", foreignKey = @ForeignKey(name = "department_NURSE_FK"))
 	private Department department;
 	
-	@OneToOne(targetEntity = Ward.class)
-	@JoinColumn(name = "ward_id", referencedColumnName = "ward_id", foreignKey = @ForeignKey(name = "ward_NURSE_FK"))
-	private Ward ward;
+	@OneToOne(targetEntity = RoomManagement.class)
+	@JoinColumn(name = "room_management_id", referencedColumnName = "room_management_id", foreignKey = @ForeignKey(name = "room_management_NURSE_FK"))
+	private RoomManagement roomManagement;
 
     /** User role. */
     @OneToOne(targetEntity = Role.class)
@@ -100,17 +100,17 @@ public class Nurse {
 	 *
 	 * @return the nurseRegId
 	 */
-	public Integer getNurseRegId() {
+	public String getNurseRegId() {
 		return nurseRegId;
 	}
 
 	/**
 	 * Set the nurseRegId of Nurse.
 	 *
-	 * @param nurseRegId the nurseRegId to set
+	 * @param string the nurseRegId to set
 	 */
-	public void setNurseRegId(Integer nurseRegId) {
-		this.nurseRegId = nurseRegId;
+	public void setNurseRegId(String string) {
+		this.nurseRegId = string;
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class Nurse {
 	 *
 	 * @return the nursePhoneNumber
 	 */
-	public Integer getNursePhoneNumber() {
+	public String getNursePhoneNumber() {
 		return nursePhoneNumber;
 	}
 
@@ -200,7 +200,7 @@ public class Nurse {
 	 *
 	 * @param nursePhoneNumber the nursePhoneNumber to set
 	 */
-	public void setNursePhoneNumber(Integer nursePhoneNumber) {
+	public void setNursePhoneNumber(String nursePhoneNumber) {
 		this.nursePhoneNumber = nursePhoneNumber;
 	}
 
@@ -240,22 +240,23 @@ public class Nurse {
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
+
 	/**
-	 * Get the ward of HouseKeeping.
+	 * Get the roomManagement of Nurse.
 	 *
-	 * @return the ward
+	 * @return the roomManagement
 	 */
-	public Ward getWard() {
-		return ward;
+	public RoomManagement getRoomManagement() {
+		return roomManagement;
 	}
 
 	/**
-	 * Set the ward of HouseKeeping.
+	 * Set the roomManagement of Nurse.
 	 *
-	 * @param ward the ward to set
+	 * @param roomManagement the roomManagement to set
 	 */
-	public void setWard(Ward ward) {
-		this.ward = ward;
+	public void setRoomManagement(RoomManagement roomManagement) {
+		this.roomManagement = roomManagement;
 	}
 
 	/**

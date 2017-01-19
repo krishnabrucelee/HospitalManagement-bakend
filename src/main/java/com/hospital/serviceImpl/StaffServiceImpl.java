@@ -24,7 +24,7 @@ public class StaffServiceImpl implements StaffService {
 	StaffDao staffdao;
 	
 	@Override
-	public JSONObject addStaff(JSONObject staff) {
+	public JSONObject addStaff(JSONObject staff) throws Exception {
 		return staffdao.addStaff(staff);
 	}
 

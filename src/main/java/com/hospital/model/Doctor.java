@@ -32,7 +32,7 @@ public class Doctor implements Serializable {
 	private Integer doctorId;
 	
 	@Column(name = "doctor_reg_id")
-	private Integer doctorRegId;
+	private String doctorRegId;
 	
 	@Column(name = "doctor_name")
 	private String doctorName;
@@ -114,17 +114,17 @@ public class Doctor implements Serializable {
 	 *
 	 * @return the doctorRegId
 	 */
-	public Integer getDoctorRegId() {
+	public String getDoctorRegId() {
 		return doctorRegId;
 	}
 
 	/**
 	 * Set the doctorRegId of Doctor.
 	 *
-	 * @param doctorRegId the doctorRegId to set
+	 * @param string the doctorRegId to set
 	 */
-	public void setDoctorRegId(Integer doctorRegId) {
-		this.doctorRegId = doctorRegId;
+	public void setDoctorRegId(String string) {
+		this.doctorRegId = string;
 	}
 
 	/**

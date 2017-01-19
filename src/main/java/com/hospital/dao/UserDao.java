@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.EMedicalReport;
 import com.hospital.model.Users;
+import com.hospital.util.AESCrypt;
 
 /**
  * @author Krishna
@@ -82,6 +83,10 @@ public class UserDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -101,6 +106,10 @@ public class UserDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -113,6 +122,10 @@ public class UserDao {
 			user = (Users) session.get(Users.class, userId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (user != null) {
 			return user;
@@ -136,6 +149,10 @@ public class UserDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -152,6 +169,10 @@ public class UserDao {
 			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return user;
 	}
@@ -166,17 +187,41 @@ public class UserDao {
 		session = sessionFactory.openSession();
 		transaction = session.beginTransaction();
 		List<Users> userList = null;
+		
+		 
 		try {
-			Query query = session.createQuery("FROM Users WHERE userEmail = :userEmail and password = :password");
+			Query query = session.createQuery("FROM Users WHERE userEmail = :userEmail");
 			query.setParameter("userEmail", user.get("userEmail"));
-			query.setParameter("password", user.get("password"));
 			userList = query.list();
-			status.put("user", userList);
-			status.put("result", true);
+			
+			if (userList.size() == 1) {
+				for (Users userDetails : userList) {
+
+					String encryptedPassword = AESCrypt.encrypt(user.get("password").toString());
+					
+					if (userDetails.getPassword().equals(encryptedPassword)) {
+						status.put("user", userList);
+						status.put("result", true);
+					} else {
+						status.put("user", "Password mismatch !!");
+						status.put("result", false);
+					}
+				}
+			} else {
+				status.put("user", "Duplicate user!!");
+				status.put("result", false);
+			}
+			
+//			status.put("user", userList);
+//			status.put("result", true);
 			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

@@ -83,6 +83,10 @@ public class BloodBankDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -102,6 +106,10 @@ public class BloodBankDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -114,6 +122,10 @@ public class BloodBankDao {
 			bloodBank = (BloodBank) session.get(BloodBank.class, bloodBankId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (bloodBank != null) {
 			return bloodBank;
@@ -137,6 +149,10 @@ public class BloodBankDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -154,6 +170,10 @@ public class BloodBankDao {
 			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return bloodBank;
 	}
@@ -171,6 +191,10 @@ public class BloodBankDao {
 			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return bloodBankId;
 	}

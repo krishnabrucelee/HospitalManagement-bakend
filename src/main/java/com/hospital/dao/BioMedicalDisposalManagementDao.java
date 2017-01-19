@@ -89,6 +89,10 @@ public class BioMedicalDisposalManagementDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -108,6 +112,10 @@ public class BioMedicalDisposalManagementDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -120,6 +128,10 @@ public class BioMedicalDisposalManagementDao {
 			bioMedicalDisposalManagement = (BioMedicalDisposalManagement) session.get(BioMedicalDisposalManagement.class, bioMedicalDisposalManagementId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (bioMedicalDisposalManagement != null) {
 			return bioMedicalDisposalManagement;
@@ -143,6 +155,10 @@ public class BioMedicalDisposalManagementDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}

@@ -33,7 +33,7 @@ public class Pharmacist {
 	private Integer pharmacistId;
 	
 	@Column(name = "pharmacist_reg_id")
-	private Integer pharmacistRegId;
+	private String pharmacistRegId;
 	
 	@Column(name = "staff_id")
 	private Integer staffId;
@@ -47,7 +47,7 @@ public class Pharmacist {
 	private String pharmacistEmail;
 	
 	@Column(name = "pharmacist_phone")
-	private Integer pharmacistPhoneNumber;
+	private String pharmacistPhoneNumber;
 	
 	@OneToOne(targetEntity = Department.class)
 	@JoinColumn(name = "dept_id", referencedColumnName = "department_id", foreignKey = @ForeignKey(name = "department_PHAMCIST_FK"))
@@ -91,17 +91,17 @@ public class Pharmacist {
 	 *
 	 * @return the pharmacistRegId
 	 */
-	public Integer getPharmacistRegId() {
+	public String getPharmacistRegId() {
 		return pharmacistRegId;
 	}
 
 	/**
 	 * Set the pharmacistRegId of Pharmacist.
 	 *
-	 * @param pharmacistRegId the pharmacistRegId to set
+	 * @param string the pharmacistRegId to set
 	 */
-	public void setPharmacistRegId(Integer pharmacistRegId) {
-		this.pharmacistRegId = pharmacistRegId;
+	public void setPharmacistRegId(String string) {
+		this.pharmacistRegId = string;
 	}
 
 	/**
@@ -163,17 +163,17 @@ public class Pharmacist {
 	 *
 	 * @return the pharmacistPhoneNumber
 	 */
-	public Integer getPharmacistPhoneNumber() {
+	public String getPharmacistPhoneNumber() {
 		return pharmacistPhoneNumber;
 	}
 
 	/**
 	 * Set the pharmacistPhoneNumber of Pharmacist.
 	 *
-	 * @param pharmacistPhoneNumber the pharmacistPhoneNumber to set
+	 * @param string the pharmacistPhoneNumber to set
 	 */
-	public void setPharmacistPhoneNumber(Integer pharmacistPhoneNumber) {
-		this.pharmacistPhoneNumber = pharmacistPhoneNumber;
+	public void setPharmacistPhoneNumber(String string) {
+		this.pharmacistPhoneNumber = string;
 	}
 
 	/**

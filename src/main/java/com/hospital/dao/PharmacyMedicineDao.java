@@ -103,6 +103,10 @@ public class PharmacyMedicineDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -122,6 +126,10 @@ public class PharmacyMedicineDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -134,6 +142,10 @@ public class PharmacyMedicineDao {
 			pharmacyMedicine = (PharmacyMedicine) session.get(PharmacyMedicine.class, pharmacyMedicineId);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		if (pharmacyMedicine != null) {
 			return pharmacyMedicine;
@@ -157,6 +169,10 @@ public class PharmacyMedicineDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
@@ -181,6 +197,10 @@ public class PharmacyMedicineDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				session.close();
+			}
 		}
 		return status;
 	}
