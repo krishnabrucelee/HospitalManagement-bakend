@@ -61,7 +61,7 @@ public class RoleDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -85,7 +85,7 @@ public class RoleDao {
 			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -111,7 +111,7 @@ public class RoleDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -127,7 +127,7 @@ public class RoleDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		if (role != null) {
@@ -153,7 +153,7 @@ public class RoleDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -173,7 +173,7 @@ public class RoleDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return role;

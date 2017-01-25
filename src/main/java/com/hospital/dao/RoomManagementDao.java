@@ -57,7 +57,7 @@ public class RoomManagementDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return appoint;

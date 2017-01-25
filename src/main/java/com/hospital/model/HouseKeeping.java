@@ -30,59 +30,59 @@ public class HouseKeeping {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "houseKeeper_id")
 	private Integer houseKeeperId;
-	
+
 	@Column(name = "houseKeeper_reg_id")
 	private String houseKeeperRegId;
-	
+
 	@Column(name = "staff_id")
 	private String staffId;
-	
+
 	@Column(name = "houseKeeper_type")
 	private String houseKeeperType;
-	
+
 	@JsonFormat(pattern = "dd-MM-yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "houseKeeper_dob")
 	private Date houseKeeperDob;
-	
+
 	@Column(name = "houseKeeper_email")
 	private String houseKeeperEmail;
-	
+
 	@Column(name = "houseKeeper_phone")
 	private Integer houseKeeperPhoneNumber;
-	
+
 	@Column(name = "houseKeeper_address")
 	private String houseKeeperAddress;
-	
+
 	@Column(name = "houseKeeper_ward_number")
 	private Integer houseKeeperWardNumber;
-	
+
 	@Column(name = "houseKeeper_shift")
 	private String houseKeeperShift;
 
 	@OneToOne(targetEntity = Department.class)
 	@JoinColumn(name = "dept_id", referencedColumnName = "department_id", foreignKey = @ForeignKey(name = "department_houseKeeping_FK"))
 	private Department department;
-	
+
 	@OneToOne(targetEntity = RoomManagement.class)
 	@JoinColumn(name = "room_management_id", referencedColumnName = "room_management_id", foreignKey = @ForeignKey(name = "room_management_houseKeeping_FK"))
 	private RoomManagement roomManagement;
 
-    /** User role. */
-    @OneToOne(targetEntity = Role.class)
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id", foreignKey = @ForeignKey(name = "role_houseKeeping_FK"))
-    private Role role;
-    
-    /** User type of the user. */
-    @Column(name = "user_type")
-    private UserType userType;
-	
-    /** Define user type. */
-    public enum UserType {
-        /** Define type constant. */
-        DOMAIN_ADMIN, ROOT_ADMIN, DOMAIN_USER, USER;
-    }
-    
+	/** User role. */
+	@OneToOne(targetEntity = Role.class)
+	@JoinColumn(name = "role_id", referencedColumnName = "role_id", foreignKey = @ForeignKey(name = "role_houseKeeping_FK"))
+	private Role role;
+
+	/** User type of the user. */
+	@Column(name = "user_type")
+	private UserType userType;
+
+	/** Define user type. */
+	public enum UserType {
+		/** Define type constant. */
+		DOMAIN_ADMIN, ROOT_ADMIN, DOMAIN_USER, USER;
+	}
+
 	/**
 	 * Get the houseKeeperId of HouseKeeping.
 	 *
@@ -95,7 +95,8 @@ public class HouseKeeping {
 	/**
 	 * Set the houseKeeperId of HouseKeeping.
 	 *
-	 * @param houseKeeperId the houseKeeperId to set
+	 * @param houseKeeperId
+	 *            the houseKeeperId to set
 	 */
 	public void setHouseKeeperId(Integer houseKeeperId) {
 		this.houseKeeperId = houseKeeperId;
@@ -113,7 +114,8 @@ public class HouseKeeping {
 	/**
 	 * Set the houseKeeperRegId of HouseKeeping.
 	 *
-	 * @param string the houseKeeperRegId to set
+	 * @param string
+	 *            the houseKeeperRegId to set
 	 */
 	public void setHouseKeeperRegId(String string) {
 		this.houseKeeperRegId = string;
@@ -131,12 +133,12 @@ public class HouseKeeping {
 	/**
 	 * Set the staffId of HouseKeeping.
 	 *
-	 * @param staffId the staffId to set
+	 * @param staffId
+	 *            the staffId to set
 	 */
 	public void setStaffId(String staffId) {
 		this.staffId = staffId;
 	}
-
 
 	/**
 	 * Get the houseKeeperType of HouseKeeping.
@@ -150,7 +152,8 @@ public class HouseKeeping {
 	/**
 	 * Set the houseKeeperType of HouseKeeping.
 	 *
-	 * @param houseKeeperType the houseKeeperType to set
+	 * @param houseKeeperType
+	 *            the houseKeeperType to set
 	 */
 	public void setHouseKeeperType(String houseKeeperType) {
 		this.houseKeeperType = houseKeeperType;
@@ -168,7 +171,8 @@ public class HouseKeeping {
 	/**
 	 * Set the houseKeeperDob of HouseKeeping.
 	 *
-	 * @param houseKeeperDob the houseKeeperDob to set
+	 * @param houseKeeperDob
+	 *            the houseKeeperDob to set
 	 */
 	public void setHouseKeeperDob(Date houseKeeperDob) {
 		this.houseKeeperDob = houseKeeperDob;
@@ -186,7 +190,8 @@ public class HouseKeeping {
 	/**
 	 * Set the houseKeeperEmail of HouseKeeping.
 	 *
-	 * @param houseKeeperEmail the houseKeeperEmail to set
+	 * @param houseKeeperEmail
+	 *            the houseKeeperEmail to set
 	 */
 	public void setHouseKeeperEmail(String houseKeeperEmail) {
 		this.houseKeeperEmail = houseKeeperEmail;
@@ -204,7 +209,8 @@ public class HouseKeeping {
 	/**
 	 * Set the houseKeeperPhoneNumber of HouseKeeping.
 	 *
-	 * @param houseKeeperPhoneNumber the houseKeeperPhoneNumber to set
+	 * @param houseKeeperPhoneNumber
+	 *            the houseKeeperPhoneNumber to set
 	 */
 	public void setHouseKeeperPhoneNumber(Integer houseKeeperPhoneNumber) {
 		this.houseKeeperPhoneNumber = houseKeeperPhoneNumber;
@@ -222,7 +228,8 @@ public class HouseKeeping {
 	/**
 	 * Set the houseKeeperAddress of HouseKeeping.
 	 *
-	 * @param houseKeeperAddress the houseKeeperAddress to set
+	 * @param houseKeeperAddress
+	 *            the houseKeeperAddress to set
 	 */
 	public void setHouseKeeperAddress(String houseKeeperAddress) {
 		this.houseKeeperAddress = houseKeeperAddress;
@@ -240,7 +247,8 @@ public class HouseKeeping {
 	/**
 	 * Set the houseKeeperWardNumber of HouseKeeping.
 	 *
-	 * @param houseKeeperWardNumber the houseKeeperWardNumber to set
+	 * @param houseKeeperWardNumber
+	 *            the houseKeeperWardNumber to set
 	 */
 	public void setHouseKeeperWardNumber(Integer houseKeeperWardNumber) {
 		this.houseKeeperWardNumber = houseKeeperWardNumber;
@@ -258,7 +266,8 @@ public class HouseKeeping {
 	/**
 	 * Set the houseKeeperShift of HouseKeeping.
 	 *
-	 * @param houseKeeperShift the houseKeeperShift to set
+	 * @param houseKeeperShift
+	 *            the houseKeeperShift to set
 	 */
 	public void setHouseKeeperShift(String houseKeeperShift) {
 		this.houseKeeperShift = houseKeeperShift;
@@ -276,7 +285,8 @@ public class HouseKeeping {
 	/**
 	 * Set the department of HouseKeeping.
 	 *
-	 * @param department the department to set
+	 * @param department
+	 *            the department to set
 	 */
 	public void setDepartment(Department department) {
 		this.department = department;
@@ -294,7 +304,8 @@ public class HouseKeeping {
 	/**
 	 * Set the roomManagement of HouseKeeping.
 	 *
-	 * @param roomManagement the roomManagement to set
+	 * @param roomManagement
+	 *            the roomManagement to set
 	 */
 	public void setRoomManagement(RoomManagement roomManagement) {
 		this.roomManagement = roomManagement;
@@ -312,7 +323,8 @@ public class HouseKeeping {
 	/**
 	 * Set the role of HouseKeeping.
 	 *
-	 * @param role the role to set
+	 * @param role
+	 *            the role to set
 	 */
 	public void setRole(Role role) {
 		this.role = role;
@@ -330,10 +342,11 @@ public class HouseKeeping {
 	/**
 	 * Set the userType of HouseKeeping.
 	 *
-	 * @param userType the userType to set
+	 * @param userType
+	 *            the userType to set
 	 */
 	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
-	
+
 }

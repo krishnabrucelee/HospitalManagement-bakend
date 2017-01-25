@@ -58,7 +58,7 @@ public class DepartmentDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -82,7 +82,7 @@ public class DepartmentDao {
 			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -105,7 +105,7 @@ public class DepartmentDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -121,7 +121,7 @@ public class DepartmentDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		if (department != null) {
@@ -148,7 +148,7 @@ public class DepartmentDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;

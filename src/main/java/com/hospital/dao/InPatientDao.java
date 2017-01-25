@@ -65,7 +65,7 @@ public class InPatientDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -89,7 +89,7 @@ public class InPatientDao {
 			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -112,7 +112,7 @@ public class InPatientDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -128,7 +128,7 @@ public class InPatientDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		if (inPatient != null) {
@@ -155,7 +155,7 @@ public class InPatientDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;

@@ -67,7 +67,7 @@ public class BioMedicalDisposalManagementDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -91,7 +91,7 @@ public class BioMedicalDisposalManagementDao {
 			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -114,7 +114,7 @@ public class BioMedicalDisposalManagementDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -130,7 +130,7 @@ public class BioMedicalDisposalManagementDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		if (bioMedicalDisposalManagement != null) {
@@ -157,7 +157,7 @@ public class BioMedicalDisposalManagementDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;

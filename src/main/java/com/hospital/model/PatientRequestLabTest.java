@@ -29,7 +29,7 @@ public class PatientRequestLabTest implements Serializable {
 	@Column
 	private String testName;
 	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)//labrequestId
-	@JoinColumn(name="testId",referencedColumnName="testId",foreignKey=@ForeignKey(name="Labrequest_PatientRequest_FK"))
+	@JoinColumn(name="subcategories",foreignKey=@ForeignKey(name="Labrequest_PatientRequestLabTest_FK"))
 	private List<PatientRequestSubCatTest> subcategories;
 	
 	public Integer getTestIdd() {

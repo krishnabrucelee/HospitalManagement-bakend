@@ -71,7 +71,7 @@ public class OuterBloodTransfusionDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -95,7 +95,7 @@ public class OuterBloodTransfusionDao {
 			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -118,7 +118,7 @@ public class OuterBloodTransfusionDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -134,7 +134,7 @@ public class OuterBloodTransfusionDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		if (outerBloodTrans != null) {
@@ -161,7 +161,7 @@ public class OuterBloodTransfusionDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;

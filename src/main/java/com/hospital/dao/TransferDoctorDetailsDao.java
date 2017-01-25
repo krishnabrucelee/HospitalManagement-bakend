@@ -66,7 +66,7 @@ public class TransferDoctorDetailsDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -90,7 +90,7 @@ public class TransferDoctorDetailsDao {
 			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -113,7 +113,7 @@ public class TransferDoctorDetailsDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -129,7 +129,7 @@ public class TransferDoctorDetailsDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		if (transferDoctorDetails != null) {
@@ -156,7 +156,7 @@ public class TransferDoctorDetailsDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
