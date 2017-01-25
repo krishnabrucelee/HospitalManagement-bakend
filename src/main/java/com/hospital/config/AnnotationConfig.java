@@ -4,12 +4,12 @@
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
 //
-////@Configuration
+//@Configuration
 //public class AnnotationConfig {
 //	
-//	/*@Bean
+//	@Bean
 //	public SessionFactory sessionFacory(){
 //		return  new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
-//	}*/
+//	}
 //
 //}

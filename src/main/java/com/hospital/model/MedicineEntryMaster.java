@@ -140,5 +140,19 @@ public class MedicineEntryMaster implements Serializable {
 	public void setMedicineComposition(String medicineComposition) {
 		this.medicineComposition = medicineComposition;
 	}
+	@Override
+	public String toString() {
+		return "MedicineEntryMaster [entryId=" + entryId + ", medicineId="
+				+ medicineId + ", medicineName=" + medicineName
+				+ ", medicinePower=" + medicinePower + ", medicineCount="
+				+ medicineCount + ", medicineBatchId=" + medicineBatchId
+				+ ", supplierName=" + supplierName + ", medicineComposition="
+				+ medicineComposition + ", companyName=" + companyName
+				+ ", purchaseDate=" + purchaseDate + ", manufactureDate="
+				+ manufactureDate + ", expiryDate=" + expiryDate
+				+ ", medicinePrice=" + medicinePrice + ", medicineType="
+				+ medicineType + "]";
+	}
+		
 	
 }

@@ -33,10 +33,16 @@ public class PharmacyOrder implements Serializable {
 	private String companyName;
 	@Column
 	private String itemDetails;
-	@Column
-	private String itemDescription;
+	/*@Column
+	private String itemDescription;*/
 	@Column
 	private  Integer itemCount;
+	
+	@Column
+	private String medicinePower;
+	
+	
+	
 	public Long getOrderId() {
 		return orderId;
 	}
@@ -73,17 +79,19 @@ public class PharmacyOrder implements Serializable {
 	public void setItemDetails(String itemDetails) {
 		this.itemDetails = itemDetails;
 	}
-	public String getItemDescription() {
-		return itemDescription;
-	}
-	public void setItemDescription(String itemDescription) {
-		this.itemDescription = itemDescription;
-	}
+	
 	public Integer getItemCount() {
 		return itemCount;
 	}
 	public void setItemCount(Integer itemCount) {
 		this.itemCount = itemCount;
 	}
-			
+	public String getMedicinePower() {
+		return medicinePower;
+	}
+	public void setMedicinePower(String medicinePower) {
+		this.medicinePower = medicinePower;
+	}
+	
+	
 }

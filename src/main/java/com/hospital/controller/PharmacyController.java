@@ -15,12 +15,15 @@ public class PharmacyController {
 	
 	@Autowired
 	IPharmaService ipharma;
-	@RequestMapping(value = "/addMasterEntry",method=RequestMethod.POST)//Working
-	public 	@ResponseBody JSONObject addMasterEntry(@RequestBody JSONObject masterentry){		
-		 return ipharma.addMasterEntry(masterentry);					
+		
+	@RequestMapping(value = "/orderMasterMedicine",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject orderMasterMedicine(@RequestBody JSONObject orderMasterMedicine){
+		
+		 return ipharma.orderMasterMedicine(orderMasterMedicine);				
 	}	
 	@RequestMapping(value = "/issueOrder",method=RequestMethod.POST)
-	public 	@ResponseBody JSONObject issueOrder(@RequestBody JSONObject productdetails){		
+	public 	@ResponseBody JSONObject issueOrder(@RequestBody JSONObject productdetails){
+		
 		 return ipharma.issueOrder(productdetails);					
 	}	
 	@RequestMapping(value = "/listOrders")
@@ -30,6 +33,23 @@ public class PharmacyController {
 	@RequestMapping(value = "/deleteOrder",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject deleteOrder(@RequestBody JSONObject productidd){		
 		 return ipharma.issueOrder(productidd);					
+	}
+	@RequestMapping(value = "/addMasterEntry",method=RequestMethod.POST)//Working
+	public 	@ResponseBody JSONObject addMasterEntry(@RequestBody JSONObject masterentry){		
+		 return ipharma.addMasterEntry(masterentry);					
+	}
+	
+	@RequestMapping(value = "/getMedicineId")
+	public 	@ResponseBody JSONObject getMedicineId(){		
+		 return ipharma.getMedicineId();				
+	}
+	@RequestMapping(value = "/pharmacyMedicineRequest",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject pharmacyMedicineRequest(@RequestBody JSONObject medicineRequest){		
+		 return ipharma.pharmacyMedicineRequest(medicineRequest);				
+	}	
+	@RequestMapping(value = "/listMedicineMaster")
+	public 	@ResponseBody JSONObject listMedicineMaster(){		
+		 return ipharma.listMasterEntry();					
 	}
 	@RequestMapping(value = "/medicineRequest",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject medicineRequest(@RequestBody JSONObject medicineRequest){		

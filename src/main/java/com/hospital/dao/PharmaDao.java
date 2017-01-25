@@ -13,6 +13,7 @@ import org.hibernate.Query;
 import org.hibernate.cfg.Configuration;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.DrugIssuetoPatient;
 import com.hospital.model.InvetoryMedicine;
+import com.hospital.model.MasterMedicineOrder;
 import com.hospital.model.MedicineRequest;
 import com.hospital.model.Medicine;
 import com.hospital.model.MedicineEntryMaster;
@@ -32,12 +34,194 @@ import com.hospital.model.MedicineTypes;
 import com.hospital.model.PatientData;
 import com.hospital.model.PharmacyOrder;
 import com.hospital.model.Patient;
+import com.hospital.model.PharmacyRequestMedicine;
 @Repository
 public class PharmaDao {
 	
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	@Autowired
+	@Qualifier("om")
+    private ObjectMapper om;
+	
+	@Autowired
+	@Qualifier("jsonViewObjectMapper")
+    private ObjectMapper jsonViewObjectMapper;
+	
 	@SuppressWarnings("unchecked")
+	public JSONObject orderMasterMedicine(JSONObject orderMasterMedicine) {
+		JSONObject status = new JSONObject();	
+		status.put("status", true);
+		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		Date orderDate = null;
+		Session session = null;
+		try {
+			orderDate=sdf.parse(orderMasterMedicine.get("orderDate").toString());
+		 } catch (ParseException e) {
+			e.printStackTrace();
+		}
+		ObjectMapper om = new ObjectMapper();
+		   om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		MasterMedicineOrder orderMedicine = om.convertValue(orderMasterMedicine, MasterMedicineOrder.class);
+		orderMedicine.setOrderDate(orderDate);
+		try {		
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			session.save(orderMedicine);
+			session.getTransaction().commit();
+			status.put("status",true);	
+			status.put("status","Master Medicine Order isue is saved");	
+		} catch (Exception e) {		
+		  status.put("status",false);			
+			status.put("originalErrorMsg", e.getMessage());
+			e.printStackTrace();
+		}finally{
+			if(session!=null && session.isOpen()){
+				session.close();
+			}
+		}
+		return status;
+	}
+	
+	@SuppressWarnings({ "unchecked", "null" })
+	public JSONObject addMasterEntryData(JSONObject masterentry) {
+		
+		JSONObject status = new JSONObject();
+		status.put("status", true);	
+		Session session = null; Date purchaseDate=null,mfgDate=null,expiryDate=null;	
+		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		SimpleDateFormat sd =new SimpleDateFormat("yyyy-MM-dd");
+		Integer medicineidd = (Integer)masterentry.get("medicineId");		
+		String medicineBatchId = masterentry.get("medicineBatchId").toString();
+		Integer mcount = (Integer)masterentry.get("medicineCount");
+		String medPower = masterentry.get("medicinePower").toString();
+		String medComposition = masterentry.get("medicineComposition").toString();
+		long medcount = (long)mcount;		
+		try {
+			purchaseDate= sdf.parse(masterentry.get("purchaseDate").toString());
+			mfgDate= sdf.parse(masterentry.get("manufactureDate").toString());
+			expiryDate= sdf.parse(masterentry.get("expiryDate").toString());			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar dbexpiryDate =Calendar.getInstance();Calendar formexpiryDate =Calendar.getInstance();
+		formexpiryDate.setTime(expiryDate);			
+		formexpiryDate.set(Calendar.HOUR_OF_DAY, 0);
+		formexpiryDate.set(Calendar.MINUTE, 0);
+		formexpiryDate.set(Calendar.SECOND, 0);	
+		MedicineEntryMaster medicineEntryMaster=null;MedicineTypes medicineTypes =null;
+		MedicineMaster medicineMaster=null;Integer medicinid=null;
+		List<MedicineMaster>medicineMasters=null;List<MedicineTypes>medicinetype= null;
+		MedicineMaster dbmedicineMasters=null;
+		try {
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			ObjectMapper om = new ObjectMapper();
+			   om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			   medicineEntryMaster = om.convertValue(masterentry, MedicineEntryMaster.class);
+			   medicineEntryMaster.setPurchaseDate(purchaseDate);medicineEntryMaster.setManufactureDate(mfgDate);
+			   medicineEntryMaster.setExpiryDate(expiryDate);
+			    medicineTypes = om.convertValue(masterentry, MedicineTypes.class);
+			   medicineMaster = om.convertValue(masterentry, MedicineMaster.class);
+			   medicineMaster.setManufactureDate(mfgDate);medicineMaster.setExpiryDate(expiryDate);
+			 
+			  
+			   session.save(medicineEntryMaster);
+			   Query query2 = session.createQuery("FROM MedicineMaster WHERE medicineId=:searchA AND medicineBatchId=:searchB AND expiryDate=:searchC");
+				medicineMasters= query2.setParameter("searchA", medicineidd).setParameter("searchB", medicineBatchId).setParameter("searchC", expiryDate).list();
+				Query query = session.createQuery("FROM MedicineTypes WHERE medicinePower=:searchA AND medicineComposition=:searchB");
+				medicinetype = query.setParameter("searchA", masterentry.get("medicinePower").toString())
+						.setParameter("searchB", masterentry.get("medicineComposition").toString()).list();
+				
+			   if (medicineMasters!=null &&!medicineMasters.isEmpty() ) {
+				  
+				   dbmedicineMasters=medicineMasters.get(0);
+					Integer existmedicineid = (Integer)dbmedicineMasters.getMedicineId();
+					String batchId = dbmedicineMasters.getMedicineBatchId();
+					Date expiryy = dbmedicineMasters.getExpiryDate();
+					dbexpiryDate.setTime(expiryy);					
+					if(((existmedicineid.equals(medicineidd))&&(batchId.equalsIgnoreCase(medicineBatchId)))&&
+		                    ((dbexpiryDate.compareTo(formexpiryDate)==0) &&(dbmedicineMasters.getMedicinePower().equals(masterentry.get("medicinePower"))))){
+								Long count = dbmedicineMasters.getMedicineCount();
+								count = count+medcount;
+								
+								dbmedicineMasters.setMedicineCount(count);						
+								session.merge(dbmedicineMasters);
+							}else if ((existmedicineid.equals(medicineidd))&&(!batchId.equalsIgnoreCase(medicineBatchId))) {
+							
+								session.save(medicineMaster);
+							} 			
+			      } else if (medicineMasters==null ||medicineMasters.isEmpty() ) {
+				
+					session.save(medicineMaster);
+				  }else{
+					
+				  }
+			   
+			   if (medicinetype!=null&&!medicinetype.isEmpty()) {
+					MedicineTypes medicineTypes2 = medicinetype.get(0);
+					if((medicineTypes2.getMedicinePower().equals(medPower))&&(medicineTypes2.getMedicineComposition().equals(medComposition))){
+						Long count = medicineTypes2.getMedicineCount();
+						count+=medcount;
+						medicineTypes2.setMedicineCount(count);
+						session.merge(medicineTypes2);
+					}
+				} else if(medicinetype==null||medicinetype.isEmpty()) {
+					 session.save(medicineTypes);
+				}
+			   /*else {
+
+			}*/
+			   session.getTransaction().commit();
+		} catch (Exception e) {
+			status.put("status", "Error happened");
+			status.put("originalErrorMsg", e.getMessage());
+			status.put("status", false);
+			e.printStackTrace();
+				
+		}finally{
+			if(session!=null && session.isOpen()){
+				session.close();
+			}
+		}
+		return status;
+	}
+	@SuppressWarnings( "unchecked")
+	public JSONObject listMasterEntry() {
+		JSONObject status = new JSONObject();
+		status.put("status", true);	
+		Session session = null;
+		List<MedicineMaster> master =null;
+		try {
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			Query query = session.createQuery("FROM MedicineMaster");
+			master = query.list();
+			System.out.println("Web service Master size="+master.size());
+			if (master!=null && !master.isEmpty()) {
+				status.put("MasterMedicine", master);
+				status.put("status", true);	
+				
+			} else {
+				status.put("status", "Error happened");
+				status.put("originalErrorMsg", "MedicineMaster table have empty");
+				status.put("status", false);
+			}
+		} catch (Exception e) {
+			status.put("status", "Error happened");
+			status.put("originalErrorMsg", e.getMessage());
+			status.put("status", false);
+			e.printStackTrace();
+				
+		}finally{
+			if(session!=null && session.isOpen()){
+				session.close();
+			}
+		}
+		return status;
+	}
+	@SuppressWarnings({ "unchecked", "null" })
 	public JSONObject addMasterEntry(JSONObject masterentry) {
 		JSONObject status = new JSONObject();
 		status.put("status", true);
@@ -52,14 +236,13 @@ public class PharmaDao {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Medicine ID="+medicineidd);
-		System.out.println("Medicine Batch  ID="+medicineBatchId);
-		System.out.println("Medicine Expiry date ID="+expiryDate);
+		
 		Calendar calendar =Calendar.getInstance();Calendar calendar1 =Calendar.getInstance();
 		calendar.setTime(expiryDate);
 		MedicineEntryMaster medicineEntryMaster=null;MedicineTypes medicineType =null;
 		MedicineMaster medicineMaster=null;Integer medicinid=null;
 		try {
+		
 			session = this.sessionFactory.getCurrentSession();
 			session.beginTransaction();
 			ObjectMapper om = new ObjectMapper();
@@ -71,10 +254,13 @@ public class PharmaDao {
 			   //if(!medicinid.equalsIgnoreCase(medicineid)){
 				   session.save(medicineTypes);
 			   //}
-		
+				  
 			Query query2 = session.createQuery("FROM MedicineMaster WHERE medicineId=:searchA AND medicineBatchId=:searchB AND expiryDate=:searchC");
 			List<MedicineMaster>medicineMasters= query2.setParameter("searchA", medicineidd).setParameter("searchB", medicineBatchId).setParameter("searchC", expiryDate).list();
-			System.out.println("SIZE="+medicineMasters.size());
+			
+			/*if( medicineMasters.isEmpty()){
+				session.save(master);	
+			}*/
 			if(medicineMasters!=null&&!medicineMasters.isEmpty()){
 				System.out.println("Inside not null &not empty");
 				medicineMaster=medicineMasters.get(0);
@@ -84,6 +270,7 @@ public class PharmaDao {
 				calendar1.setTime(expiryy);
 				if((existmedicineid.equals(medicineidd))&&(batchId.equalsIgnoreCase(medicineBatchId))&&(calendar.compareTo(calendar1)==0)){
 					System.out.println("Merge");
+					System.out.println("Add master entry same merge");
 					Long count = medicineMaster.getMedicineCount();
 					count = count+medcount;
 					medicineMaster.setMedicineCount(count);
@@ -92,10 +279,12 @@ public class PharmaDao {
 				}
 				else if((existmedicineid.equals(medicineidd))&&(!batchId.equalsIgnoreCase(medicineBatchId))){
 					System.out.println("Id same diff batch");
+					System.out.println("Add master entry different to save ");
 					session.save(master);
 				}else{
-					if((!existmedicineid.equals(medicineidd))&&(!batchId.equalsIgnoreCase(medicineBatchId))&&(calendar1.after(calendar))){
+					if((!existmedicineid.equals(medicineidd))&&(!batchId.equalsIgnoreCase(medicineBatchId))){
 						System.out.println("New row");
+						System.out.println("Add master entery new row");
 						session.save(master);
 					}					
 				}
@@ -113,19 +302,20 @@ public class PharmaDao {
 	
 	@SuppressWarnings("unchecked")
 	public JSONObject issueOrder(JSONObject productdetails) {
-		JSONObject status = new JSONObject();
+		JSONObject status = new JSONObject();	
 		status.put("status", true);
 		Session session = null;
 		ObjectMapper om = new ObjectMapper();
 		   om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		PharmacyOrder medicine = om.convertValue(productdetails, PharmacyOrder.class);
 		try {
+		
 			session = this.sessionFactory.getCurrentSession();
 			session.beginTransaction();
 			session.save(medicine);
 			session.getTransaction().commit();
 			status.put("status",true);	
-			status.put("status","Order isue is saved");	
+			status.put("status","Medicine Order isue is saved");	
 		} catch (Exception e) {		
 		status.put("status",false);			
 			status.put("originalErrorMsg", e.getMessage());
@@ -180,8 +370,58 @@ public class PharmaDao {
 			}
 			session.getTransaction().commit();
 			status.put("status", true);
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			status.put("status",false);			
+			status.put("originalErrorMsg", e.getMessage());
+			e.printStackTrace();
+		}
+		return status;
+	}
+	@SuppressWarnings("unchecked")
+	public JSONObject getMedicineId() {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		Session session = null;
+		List<MedicineMaster> master = null;
+		try {
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();	
+			master =session.createQuery("FROM MedicineMaster").list();			
+			if(master!=null&&!master.isEmpty()){
+				status.put("MasterMedicine", master);
+			}
+			session.getTransaction().commit();
+			status.put("status", true);
+		} catch (Exception e) {
+			status.put("status",false);			
+			status.put("originalErrorMsg", e.getMessage());
+			e.printStackTrace();
+		}
+		return status;
+	}
+	@SuppressWarnings("unchecked")
+	public JSONObject pharmacyMedicineRequest(JSONObject medicineRequest) {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		Session session = null;
+		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		Date  date =null;
+		try {
+			date= sdf.parse(medicineRequest.get("requestDate").toString());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		try {
+			PharmacyRequestMedicine requestmedicine = om.convertValue(medicineRequest, PharmacyRequestMedicine.class);	
+			requestmedicine.setRequestDate(date);
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			session.save(requestmedicine);
+			session.getTransaction().commit();
+			status.put("status",true);	
+			status.put("status","MedicineRequest isue is saved");	
+		} catch (Exception e) {		
+		status.put("status",false);			
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
 		}
