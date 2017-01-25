@@ -61,7 +61,7 @@ public class UserDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -85,7 +85,7 @@ public class UserDao {
 			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -108,7 +108,7 @@ public class UserDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -124,7 +124,7 @@ public class UserDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		if (user != null) {
@@ -151,7 +151,7 @@ public class UserDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -171,7 +171,7 @@ public class UserDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return user;
@@ -220,7 +220,7 @@ public class UserDao {
 			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+//				// session.close();
 			}
 		}
 		return status;

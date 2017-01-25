@@ -47,7 +47,7 @@ public class AdmitPatientDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return admission;

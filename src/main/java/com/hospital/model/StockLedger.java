@@ -30,6 +30,9 @@ public class StockLedger {
 	@Column(name = "stock_ledger_id")
 	private Integer stockLedgerId;
 	
+	@Column(name = "stock_ledger_ref_number")
+	private String stockLedgerRefNumber;
+	
 	@Column(name = "item_name")
 	private String itemName;
 	

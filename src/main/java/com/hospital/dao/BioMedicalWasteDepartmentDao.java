@@ -72,7 +72,7 @@ public class BioMedicalWasteDepartmentDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -96,7 +96,7 @@ public class BioMedicalWasteDepartmentDao {
 			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -120,7 +120,7 @@ public class BioMedicalWasteDepartmentDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;
@@ -137,7 +137,7 @@ public class BioMedicalWasteDepartmentDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		if (bioMedicalWasteDepartment != null) {
@@ -165,7 +165,7 @@ public class BioMedicalWasteDepartmentDao {
 			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
-				session.close();
+				// session.close();
 			}
 		}
 		return status;

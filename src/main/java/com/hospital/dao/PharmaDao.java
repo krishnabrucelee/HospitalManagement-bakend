@@ -506,7 +506,7 @@ public class PharmaDao {
 			e.printStackTrace();
 		}
 		if(session.isOpen()){
-			session.close();
+			// session.close();
 		}
 		if (medicine!=null) {
 			return medicine;

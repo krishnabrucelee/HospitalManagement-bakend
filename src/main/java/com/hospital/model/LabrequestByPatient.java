@@ -42,7 +42,7 @@ public class LabrequestByPatient implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date requestTime;
 	@OneToMany(cascade=CascadeType.ALL)//labrequestId
-	@JoinColumn(name="labrequestId",referencedColumnName="labrequestId",foreignKey=@ForeignKey(name="Labrequest_Labrequest_FK"))
+	@JoinColumn(name="labTestNames", foreignKey=@ForeignKey(name="Labrequest_Labrequest_FK"))
 	private Set<PatientRequestLabTest> labTestNames; 
 	public Integer getLabrequestId() {
 		return labrequestId;
