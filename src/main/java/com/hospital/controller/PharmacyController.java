@@ -15,7 +15,27 @@ public class PharmacyController {
 	
 	@Autowired
 	IPharmaService ipharma;
+	
+	@RequestMapping(value = "/saveMasterMedicineItem",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject saveMasterMedicineItem(@RequestBody JSONObject masterMedicineItem){		
+		 return ipharma.saveMasterMedicineItem(masterMedicineItem);			
+	}	
+	
+	@RequestMapping(value = "/listMasterMedicineItem")
+	public 	@ResponseBody JSONObject listMasterMedicineItem(){		
+		 return ipharma.listMasterMedicineItem();					
+	}
 		
+	@RequestMapping(value = "/savePharmacyMasterEntry",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject savePharmacyMasterEntry(@RequestBody JSONObject pharmacyMasterEntry){		
+		 return ipharma.savePharmacyMasterEntry(pharmacyMasterEntry);		
+	}	
+	
+	@RequestMapping(value = "/listPharmacyMasterEntry")
+	public 	@ResponseBody JSONObject listPharmacyMasterEntry(){		
+		 return ipharma.listPharmacyMasterEntry();					
+	}
+	
 	@RequestMapping(value = "/orderMasterMedicine",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject orderMasterMedicine(@RequestBody JSONObject orderMasterMedicine){
 		

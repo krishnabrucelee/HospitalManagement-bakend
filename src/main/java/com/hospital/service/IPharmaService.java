@@ -3,6 +3,13 @@ package com.hospital.service;
 import org.json.simple.JSONObject;
 
 public interface IPharmaService {
+	
+	public JSONObject saveMasterMedicineItem(JSONObject masterMedicineItem);
+	public JSONObject listMasterMedicineItem();
+	
+	public JSONObject savePharmacyMasterEntry(JSONObject pharmacyMasterEntry);
+	public JSONObject listPharmacyMasterEntry();
+	
 	public JSONObject orderMasterMedicine(JSONObject orderMasterMedicine);
 	public JSONObject issueOrder(JSONObject productdetails);
 	public JSONObject addMasterEntry(JSONObject masterentry);
