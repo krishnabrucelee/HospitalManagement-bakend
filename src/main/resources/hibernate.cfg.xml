@@ -99,9 +99,12 @@
 		<mapping class="com.hospital.model.PharmacyRequestMedicine" />	
 		<mapping class="com.hospital.model.RequestMedicineList" />	
 		
-		<mapping class="com.hospital.model.MedicineCategories" />
-		<mapping class="com.hospital.model.MedicineDetails" />	
+		<mapping class="com.hospital.model.MedicineItemMaster" />
 		<mapping class="com.hospital.model.MedicineMasterStock" />
+		 <mapping class="com.hospital.model.PharmacyMasterEntry" /> 
+		<!-- <mapping class="com.hospital.model.MedicineCategories" />
+		<mapping class="com.hospital.model.MedicineDetails" />	
+		<mapping class="com.hospital.model.MedicineMasterStock" /> -->
 					                            
 	<mapping class="com.hospital.model.PharmacyOrder" />
 	<mapping class="com.hospital.model.SupplierInformation" />

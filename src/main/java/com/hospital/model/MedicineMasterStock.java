@@ -1,6 +1,7 @@
 package com.hospital.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +9,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table
 @Component
@@ -16,90 +22,105 @@ public class MedicineMasterStock implements Serializable {
 	
 	@Column
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)	
-	private Long medicineMasterStockId;
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Integer medicineMasterStockId;
 	
 	@Column
-	private String medicineType;
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date purchaseDate;
 	
 	@Column
-	private String companyName;
+	@JsonFormat(pattern="dd-MM-yyyy")	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date manufactureDate;
 	
 	@Column
-	private String medicineName;
-	
-	
-	@Column
-	private Integer medicineTotalUnit;
+	@JsonFormat(pattern="dd-MM-yyyy")	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date expiryDate;
 	
 	@Column
-	private String medicineUnit;
+	private String batchId;
 	
 	@Column
-	private Double price;
+	private String unitsDetails;
 	
+	@Column
+	private Integer quantity;
+	
+	@Column
+	private Double  medicinePrice;
 
 	public MedicineMasterStock() {
 		super();
 	}
 
-	public Long getMedicineMasterStockId() {
+	public Integer getMedicineMasterStockId() {
 		return medicineMasterStockId;
 	}
 
-	public void setMedicineMasterStockId(Long medicineMasterStockId) {
+	public void setMedicineMasterStockId(Integer medicineMasterStockId) {
 		this.medicineMasterStockId = medicineMasterStockId;
 	}
 
-	public String getMedicineType() {
-		return medicineType;
+	public Date getPurchaseDate() {
+		return purchaseDate;
 	}
 
-	public void setMedicineType(String medicineType) {
-		this.medicineType = medicineType;
+	public void setPurchaseDate(Date purchaseDate) {
+		this.purchaseDate = purchaseDate;
 	}
 
-	public String getCompanyName() {
-		return companyName;
+	public Date getManufactureDate() {
+		return manufactureDate;
 	}
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setManufactureDate(Date manufactureDate) {
+		this.manufactureDate = manufactureDate;
 	}
 
-	public String getMedicineName() {
-		return medicineName;
+	public Date getExpiryDate() {
+		return expiryDate;
 	}
 
-	public void setMedicineName(String medicineName) {
-		this.medicineName = medicineName;
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
 	}
 
+	public String getBatchId() {
+		return batchId;
+	}
+
+	public void setBatchId(String batchId) {
+		this.batchId = batchId;
+	}
+
+	public String getUnitsDetails() {
+		return unitsDetails;
+	}
+
+	public void setUnitsDetails(String unitsDetails) {
+		this.unitsDetails = unitsDetails;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public Double getMedicinePrice() {
+		return medicinePrice;
+	}
+
+	public void setMedicinePrice(Double medicinePrice) {
+		this.medicinePrice = medicinePrice;
+	}
+	
+	
 	
 
-	public Integer getMedicineTotalUnit() {
-		return medicineTotalUnit;
-	}
-
-	public void setMedicineTotalUnit(Integer medicineTotalUnit) {
-		this.medicineTotalUnit = medicineTotalUnit;
-	}
-
-	public String getMedicineUnit() {
-		return medicineUnit;
-	}
-
-	public void setMedicineUnit(String medicineUnit) {
-		this.medicineUnit = medicineUnit;
-	}
-
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-	
-	
 }
