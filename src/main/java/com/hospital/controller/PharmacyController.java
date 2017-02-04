@@ -102,6 +102,11 @@ public class PharmacyController {
 	}
 	@RequestMapping(value = "/patientReturnMedicine",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject patientReturnMedicine(@RequestBody JSONObject patientReturnMedicine){		
-		 return ipharma.patientReturnMedicine(patientReturnMedicine);			
+		 return ipharma.patientReturnMedicine(patientReturnMedicine);	 		
+	}
+	
+	@RequestMapping(value = "/listPharamacyRequestDetails")
+	public 	@ResponseBody JSONObject listPharamacyRequestDetails(){		
+		 return ipharma.listPharamacyRequestDetails();	 		
 	}
 }

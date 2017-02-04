@@ -13,12 +13,13 @@
      <property name="hbm2ddl.auto">update</property>     
         <property name="current_session_context_class">thread</property> -->
         
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+     <!--    <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
      <property name="hbm2ddl.auto">update</property>  
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property> 
         <property name="hibernate.show_sql">true</property>
         <property name="current_session_context_class">thread</property> -->
         
+     <property name="hibernate.connection.username">root</property>   
    <property name="hibernate.connection.password">mysql</property>  
   <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hospitalmanagement</property>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
@@ -92,7 +93,12 @@
 		<mapping class="com.hospital.model.BillingMaster" />
 		<mapping class="com.hospital.model.BillingChart" />
 		<mapping class="com.hospital.model.InventoryItems" />
-		<mapping class="com.hospital.model.AccountCategoryChart" />			                            
+		<mapping class="com.hospital.model.AccountCategoryChart" />		                            
+		<mapping class="com.hospital.model.StockMedicine" />
+		<mapping class="com.hospital.model.StockMedicineTransaction" />
+		<mapping class="com.hospital.model.Supplier" />
+					                            
+					                            
 					                            
 		<mapping class="com.hospital.model.MasterMedicineOrder" />	
 		<mapping class="com.hospital.model.MedicineOrderTypes" />

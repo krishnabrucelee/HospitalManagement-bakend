@@ -28,5 +28,9 @@ public interface IPharmaService {
 	public JSONObject medicineIssuetoPharmacy(JSONObject medicinetoPharmacy);
 	public JSONObject medicinetoPatient(JSONObject medicinetoPatient);
 	public JSONObject patientReturnMedicine(JSONObject patientReturnMedicine);
+	/**
+	 * @return
+	 */
+	public JSONObject listPharamacyRequestDetails();
 	
 }
