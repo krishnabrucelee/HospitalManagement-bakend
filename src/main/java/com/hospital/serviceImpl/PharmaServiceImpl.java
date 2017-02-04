@@ -106,6 +106,11 @@ public class PharmaServiceImpl implements IPharmaService {
 		return pharmadao.listPharmacyMasterEntry();
 	}
 
+	@Override
+	public JSONObject listPharamacyRequestDetails() {
+		return pharmadao.listPharamacyRequestDetails();
+	}
+
 	
 	
 	

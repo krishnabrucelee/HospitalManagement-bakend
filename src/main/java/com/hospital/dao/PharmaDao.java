@@ -940,4 +940,30 @@ public class PharmaDao {
 		}
 		
 	}
+	/**
+	 * @return
+	 */
+	public JSONObject listPharamacyRequestDetails() {
+		System.out.println("Inside Dao1Patient");
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		Session session = sessionFactory.openSession();
+		Transaction transaction = session.beginTransaction();
+		List<Patient> pharmacyRequestMedicine = null;
+		try {
+			Query query = session.createQuery("FROM PharmacyRequestMedicine");
+			pharmacyRequestMedicine = query.list();
+			status.put("PharmacyRequest", pharmacyRequestMedicine);
+			status.put("result", true);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return status;
+	}
 }

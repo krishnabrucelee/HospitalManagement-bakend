@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,9 +30,9 @@ public class PharmacyRequestMedicine implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)	
 	private Long medicineRequestId;
 	
-
-	private Integer departmentId;
-	
+	@OneToOne(targetEntity = Department.class)
+	@JoinColumn(name = "dept_id", referencedColumnName = "department_id", foreignKey = @ForeignKey(name = "department_pharmacyRequestMedicine_FK"))
+	private Department department;
 	
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -53,16 +54,6 @@ public class PharmacyRequestMedicine implements Serializable {
 		this.medicineRequestId = medicineRequestId;
 	}
 
-	public Integer getDepartmentId() {
-		return departmentId;
-	}
-
-	public void setDepartmentId(Integer departmentId) {
-		this.departmentId = departmentId;
-	}
-
-	
-
 	public Date getRequestDate() {
 		return requestDate;
 	}
@@ -78,6 +69,23 @@ public class PharmacyRequestMedicine implements Serializable {
 	public void setMedicineList(List<RequestMedicineList> medicineList) {
 		this.medicineList = medicineList;
 	}
-	
-	
+
+	/**
+	 * Get the department of PharmacyRequestMedicine.
+	 *
+	 * @return the department
+	 */
+	public Department getDepartment() {
+		return department;
+	}
+
+	/**
+	 * Set the department of PharmacyRequestMedicine.
+	 *
+	 * @param department the department to set
+	 */
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
 }

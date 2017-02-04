@@ -63,15 +63,15 @@ public class PatientRequestRadiologyTest implements Serializable {
 	
 	@OneToMany(cascade=CascadeType.ALL)
 	@Fetch(FetchMode.JOIN)
-	@JoinColumn(name="radiology_requestid",referencedColumnName="radiology_requestid",foreignKey=@ForeignKey(name="Labrequest_Labrequest_FK"))
+	@JoinColumn(name="radiologyTestNames",foreignKey=@ForeignKey(name="Labrequest_Radiologyrequest_FK"))
 	private Set<PatientRadiologyTestNames> radiologyTestNames; 
 	
 	@ManyToOne(targetEntity=Patient.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="patient_id",referencedColumnName="patient_id",foreignKey=@ForeignKey(name="patient_Radiologyrequest_FK"))
+	@JoinColumn(name="patient_id",foreignKey=@ForeignKey(name="patient_Radiologyrequest_FK"))
 	private Patient patient; 
 	
 	@ManyToOne(targetEntity=Doctor.class,fetch=FetchType.LAZY)
-	@JoinColumn(name="doctor_id",referencedColumnName="doctor_id",foreignKey=@ForeignKey(name="doctor_Radiologyrequest_FK"))
+	@JoinColumn(name="doctor_id",foreignKey=@ForeignKey(name="doctor_Radiologyrequest_FK"))
 	private Doctor doctor;
 	
 	public PatientRequestRadiologyTest() {
