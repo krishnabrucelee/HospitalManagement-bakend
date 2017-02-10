@@ -27,7 +27,8 @@ public class PharmacyController {
 	}
 		
 	@RequestMapping(value = "/savePharmacyMasterEntry",method=RequestMethod.POST)
-	public 	@ResponseBody JSONObject savePharmacyMasterEntry(@RequestBody JSONObject pharmacyMasterEntry){		
+	public 	@ResponseBody JSONObject savePharmacyMasterEntry(@RequestBody JSONObject pharmacyMasterEntry){	
+		System.out.println("Inside webservice save controller");
 		 return ipharma.savePharmacyMasterEntry(pharmacyMasterEntry);		
 	}	
 	
@@ -36,6 +37,12 @@ public class PharmacyController {
 		 return ipharma.listPharmacyMasterEntry();					
 	}
 	
+	
+	@RequestMapping(value = "/savePharmacyBill",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject savePharmacyBill(@RequestBody JSONObject pharmacyBillDatas){	
+		System.out.println("Inside webservice save controller");
+		 return ipharma.savePharmacyBill(pharmacyBillDatas);		
+	}	
 	@RequestMapping(value = "/orderMasterMedicine",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject orderMasterMedicine(@RequestBody JSONObject orderMasterMedicine){
 		

@@ -14,25 +14,22 @@ import com.hospital.service.ILabService;
 public class LabController {
 	@Autowired
 	ILabService irestlab;
+	
+	
+	
+	
 	@RequestMapping(value = "/labConfigure",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject labConfigure(@RequestBody JSONObject labconfigure){		
-		System.out.println("Enter into controller labConfigure");
 		 return irestlab.addLabConfigure(labconfigure);					
 	}	
 	
 	@RequestMapping(value = "/addLabTypes",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject addLabTypes(@RequestBody JSONObject addLabTypes){		
-		System.out.println("Enter into controller labConfigure");
 		 return irestlab.addLabTypes(addLabTypes);			
 	}
-	@RequestMapping(value = "/addLabtestNames",method=RequestMethod.POST)
-	public 	@ResponseBody JSONObject addLabtestNames(@RequestBody JSONObject labtestNames){		
-		System.out.println("Enter into controller labtestNames");
-		 return irestlab.addLabtestNames(labtestNames);		
-	}
+	
 	@RequestMapping(value = "/labrequesttoPatient",method=RequestMethod.POST)
-	public 	@ResponseBody JSONObject labrequesttoPatient(@RequestBody JSONObject labrequestToPatient){		
-		System.out.println("Enter into controller labrequesttoPatient");
+	public 	@ResponseBody JSONObject labrequesttoPatient(@RequestBody JSONObject labrequestToPatient){			
 		 return irestlab.labrequestToPatient(labrequestToPatient);		
 	}
 	//New Types///
@@ -73,5 +70,37 @@ public class LabController {
 	public 	@ResponseBody JSONObject viewPatientLabtestReport(@RequestBody JSONObject labtestReportId){		
 		System.out.println("Enter into controller addExternalLab");
 		 return irestlab.viewPatientLabtestReport(labtestReportId);
+	}
+	
+
+	@RequestMapping(value = "/addMasterLabConfigure",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject addMasterLabConfigure(@RequestBody JSONObject masterLabConfigure){				
+		return irestlab.addMasterLabConfigure(masterLabConfigure);				
+	}	
+	
+	@RequestMapping(value = "/listMasterLabTest")
+	public 	@ResponseBody JSONObject listMasterLabtest(){		
+		 return irestlab.listMasterLabTest();					
+	}	
+	
+	@RequestMapping(value = "/addMasterLabTestReport",method=RequestMethod.POST)//MasterLab Report//
+	public 	@ResponseBody JSONObject saveMasterLabTestReport(@RequestBody JSONObject masterLabTestReport){		
+		 return irestlab.saveMasterLabTestReport(masterLabTestReport);		
+	}
+	
+	@RequestMapping(value = "/savePatientLabRequest",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject savePatientRequestLabTest(@RequestBody JSONObject patientRequestLabTest){		
+		System.out.println("savePatientLabRequest web services"); 
+		return irestlab.savePatientRequestLabTest(patientRequestLabTest);		
+	}
+	
+	@RequestMapping(value = "/listPatientLabRequest")
+	public 	@ResponseBody JSONObject listPatientLabRequest(){		
+		 return irestlab.listPatientRequestLabTest();				
+	}	
+	
+	@RequestMapping(value = "/updatePatientRequestLabTest",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject updatePatientRequestLabTest(@RequestBody JSONObject labTestReport){		
+		return irestlab.updatePatientRequestLabTest(labTestReport);		
 	}
 }

@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,30 +17,21 @@ import javax.persistence.TemporalType;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table
 @Component
-public class PharmacyMasterEntry implements Serializable {
+public class MedicineExpiryList implements Serializable {
 	
-	@Column	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	 private Long pharmacyMasterId;
-	
+	@GeneratedValue(strategy = GenerationType.AUTO)	
+	private Integer medicineExpiryTransferId;
 	
 	@ManyToOne()
 	@JoinColumn(name="medicineId")
 	private MedicineItemMaster medicineMaster;
 	
-	
-	@Column
 	private String itemName;
-	
-	
-	@Column
-	@JsonFormat(pattern="dd-MM-yyyy")	
-	@Temporal(TemporalType.DATE)
-	private Date purchaseDate;
 	
 	@Column
 	private String batchId;
@@ -58,35 +48,34 @@ public class PharmacyMasterEntry implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date expiryDate;
 	
+	
 	@Column
 	private String itemUnits;
 	
-	@Column
-	private Integer numbersInUnit;
-	@Column
-	private Integer numberofUnits;
 	
-	
+
 	@Column
 	private Long quantity;
 	
-
 	@Column
-	private Double price;
+	private String unit;
+	
+	@Column
+	private String supplierName;
+	
+	
 
-	public PharmacyMasterEntry() {
+	public MedicineExpiryList() {
 		super();
 	}
 
-	public Long getPharmacyMasterId() {
-		return pharmacyMasterId;
+	public Integer getMedicineExpiryTransferId() {
+		return medicineExpiryTransferId;
 	}
 
-	public void setPharmacyMasterId(Long pharmacyMasterId) {
-		this.pharmacyMasterId = pharmacyMasterId;
+	public void setMedicineExpiryTransferId(Integer medicineExpiryTransferId) {
+		this.medicineExpiryTransferId = medicineExpiryTransferId;
 	}
-
-	
 
 	public MedicineItemMaster getMedicineMaster() {
 		return medicineMaster;
@@ -96,12 +85,12 @@ public class PharmacyMasterEntry implements Serializable {
 		this.medicineMaster = medicineMaster;
 	}
 
-	public Date getPurchaseDate() {
-		return purchaseDate;
+	public String getItemName() {
+		return itemName;
 	}
 
-	public void setPurchaseDate(Date purchaseDate) {
-		this.purchaseDate = purchaseDate;
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
 	}
 
 	public String getBatchId() {
@@ -136,14 +125,6 @@ public class PharmacyMasterEntry implements Serializable {
 		this.itemUnits = itemUnits;
 	}
 
-	public Double getPrice() {
-		return price;
-	}
-
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-
 	public Long getQuantity() {
 		return quantity;
 	}
@@ -152,43 +133,22 @@ public class PharmacyMasterEntry implements Serializable {
 		this.quantity = quantity;
 	}
 
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+	
 	
 
-	public String getItemName() {
-		return itemName;
-	}
-
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-
-	public Integer getNumberofUnits() {
-		return numberofUnits;
-	}
-
-	public void setNumberofUnits(Integer numberofUnits) {
-		this.numberofUnits = numberofUnits;
-	}
-
-	public Integer getNumbersInUnit() {
-		return numbersInUnit;
-	}
-
-	public void setNumbersInUnit(Integer numbersInUnit) {
-		this.numbersInUnit = numbersInUnit;
-	}
-
-	@Override
-	public String toString() {
-		return "PharmacyMasterEntry [pharmacyMasterId=" + pharmacyMasterId
-				+ ", medicineMaster=" + medicineMaster + ", itemName="
-				+ itemName + ", purchaseDate=" + purchaseDate + ", batchId="
-				+ batchId + ", manufactureDate=" + manufactureDate
-				+ ", expiryDate=" + expiryDate + ", itemUnits=" + itemUnits
-				+ ", numbersInUnit=" + numbersInUnit + ", numberofUnits="
-				+ numberofUnits + ", quantity=" + quantity + ", price=" + price
-				+ "]";
-	}
-
-		
 }

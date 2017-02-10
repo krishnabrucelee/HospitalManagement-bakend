@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -30,8 +31,9 @@ public class PharmacyRequestMedicine implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)	
 	private Long medicineRequestId;
 	
-	@OneToOne(targetEntity = Department.class)
-	@JoinColumn(name = "dept_id", referencedColumnName = "department_id", foreignKey = @ForeignKey(name = "department_pharmacyRequestMedicine_FK"))
+	
+    @ManyToOne()
+    @JoinColumn(name="departmentId")
 	private Department department;
 	
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")	
@@ -54,6 +56,7 @@ public class PharmacyRequestMedicine implements Serializable {
 		this.medicineRequestId = medicineRequestId;
 	}
 
+
 	public Date getRequestDate() {
 		return requestDate;
 	}
@@ -68,6 +71,14 @@ public class PharmacyRequestMedicine implements Serializable {
 
 	public void setMedicineList(List<RequestMedicineList> medicineList) {
 		this.medicineList = medicineList;
+	}
+
+	@Override
+	public String toString() {
+		return "PharmacyRequestMedicine [medicineRequestId="
+				+ medicineRequestId + ", department=" + department
+				+ ", requestDate=" + requestDate + ", medicineList="
+				+ medicineList + "]";
 	}
 
 	/**
