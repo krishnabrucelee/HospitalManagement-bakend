@@ -2,15 +2,21 @@ package com.hospital.dao;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.Query;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +24,8 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hospital.model.Department;
+import com.hospital.model.Doctor;
 import com.hospital.model.DrugIssuetoPatient;
 import com.hospital.model.InvetoryMedicine;
 import com.hospital.model.MasterMedicineOrder;
@@ -31,10 +39,13 @@ import com.hospital.model.MedicineRequestByPharmacy;
 import com.hospital.model.MedicineRequestToMaster;
 import com.hospital.model.MedicineToPatient;
 import com.hospital.model.MedicineTypes;
+import com.hospital.model.PatientMedicineList;
+import com.hospital.model.PharmacyBill;
 import com.hospital.model.PharmacyMasterEntry;
 import com.hospital.model.PharmacyOrder;
 import com.hospital.model.Patient;
 import com.hospital.model.PharmacyRequestMedicine;
+import com.hospital.model.Staff;
 @Repository
 public class PharmaDao {
 	
@@ -108,7 +119,8 @@ public class PharmaDao {
 	
 	@SuppressWarnings("unchecked")
 	public JSONObject savePharmacyMasterEntry(JSONObject pharmacyMasterEntry) {
-		JSONObject status = new JSONObject();			
+		JSONObject status = new JSONObject();
+		System.out.println("Inside webservice save controller");
 		Session session = null;	
 	    Date purchaseDate=null,mfgDate=null,expiryDate=null;	
 		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -131,7 +143,7 @@ public class PharmaDao {
 		formexpiryDate.set(Calendar.SECOND, 0);	
 		List<PharmacyMasterEntry> pharmacyEntryMaster =null;
 		PharmacyMasterEntry dbmedicineMasters = null;
-		PharmacyMasterEntry pharmacyMasterEntries = om.convertValue(pharmacyMasterEntry, PharmacyMasterEntry.class);		
+		PharmacyMasterEntry pharmacyMasterEntries = om.convertValue(pharmacyMasterEntry, PharmacyMasterEntry.class);				
 		pharmacyMasterEntries.setPurchaseDate(purchaseDate);
 		pharmacyMasterEntries.setManufactureDate(mfgDate);
 		pharmacyMasterEntries.setExpiryDate(expiryDate);
@@ -144,11 +156,17 @@ public class PharmaDao {
 		try {		
 			session = this.sessionFactory.getCurrentSession();
 			session.beginTransaction();
+			MedicineItemMaster mt = new MedicineItemMaster();
+			mt.setMedicineId(medicineidd);
+			
+			pharmacyMasterEntries.setMedicineMaster(mt);
+					
+			//MedicineItemMaster medicineItemMaster = session.load(MedicineItemMaster.class, (Integer)pharmacyMasterEntry.get("medicineId"));
 			Query query = session.createQuery("FROM PharmacyMasterEntry WHERE medicineId =:searchA");	
 			pharmacyEntryMaster=query.setParameter("searchA", medicineidd).list();
 			if (pharmacyEntryMaster!=null && !pharmacyEntryMaster.isEmpty()) {
 				dbmedicineMasters = pharmacyEntryMaster.get(0);
-				Integer existmedicineid = (Integer)dbmedicineMasters.getMedicineId();
+				Integer existmedicineid = (Integer)dbmedicineMasters.getMedicineMaster().getMedicineId();
 				String batchId = dbmedicineMasters.getBatchId();
 				Date expiryy = dbmedicineMasters.getExpiryDate();
 				dbexpiryDate.setTime(expiryy);	
@@ -157,10 +175,7 @@ public class PharmaDao {
 					if((batchId.equalsIgnoreCase(medicineBatchId))&&(dbexpiryDate.compareTo(formexpiryDate)==0)){
 						System.out.println("Inside existmedicineid == existmedicineid ,batchid==batchid,equal expiry date");
 						Long dbQuantity = dbmedicineMasters.getQuantity();
-						dbQuantity = dbQuantity+quantity;
-						/*dbmedicineMasters.setPurchaseDate(purchaseDate);
-						dbmedicineMasters.setManufactureDate(mfgDate);
-						dbmedicineMasters.setExpiryDate(expiryDate);*/
+						dbQuantity = dbQuantity+quantity;					
 						dbmedicineMasters.setQuantity(dbQuantity);
 						session.merge(dbmedicineMasters);			
 					} else if((existmedicineid.equals(medicineidd))&&(!batchId.equalsIgnoreCase(medicineBatchId))) {
@@ -229,6 +244,99 @@ public class PharmaDao {
 			status.put("status", false);
 			e.printStackTrace();
 				
+		}finally{
+			if(session!=null && session.isOpen()){
+				session.close();
+			}
+		}
+		return status;
+	}
+	
+	
+	public JSONObject savePharmacyBill(JSONObject pharmacyBillDatas) {
+		JSONObject status = new JSONObject();			
+		Session session = null;		
+		
+		Integer patientid = Integer.parseInt(pharmacyBillDatas.get("patientId").toString());
+		Integer doctorid = Integer.parseInt(pharmacyBillDatas.get("doctorId").toString());
+		Integer stafid = Integer.parseInt(pharmacyBillDatas.get("staffId").toString());
+		
+		Patient patient = new Patient();
+		patient.setPatientId(patientid);
+		
+		Doctor doctor =new Doctor();
+		doctor.setDoctorId(doctorid);
+		
+		Staff s=new Staff();
+			s.setStaffId(stafid);	
+		PharmacyBill pharmacyBill = om.convertValue(pharmacyBillDatas, PharmacyBill.class);		
+		pharmacyBill.setPatient(patient);
+		
+		pharmacyBill.setDoctor(doctor);
+		pharmacyBill.setStaff(s);
+		//PatientMedicineList lst = (PatientMedicineList) pharmacyBill.getPatientMedicineList();
+		/*int a = (int) ((int)lst.getQuantity()*lst.getPrice());
+		lst.setAmount();*/
+		// Generate backend fields
+		pharmacyBill.setBillDate(new Date());
+		pharmacyBill.setBillNumber(RandomStringUtils.random(10));
+		
+		try {		
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			
+			session.save(pharmacyBill);
+			
+			
+			/** Update Quantity in Master table **/
+			
+			List<PatientMedicineList> medicneList = pharmacyBill.getPatientMedicineList();
+			
+			List<Long> medicineIds = medicneList.stream().map(v->
+				{
+					v.setAmount((int)(v.getQuantity() * v.getPrice()));
+					return Long.valueOf(v.getPharmacyMasterId());
+				})
+				.collect(Collectors.toList());
+			
+			System.out.println(medicineIds);
+			
+			Criteria ct = session.createCriteria(PharmacyMasterEntry.class)
+			.add(Restrictions.in("pharmacyMasterId", medicineIds));
+			List<PharmacyMasterEntry> PMEList = ct.list();
+			
+			
+			if(PMEList.size() != medicineIds.size()){
+				System.err.println("Any one Pharmacy Bill Item is not matched or not founded in PharmacyMasterEntry table.");				
+			}
+			
+			PMEList.stream().forEach(PME->{
+				
+				long pharmacyMedicineId = PME.getPharmacyMasterId();
+				
+				
+				medicneList.stream().anyMatch(v->{					
+					if(pharmacyMedicineId == v.getPharmacyMasterId().longValue())	
+					{
+						PME.setQuantity(PME.getQuantity() - v.getQuantity());		
+						return true;
+					}
+					else 
+					{						
+						return false;	
+					}
+				});			
+			
+				
+			});
+			
+			session.getTransaction().commit();
+			status.put("status",true);	
+			status.put("status","Master Medicine  isue is saved");	
+		} catch (Exception e) {		
+		  status.put("status",false);			
+			status.put("originalErrorMsg", e.getMessage());
+			e.printStackTrace();
 		}finally{
 			if(session!=null && session.isOpen()){
 				session.close();
@@ -588,6 +696,7 @@ public class PharmaDao {
 	public JSONObject pharmacyMedicineRequest(JSONObject medicineRequest) {
 		JSONObject status = new JSONObject();
 		status.put("status", true);
+		Integer deptid =  Integer.parseInt(medicineRequest.get("departmentId").toString());
 		Session session = null;
 		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		Date  date =null;
@@ -596,8 +705,14 @@ public class PharmaDao {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		
+		
+		
 		try {
 			PharmacyRequestMedicine requestmedicine = om.convertValue(medicineRequest, PharmacyRequestMedicine.class);	
+			Department department = new Department();
+			department.setDepartmentId(deptid);
+			requestmedicine.setDepartment(department);			
 			requestmedicine.setRequestDate(date);
 			session = this.sessionFactory.getCurrentSession();
 			session.beginTransaction();

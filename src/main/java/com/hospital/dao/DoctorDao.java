@@ -71,15 +71,15 @@ public class DoctorDao {
 		}
 		return status;
 	}
-
+  @SuppressWarnings("unchecked")
 	public JSONObject listDoctor() {
 		System.out.println("Inside Dao1Doctor");
 		JSONObject status = new JSONObject();
-		status.put("status", true);
-		session = sessionFactory.openSession();
-		transaction = session.beginTransaction();
+		status.put("status", true);		
 		List<Doctor> doctorList = null;
 		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
 			Query query = session.createQuery("FROM Doctor");
 			doctorList = query.list();
 			status.put("Doctor", doctorList);

@@ -3,7 +3,7 @@
           "-//Hibernate/Hibernate Configuration DTD 5.0//EN"  
           "http://hibernate.sourceforge.net/hibernate-configuration-5.0.dtd">  
   
-<hibernate-configuration>  
+<hibernate-configuration>
   
     <session-factory>  
     <!-- <property name="dialect">org.hibernate.dialect.MySQLDialect</property>   
@@ -11,16 +11,16 @@
    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hospitalmanagement</property>
    <property name="hibernate.connection.username">root</property>  
      <property name="hbm2ddl.auto">update</property>     
-        <property name="current_session_context_class">thread</property> -->
+        <property name="current_session_context_class">thread</property> 
         
      <!--    <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
      <property name="hbm2ddl.auto">update</property>  
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property> 
         <property name="hibernate.show_sql">true</property>
-        <property name="current_session_context_class">thread</property> -->
+        <property name="current_session_context_class">thread</property> --> 
         
-     <property name="hibernate.connection.username">root</property>   
-   <property name="hibernate.connection.password">mysql</property>  
+  <!--  <property name="hibernate.connection.password">mysql</property>   -->
+  <property name="hibernate.connection.username">root</property> 
   <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hospitalmanagement</property>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
@@ -105,12 +105,13 @@
 		<mapping class="com.hospital.model.PharmacyRequestMedicine" />	
 		<mapping class="com.hospital.model.RequestMedicineList" />	
 		
+		<!-- Pharmacy New Type -->
 		<mapping class="com.hospital.model.MedicineItemMaster" />
 		<mapping class="com.hospital.model.MedicineMasterStock" />
 		 <mapping class="com.hospital.model.PharmacyMasterEntry" /> 
-		<!-- <mapping class="com.hospital.model.MedicineCategories" />
-		<mapping class="com.hospital.model.MedicineDetails" />	
-		<mapping class="com.hospital.model.MedicineMasterStock" /> -->
+		 <mapping class="com.hospital.model.PharmacyBill" />
+		<mapping class="com.hospital.model.PatientMedicineList" />	
+		
 					                            
 	<mapping class="com.hospital.model.PharmacyOrder" />
 	<mapping class="com.hospital.model.SupplierInformation" />
@@ -127,6 +128,17 @@
 	<mapping class="com.hospital.model.MedicineTypes" />
 	<mapping class="com.hospital.model.MedicineMaster" />
 	<mapping class="com.hospital.model.MedicineEntryMaster" />
+	
+	<!-- Lab New Type -->	
+	<mapping class="com.hospital.model.LabMasterName" />
+	<mapping class="com.hospital.model.LabMasterSubCategories" />
+	<mapping class="com.hospital.model.LabTestMasterReport" />
+	<mapping class="com.hospital.model.LabTestMasterSubcategories" />
+	<mapping class="com.hospital.model.LabPatientRequestTest" />
+	<mapping class="com.hospital.model.LabPatientRequestMainCategories" />
+	<mapping class="com.hospital.model.LabPatientRequestSubcategories" />
+	<mapping class="com.hospital.model.PatientLabTestStatus" />
+	
 	<mapping class="com.hospital.model.LabTest" />
 	<mapping class="com.hospital.model.ExternalLab" />
 	<mapping class="com.hospital.model.LabtestTypes" />
@@ -172,6 +184,6 @@
 			<mapping class="com.hospital.model.PatientRadiologyTestNames" /> 
 			 <mapping class="com.hospital.model.PatientRadiologyReport" />
 			<mapping class="com.hospital.model.RadiologyReportSubCategeries" /> 
-   </session-factory>  
+</session-factory>  
   
 </hibernate-configuration>  

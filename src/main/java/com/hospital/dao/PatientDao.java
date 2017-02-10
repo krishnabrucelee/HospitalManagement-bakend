@@ -116,6 +116,7 @@ public class PatientDao {
 		try {
 			Query query = session.createQuery("FROM Patient");
 			patientList = query.list();
+			System.out.println("DB PATIENT="+patientList);
 			status.put("Patient", patientList);
 			status.put("result", true);
 			transaction.commit();

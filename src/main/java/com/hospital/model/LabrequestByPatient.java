@@ -92,6 +92,14 @@ public class LabrequestByPatient implements Serializable {
 	public void setDepartmentId(Integer departmentId) {
 		this.departmentId = departmentId;
 	}
+	@Override
+	public String toString() {
+		return "LabrequestByPatient [labrequestId=" + labrequestId
+				+ ", requestStatus=" + requestStatus + ", doctorId=" + doctorId
+				+ ", departmentId=" + departmentId + ", patientId=" + patientId
+				+ ", patientName=" + patientName + ", requestTime="
+				+ requestTime + ", labTestNames=" + labTestNames + "]";
+	}
 	
 
 }

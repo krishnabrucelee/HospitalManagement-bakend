@@ -14,19 +14,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 @Entity
-public class LabTestName implements Serializable {
+public class LabTestName implements Serializable {//LabMasterTestReport
 	@Column
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)	
 	private Integer testId;
 	
+	@Column
+	private String ageRange;
+	@Column
 	private String testName;
+	
 	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name="testId",referencedColumnName="testId",foreignKey=@ForeignKey(name="Labtest_Categories_FK"))
 	private List<TestSubCategeries> subcategories;
-	/*@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="testId",referencedColumnName="testId",foreignKey=@ForeignKey(name="Labtest_Categories_FK"))
-	private List<TestSubCategeries> subcategories;*/
+	
 	public LabTestName() {
 		super();
 	}

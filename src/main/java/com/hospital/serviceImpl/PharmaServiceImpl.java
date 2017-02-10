@@ -98,12 +98,18 @@ public class PharmaServiceImpl implements IPharmaService {
 
 	@Override
 	public JSONObject savePharmacyMasterEntry(JSONObject pharmacyMasterEntry) {
+		System.out.println("Inside webservice save controller");
 		return pharmadao.savePharmacyMasterEntry(pharmacyMasterEntry);
 	}
 
 	@Override
 	public JSONObject listPharmacyMasterEntry() {
 		return pharmadao.listPharmacyMasterEntry();
+	}
+
+	@Override
+	public JSONObject savePharmacyBill(JSONObject pharmacyBillDatas) {
+		return pharmadao.savePharmacyBill(pharmacyBillDatas);
 	}
 
 	@Override

@@ -10,6 +10,10 @@ public interface IPharmaService {
 	public JSONObject savePharmacyMasterEntry(JSONObject pharmacyMasterEntry);
 	public JSONObject listPharmacyMasterEntry();
 	
+	public JSONObject savePharmacyBill(JSONObject pharmacyBillDatas);
+	
+	
+	
 	public JSONObject orderMasterMedicine(JSONObject orderMasterMedicine);
 	public JSONObject issueOrder(JSONObject productdetails);
 	public JSONObject addMasterEntry(JSONObject masterentry);
