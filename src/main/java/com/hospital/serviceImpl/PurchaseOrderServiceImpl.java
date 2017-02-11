@@ -43,4 +43,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		return purchaseOrderdao.deletePurchaseOrder(purchaseOrderId);
 	}
 
+	@Override
+	public JSONObject getItemsByDepartment(JSONObject department) {
+		return purchaseOrderdao.getItemsByDepartment(department);
+	}
+
 }

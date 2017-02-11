@@ -26,7 +26,8 @@
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   <property name="hibernate.show_sql">true</property>
   <property name="hibernate.current_session_context_class">thread</property>
-   <property name="hibernate.hbm2ddl.auto">update</property>        
+   <property name="hibernate.hbm2ddl.auto">update</property>  
+         
           <!-- mapping properties -->
 		<mapping class="com.hospital.model.Department" />
 		<mapping class="com.hospital.model.Doctor" /> 
@@ -97,9 +98,11 @@
 		<mapping class="com.hospital.model.StockMedicine" />
 		<mapping class="com.hospital.model.StockMedicineTransaction" />
 		<mapping class="com.hospital.model.Supplier" />
-					                            
-					                            
-					                            
+		<mapping class="com.hospital.model.PurchaseOrderTransaction" />			                            
+		<mapping class="com.hospital.model.MaterialRecieveNote" />			                            
+		<mapping class="com.hospital.model.SurgeryRoom" />
+			
+				                            
 		<mapping class="com.hospital.model.MasterMedicineOrder" />	
 		<mapping class="com.hospital.model.MedicineOrderTypes" />
 		<mapping class="com.hospital.model.PharmacyRequestMedicine" />	

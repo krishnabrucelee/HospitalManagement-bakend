@@ -3,7 +3,10 @@
  */
 package com.hospital.dao;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -11,15 +14,21 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.datetime.joda.LocalDateTimeParser;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.PurchaseOrder;
+import com.hospital.model.PurchaseOrderTransaction;
 import com.hospital.model.StockLedger;
+import com.hospital.model.StockMedicine;
+import com.hospital.model.Supplier;
 import com.hospital.model.Department;
 import com.hospital.model.Doctor;
+import com.hospital.model.MedicineItemMaster;
 import com.hospital.model.Patient;
+import com.hospital.model.PharmacyRequestMedicine;
 
 /**
  * @author Krishna
@@ -52,12 +61,18 @@ public class PurchaseOrderDao {
 		ObjectMapper om = new ObjectMapper();
 		om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		PurchaseOrder appoint = om.convertValue(purchaseOrder, PurchaseOrder.class);
-		// Load StockLedger
-		StockLedger stockLedgerDetails = session.load(StockLedger.class, (Integer) purchaseOrder.get("stock_ledger_id"));
-		appoint.setStockLedger(stockLedgerDetails);
-		// Load Department
-		Department departmentDetails = session.load(Department.class, (Integer) purchaseOrder.get("department_id"));
-		appoint.setDepartment(departmentDetails);
+		appoint.setPurchaseOrderRefNumber("PO" + new Date());
+		List<PurchaseOrderTransaction> purchaseOrderList = appoint.getPurchaseOrderTransaction();
+
+		for (PurchaseOrderTransaction purchase : purchaseOrderList) {
+			MedicineItemMaster medicineDetails = session.load(MedicineItemMaster.class, purchase.getMedicineId());
+			purchase.setMedicineItemMaster(medicineDetails);
+			purchase.setShipTo(purchaseOrder.get("shipTo").toString());
+			purchase.setShipingAddress(purchaseOrder.get("shipingAddress").toString());
+		}
+		// Load supplier
+		Supplier supplier = session.load(Supplier.class, (Integer) purchaseOrder.get("supplier_id"));
+		appoint.setSupplier(supplier);
 
 		try {
 			System.out.println("Inside Dao11 PATIENT");
@@ -160,6 +175,41 @@ public class PurchaseOrderDao {
 		} finally {
 			if (session.isOpen()) {
 				// session.close();
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * @param department
+	 * @return
+	 */
+	public JSONObject getItemsByDepartment(JSONObject department) {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		if (department.get("departmentName").equals("Pharmacy")) {
+			System.out.println(department.get("departmentId"));
+
+			List<PharmacyRequestMedicine> pharmacyRequestMedicineList = null;
+			Integer patientId = Integer.parseInt(department.get("departmentId").toString());
+			try {
+				Query query = session.createQuery("FROM PharmacyRequestMedicine WHERE dept_id = :id");
+				query.setParameter("id", patientId);
+				pharmacyRequestMedicineList = query.list();
+				status.put("PharamacyRequestItems", pharmacyRequestMedicineList.iterator());
+				System.out.println(" Inside Rest DAO Bus Status=" + status);
+				transaction.commit();
+				return status;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				status.put("result", false);
+			} finally {
+				if (session.isOpen()) {
+					// session.close();
+				}
 			}
 		}
 		return status;

@@ -4,7 +4,9 @@
 package com.hospital.model;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -12,11 +14,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * @author Krishna
@@ -31,33 +33,23 @@ public class PurchaseOrder {
 	@Column(name = "purchase_order_id")
 	private Integer purchaseOrderId;
 	
-	@OneToOne(targetEntity = StockLedger.class)
-	@JoinColumn(name = "stock_ledger_id", referencedColumnName = "stock_ledger_id", foreignKey = @ForeignKey(name = "stock_ledger_PURODR_FK"))
-	private StockLedger stockLedger;
+	@Column(name = "purchase_order_ref_number")
+	private String purchaseOrderRefNumber;
 	
 	@OneToOne(targetEntity = Department.class)
 	@JoinColumn(name = "dept_id", referencedColumnName = "department_id", foreignKey = @ForeignKey(name = "department_PURODR_FK"))
 	private Department department;
 	
-	@JsonFormat(pattern = "dd-MM-yyyy")
+	@OneToOne(targetEntity = Supplier.class)
+	@JoinColumn(name = "supplier_id", referencedColumnName = "supplier_id", foreignKey = @ForeignKey(name = "supplier_PURODR_FK"))
+	private Supplier supplier;
+	
 	@Temporal(TemporalType.DATE)
-	@Column(name = "issued_date")
-	private Date issuedDate;
+	@Column(name = "purchase_order_date")
+	private Date purchaseOrderDate;
 	
-	@Column(name = "supplier_company_name")
-	private String supplierCompanyName;
-	
-	@Column(name = "item_name")
-	private String itemName;
-	
-	@Column(name = "item_description")
-	private String itemDescription;
-	
-	@Column(name = "item_count")
-	private Integer itemCount;
-	
-	@Column(name = "price")
-	private Double price;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<PurchaseOrderTransaction> purchaseOrderTransaction;
 
 	/**
 	 * Get the purchaseOrderId of PurchaseOrder.
@@ -75,24 +67,6 @@ public class PurchaseOrder {
 	 */
 	public void setPurchaseOrderId(Integer purchaseOrderId) {
 		this.purchaseOrderId = purchaseOrderId;
-	}
-
-	/**
-	 * Get the stockLedger of PurchaseOrder.
-	 *
-	 * @return the stockLedger
-	 */
-	public StockLedger getStockLedger() {
-		return stockLedger;
-	}
-
-	/**
-	 * Set the stockLedger of PurchaseOrder.
-	 *
-	 * @param stockLedger the stockLedger to set
-	 */
-	public void setStockLedger(StockLedger stockLedger) {
-		this.stockLedger = stockLedger;
 	}
 
 	/**
@@ -114,111 +88,75 @@ public class PurchaseOrder {
 	}
 
 	/**
-	 * Get the issuedDate of PurchaseOrder.
+	 * Get the supplier of PurchaseOrder.
 	 *
-	 * @return the issuedDate
+	 * @return the supplier
 	 */
-	public Date getIssuedDate() {
-		return issuedDate;
+	public Supplier getSupplier() {
+		return supplier;
 	}
 
 	/**
-	 * Set the issuedDate of PurchaseOrder.
+	 * Set the supplier of PurchaseOrder.
 	 *
-	 * @param issuedDate the issuedDate to set
+	 * @param supplier the supplier to set
 	 */
-	public void setIssuedDate(Date issuedDate) {
-		this.issuedDate = issuedDate;
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
 	}
 
 	/**
-	 * Get the supplierCompanyName of PurchaseOrder.
+	 * Get the purchaseOrderDate of PurchaseOrder.
 	 *
-	 * @return the supplierCompanyName
+	 * @return the purchaseOrderDate
 	 */
-	public String getSupplierCompanyName() {
-		return supplierCompanyName;
+	public Date getPurchaseOrderDate() {
+		return purchaseOrderDate;
 	}
 
 	/**
-	 * Set the supplierCompanyName of PurchaseOrder.
+	 * Set the purchaseOrderDate of PurchaseOrder.
 	 *
-	 * @param supplierCompanyName the supplierCompanyName to set
+	 * @param purchaseOrderDate the purchaseOrderDate to set
 	 */
-	public void setSupplierCompanyName(String supplierCompanyName) {
-		this.supplierCompanyName = supplierCompanyName;
+	public void setPurchaseOrderDate(Date purchaseOrderDate) {
+		this.purchaseOrderDate = purchaseOrderDate;
 	}
 
 	/**
-	 * Get the itemName of PurchaseOrder.
+	 * Get the purchaseOrderTransaction of PurchaseOrder.
 	 *
-	 * @return the itemName
+	 * @return the purchaseOrderTransaction
 	 */
-	public String getItemName() {
-		return itemName;
+	public List<PurchaseOrderTransaction> getPurchaseOrderTransaction() {
+		return purchaseOrderTransaction;
 	}
 
 	/**
-	 * Set the itemName of PurchaseOrder.
+	 * Set the purchaseOrderTransaction of PurchaseOrder.
 	 *
-	 * @param itemName the itemName to set
+	 * @param purchaseOrderTransaction the purchaseOrderTransaction to set
 	 */
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
+	public void setPurchaseOrderTransaction(List<PurchaseOrderTransaction> purchaseOrderTransaction) {
+		this.purchaseOrderTransaction = purchaseOrderTransaction;
 	}
 
 	/**
-	 * Get the itemDescription of PurchaseOrder.
+	 * Get the purchaseOrderRefNumber of PurchaseOrder.
 	 *
-	 * @return the itemDescription
+	 * @return the purchaseOrderRefNumber
 	 */
-	public String getItemDescription() {
-		return itemDescription;
+	public String getPurchaseOrderRefNumber() {
+		return purchaseOrderRefNumber;
 	}
 
 	/**
-	 * Set the itemDescription of PurchaseOrder.
+	 * Set the purchaseOrderRefNumber of PurchaseOrder.
 	 *
-	 * @param itemDescription the itemDescription to set
+	 * @param purchaseOrderRefNumber the purchaseOrderRefNumber to set
 	 */
-	public void setItemDescription(String itemDescription) {
-		this.itemDescription = itemDescription;
-	}
-
-	/**
-	 * Get the itemCount of PurchaseOrder.
-	 *
-	 * @return the itemCount
-	 */
-	public Integer getItemCount() {
-		return itemCount;
-	}
-
-	/**
-	 * Set the itemCount of PurchaseOrder.
-	 *
-	 * @param itemCount the itemCount to set
-	 */
-	public void setItemCount(Integer itemCount) {
-		this.itemCount = itemCount;
-	}
-
-	/**
-	 * Get the price of PurchaseOrder.
-	 *
-	 * @return the price
-	 */
-	public Double getPrice() {
-		return price;
-	}
-
-	/**
-	 * Set the price of PurchaseOrder.
-	 *
-	 * @param price the price to set
-	 */
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setPurchaseOrderRefNumber(String purchaseOrderRefNumber) {
+		this.purchaseOrderRefNumber = purchaseOrderRefNumber;
 	}
 	
 }
