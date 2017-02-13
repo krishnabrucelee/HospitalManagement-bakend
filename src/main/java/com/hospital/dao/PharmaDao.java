@@ -713,9 +713,9 @@ public class PharmaDao {
 		
 		try {
 			PharmacyRequestMedicine requestmedicine = om.convertValue(medicineRequest, PharmacyRequestMedicine.class);
-			Department department = new Department();
-			department.setDepartmentId(deptid);
-			requestmedicine.setDepartment(department);			
+//			Department department = new Department();
+//			department.setDepartmentId(deptid);
+//			requestmedicine.setDepartment(department);			
 			requestmedicine.setRequestDate(date);
 			
 			session = this.sessionFactory.getCurrentSession();

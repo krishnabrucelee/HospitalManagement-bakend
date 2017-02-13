@@ -32,7 +32,7 @@ public class PharmacyRequestMedicine implements Serializable {
 	private Long medicineRequestId;
 	
 	
-    @ManyToOne()
+    @OneToOne()
     @JoinColumn(name="departmentId")
 	private Department department;
 	
