@@ -70,8 +70,23 @@ public class StockMedicine {
 	private Long quantity;
 
 	@Column(name = "price")	
-	private Double price;
+	private Double purchasePrice;
+	
+	@Column(name = "sales_price")	
+	private Double salesPrice;
 
+	@OneToOne(targetEntity = PurchaseOrder.class)
+	@JoinColumn(name = "purchaseOrder_id", referencedColumnName = "purchase_order_id", foreignKey = @ForeignKey(name = "purchaseOrder_STK_FK"))
+	private PurchaseOrder purchaseOrder;
+	
+	@OneToOne(targetEntity = MaterialRecieveNote.class)
+	@JoinColumn(name = "materialRecieveNote", referencedColumnName = "material_recieve_note_id", foreignKey = @ForeignKey(name = "materialRecieveNote_STK_FK"))
+	private MaterialRecieveNote materialRecieveNote;
+	
+	@OneToOne(targetEntity = MaterialRecieveNote.class)
+	@JoinColumn(name = "medicineItemMaster")
+	private MedicineItemMaster medicineItemMaster;
+	
 	@OneToMany(cascade = CascadeType.ALL)
 	List<StockMedicineTransaction> stockMedicineTransaction;
 	
@@ -255,22 +270,41 @@ public class StockMedicine {
 		this.quantity = quantity;
 	}
 
+
 	/**
-	 * Get the price of StockMedicine.
+	 * Get the purchasePrice of StockMedicine.
 	 *
-	 * @return the price
+	 * @return the purchasePrice
 	 */
-	public Double getPrice() {
-		return price;
+	public Double getPurchasePrice() {
+		return purchasePrice;
 	}
 
 	/**
-	 * Set the price of StockMedicine.
+	 * Set the purchasePrice of StockMedicine.
 	 *
-	 * @param price the price to set
+	 * @param purchasePrice the purchasePrice to set
 	 */
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setPurchasePrice(Double purchasePrice) {
+		this.purchasePrice = purchasePrice;
+	}
+
+	/**
+	 * Get the salesPrice of StockMedicine.
+	 *
+	 * @return the salesPrice
+	 */
+	public Double getSalesPrice() {
+		return salesPrice;
+	}
+
+	/**
+	 * Set the salesPrice of StockMedicine.
+	 *
+	 * @param salesPrice the salesPrice to set
+	 */
+	public void setSalesPrice(Double salesPrice) {
+		this.salesPrice = salesPrice;
 	}
 
 	/**
@@ -309,5 +343,58 @@ public class StockMedicine {
 		this.stockMedicineTransaction = stockMedicineTransaction;
 	}
 
+	/**
+	 * Get the purchaseOrder of StockMedicine.
+	 *
+	 * @return the purchaseOrder
+	 */
+	public PurchaseOrder getPurchaseOrder() {
+		return purchaseOrder;
+	}
+
+	/**
+	 * Set the purchaseOrder of StockMedicine.
+	 *
+	 * @param purchaseOrder the purchaseOrder to set
+	 */
+	public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+		this.purchaseOrder = purchaseOrder;
+	}
+
+	/**
+	 * Get the materialRecieveNote of StockMedicine.
+	 *
+	 * @return the materialRecieveNote
+	 */
+	public MaterialRecieveNote getMaterialRecieveNote() {
+		return materialRecieveNote;
+	}
+
+	/**
+	 * Set the materialRecieveNote of StockMedicine.
+	 *
+	 * @param materialRecieveNote the materialRecieveNote to set
+	 */
+	public void setMaterialRecieveNote(MaterialRecieveNote materialRecieveNote) {
+		this.materialRecieveNote = materialRecieveNote;
+	}
+
+	/**
+	 * Get the medicineItemMaster of StockMedicine.
+	 *
+	 * @return the medicineItemMaster
+	 */
+	public MedicineItemMaster getMedicineItemMaster() {
+		return medicineItemMaster;
+	}
+
+	/**
+	 * Set the medicineItemMaster of StockMedicine.
+	 *
+	 * @param medicineItemMaster the medicineItemMaster to set
+	 */
+	public void setMedicineItemMaster(MedicineItemMaster medicineItemMaster) {
+		this.medicineItemMaster = medicineItemMaster;
+	}
 	
 }

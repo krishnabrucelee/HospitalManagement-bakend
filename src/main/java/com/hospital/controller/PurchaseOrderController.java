@@ -69,4 +69,15 @@ public class PurchaseOrderController {
 	public @ResponseBody JSONObject deletePurchaseOrder(@RequestBody JSONObject purchaseOrderId) {
 		return purchaseOrderService.deletePurchaseOrder(purchaseOrderId);
 	}
+	
+	/**
+	 * Update PurchaseOrder.
+	 * 
+	 * @param purchaseOrder
+	 * @return purchaseOrder
+	 */
+	@RequestMapping(value = "/getItemsByDepartment")
+	public @ResponseBody JSONObject getItemsByDepartment(@RequestBody JSONObject department) {
+		return purchaseOrderService.getItemsByDepartment(department);
+	}
 }

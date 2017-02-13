@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
@@ -46,6 +47,8 @@ import com.hospital.model.PharmacyOrder;
 import com.hospital.model.Patient;
 import com.hospital.model.PharmacyRequestMedicine;
 import com.hospital.model.Staff;
+import com.hospital.model.StockMedicine;
+import com.hospital.model.StockMedicineTransaction;
 @Repository
 public class PharmaDao {
 	
@@ -709,17 +712,18 @@ public class PharmaDao {
 		
 		
 		try {
-			PharmacyRequestMedicine requestmedicine = om.convertValue(medicineRequest, PharmacyRequestMedicine.class);	
-			Department department = new Department();
-			department.setDepartmentId(deptid);
-			requestmedicine.setDepartment(department);			
+			PharmacyRequestMedicine requestmedicine = om.convertValue(medicineRequest, PharmacyRequestMedicine.class);
+//			Department department = new Department();
+//			department.setDepartmentId(deptid);
+//			requestmedicine.setDepartment(department);			
 			requestmedicine.setRequestDate(date);
+			
 			session = this.sessionFactory.getCurrentSession();
 			session.beginTransaction();
 			session.save(requestmedicine);
 			session.getTransaction().commit();
-			status.put("status",true);	
-			status.put("status","MedicineRequest isue is saved");	
+			status.put("status", true);
+			status.put("status", "MedicineRequest isue is saved");
 		} catch (Exception e) {		
 		status.put("status",false);			
 			status.put("originalErrorMsg", e.getMessage());

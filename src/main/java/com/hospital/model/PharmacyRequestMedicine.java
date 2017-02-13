@@ -32,7 +32,7 @@ public class PharmacyRequestMedicine implements Serializable {
 	private Long medicineRequestId;
 	
 	
-    @ManyToOne()
+    @OneToOne()
     @JoinColumn(name="departmentId")
 	private Department department;
 	
@@ -40,8 +40,7 @@ public class PharmacyRequestMedicine implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date requestDate;
 	
-	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
-	@JoinColumn(name="medicineRequestId",foreignKey=@ForeignKey(name="MedicineRequest_MedicineList_FK"))
+	@OneToMany(cascade=CascadeType.ALL)
 	List<RequestMedicineList> medicineList = new ArrayList<RequestMedicineList>();
 
 	public PharmacyRequestMedicine() {

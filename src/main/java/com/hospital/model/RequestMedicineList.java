@@ -25,7 +25,7 @@ public class RequestMedicineList implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)	
 	private Long medicineListId;
 	
-	@Column
+	@Column(name = "medicineId")
 	private Integer medicineId;
 	
 	@Column
@@ -33,10 +33,6 @@ public class RequestMedicineList implements Serializable {
 
 	@Column
 	private Status status;
-	
-	@OneToOne(targetEntity = StockMedicine.class)
-	@JoinColumn(name = "stock_medicine_id", referencedColumnName = "stock_medicine_id", foreignKey = @ForeignKey(name = "stockMedicine_requestMedicineList_FK"))
-	private StockMedicine stockMedicine;
 	
 	public enum Status {
 		Stock_Issued,
@@ -56,10 +52,20 @@ public class RequestMedicineList implements Serializable {
 		this.medicineListId = medicineListId;
 	}
 
+	/**
+	 * Get the medicineId of RequestMedicineList.
+	 *
+	 * @return the medicineId
+	 */
 	public Integer getMedicineId() {
 		return medicineId;
 	}
 
+	/**
+	 * Set the medicineId of RequestMedicineList.
+	 *
+	 * @param medicineId the medicineId to set
+	 */
 	public void setMedicineId(Integer medicineId) {
 		this.medicineId = medicineId;
 	}
@@ -97,24 +103,6 @@ public class RequestMedicineList implements Serializable {
 	 */
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	/**
-	 * Get the stockMedicine of RequestMedicineList
-	 *
-	 * @return the stockMedicine
-	 */
-	public StockMedicine getStockMedicine() {
-		return stockMedicine;
-	}
-
-	/**
-	 * Set the stockMedicine of RequestMedicineList
-	 *
-	 * @param stockMedicine the stockMedicine to set
-	 */
-	public void setStockMedicine(StockMedicine stockMedicine) {
-		this.stockMedicine = stockMedicine;
 	}
 	
 }

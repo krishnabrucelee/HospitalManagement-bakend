@@ -43,4 +43,10 @@ public interface PurchaseOrderService {
 	 */
 	public JSONObject deletePurchaseOrder(JSONObject purchaseOrderId);
 
+	/**
+	 * @param department
+	 * @return
+	 */
+	public JSONObject getItemsByDepartment(JSONObject department);
+
 }
