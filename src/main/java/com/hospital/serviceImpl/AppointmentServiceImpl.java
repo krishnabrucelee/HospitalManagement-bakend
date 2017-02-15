@@ -28,6 +28,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	public JSONObject getDoctorAvaliablities(JSONObject doctor) {
+		return appointmentdao.getDoctorAvaliablities(doctor);
+	}
+	
+	@Override
 	public JSONObject listAppointment() {
 		return appointmentdao.listAppointment();
 	}
@@ -41,5 +46,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public JSONObject deleteAppointment(JSONObject appointmentId) {
 		return appointmentdao.deleteAppointment(appointmentId);
 	}
+
 
 }

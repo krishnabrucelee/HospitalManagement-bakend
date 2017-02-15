@@ -21,7 +21,7 @@
         
   <!--  <property name="hibernate.connection.password">mysql</property>   -->
   <property name="hibernate.connection.username">root</property> 
-  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hospitalmanagement</property>
+  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hospitalmanagement?useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   <property name="hibernate.show_sql">true</property>
@@ -31,7 +31,9 @@
           <!-- mapping properties -->
 		<mapping class="com.hospital.model.Department" />
 		<mapping class="com.hospital.model.Doctor" /> 
+		<mapping class="com.hospital.model.DoctorsDefaultSchedule" /> 		
 		<mapping class="com.hospital.model.Appointment" />
+		<mapping class="com.hospital.model.DoctorAppointment" />
 		<mapping class="com.hospital.model.BloodBank" />
 		<mapping class="com.hospital.model.BloodRequest" />
 		<mapping class="com.hospital.model.BloodReturn" />
@@ -187,6 +189,10 @@
 			<mapping class="com.hospital.model.PatientRadiologyTestNames" /> 
 			 <mapping class="com.hospital.model.PatientRadiologyReport" />
 			<mapping class="com.hospital.model.RadiologyReportSubCategeries" /> 
+			
+	<!-- Nurse Scheduling -->
+	<mapping class="com.hospital.model.NurseAttendance" />		
+			
 </session-factory>  
   
 </hibernate-configuration>  

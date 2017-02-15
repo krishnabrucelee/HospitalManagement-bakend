@@ -3,21 +3,40 @@
  */
 package com.hospital.dao;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Appointment;
-import com.hospital.model.Department;
 import com.hospital.model.Doctor;
+import com.hospital.model.DoctorAppointment;
+import com.hospital.model.DoctorsDefaultSchedule;
 import com.hospital.model.Patient;
+import com.monitorjbl.json.JsonView;
+import com.monitorjbl.json.Match;
 
 /**
  * @author Krishna
@@ -33,6 +52,11 @@ public class AppointmentDao {
 	 */
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	
+	@Autowired
+	@Qualifier("jsonViewObjectMapper")
+	ObjectMapper jsonViewObjectMapper;
 
 	static {
 		System.out.println("class AppointmentDao executed");
@@ -42,8 +66,8 @@ public class AppointmentDao {
 	private Transaction transaction = null;
 
 	@SuppressWarnings("unchecked")
-	public JSONObject addAppointment(JSONObject appointment) {
-		JSONObject status = new JSONObject();
+	public JSONObject addAppointment(JSONObject appointmentDetails) {
+		/*JSONObject status = new JSONObject();
 		status.put("status", true);
 		session = sessionFactory.openSession();
 		transaction = session.beginTransaction();
@@ -70,9 +94,154 @@ public class AppointmentDao {
 				// session.close();
 			}
 		}
-		return status;
+		return status;*/
+		
+		JSONObject result = new JSONObject();
+		result.put("status",true);
+		Session session = null;
+		try {
+			
+			session = this.sessionFactory.getCurrentSession();
+			
+			session.beginTransaction();
+			
+			DoctorAppointment doctorAppointment = jsonViewObjectMapper.convertValue(appointmentDetails, com.hospital.model.DoctorAppointment.class);
+			
+			Doctor doct_details = session.get(Doctor.class,(int)appointmentDetails.get("doctorId"));
+			
+			if(doct_details == null)
+			{
+				result.put("status",false);
+				result.put("reason","Can't find Doctor details. Please check doctorId field");
+				return result;
+			}
+			
+			Patient patient_details = session.get(Patient.class,(int)appointmentDetails.get("patientId"));
+			
+			if(patient_details == null)
+			{
+				result.put("status",false);
+				result.put("reason","Can't find Patient details. Please check patientId field");
+				return result;
+			}
+			
+				
+			doctorAppointment.setDoctorDetails(doct_details);
+			doctorAppointment.setPatientDetails(patient_details);
+			
+			doctorAppointment.setCreationDate(new Date());
+			
+			session.save(doctorAppointment);
+			
+			session.getTransaction().commit();
+			
+			System.out.println(doctorAppointment.getStarttime()+" "+doctorAppointment.getEndtime());
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status",false);
+			result.put("reason","error happend");
+			result.put("message",e.getMessage());
+		}
+		return result;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject getDoctorAvaliablities(JSONObject doctor) {
+		JSONObject result = new JSONObject();
+		result.put("status", true);
+		Session session = null;
+		try {
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			
+			LinkedHashMap<String, Object> output = new LinkedHashMap<String, Object>();
+			
+			String startDate = (String) doctor.get("date");
+			
+			LocalDate ld = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+			
+			ZonedDateTime startZDT = ld.atStartOfDay(ZoneId.of("UTC"));
+			
+			LocalDateTime startLDT = startZDT.toLocalDateTime();			
+			
+			LocalDateTime endLDT = startLDT.plusDays(1);	
+			
+			
+			Date startDateObj = Date.from(startZDT.toInstant());
+			
+			Date endDateObj = Date.from(endLDT.toInstant(ZoneOffset.UTC));
+			
+			
+			ArrayList<Object> emptyList = new ArrayList<Object>();
+			
+			// 1. Get Doctor Details
+			Doctor doctorDetails = session.get(Doctor.class,(int)doctor.get("doctorId"));
+			
+			if(doctorDetails == null)
+			{
+				result.put("status",false);
+				result.put("reason","doctor_details_id is wrong please check");
+				return result;
+			}
+			
+			
+			// 2. Get Doctors Default Schedule & doctorsSchedule		
+			
+			Criteria cri = session.createCriteria(DoctorsDefaultSchedule.class);
+			cri.add(Restrictions.eq("doctorDetails",doctorDetails)				
+			);
+			
+			List<DoctorsDefaultSchedule> doctorDefaultSchedule = cri.list();	
+			
+			String jsonString = jsonViewObjectMapper.writeValueAsString(JsonView.with(doctorDefaultSchedule)
+					.onClass(DoctorsDefaultSchedule.class,Match.match().exclude("doctorDetails"))
+					);
+			
+			output.put("defaultSchdule", jsonViewObjectMapper.readValue(jsonString,new TypeReference<ArrayList<Map<String,Object>>>(){}));
+			
+			// 3. Get Doctor Appointments for particular Date
+			cri = session.createCriteria(DoctorAppointment.class);			
+			cri.add(
+					Restrictions.and(
+							Restrictions.ge("starttime", startDateObj),
+							Restrictions.lt("starttime", endDateObj),
+							Restrictions.eq("doctorDetails",doctorDetails)
+					)
+			);
+			
+			List<DoctorAppointment> doctorAppointments = cri.list();	
+			
+			output.put("doctorAppointments",emptyList);
+			
+			if(!doctorAppointments.isEmpty())
+			{
+				jsonString = jsonViewObjectMapper.writeValueAsString(JsonView.with(doctorAppointments)
+						.onClass(DoctorAppointment.class, Match.match().exclude("doctorDetails","patientDetails"))						
+						);
+				
+				output.put("doctorAppointments", jsonViewObjectMapper.readValue(jsonString,new TypeReference<ArrayList<HashMap<String,Object>>>(){}));
+				
+			}
+			
+			result.put("result",output);
+			
+		} catch (Exception e) {
+			result.put("status", false);
+			result.put("reason","Error Happend");
+			result.put("message",e.getMessage());
+			e.printStackTrace();
+		}
+		finally{
+			if(session.isOpen() && session.isConnected())
+				session.close();
+		}
+		return result;
 	}
 
+	
 	public JSONObject listAppointment() {
 		System.out.println("Inside Dao1Appointment");
 		JSONObject status = new JSONObject();
@@ -161,6 +330,5 @@ public class AppointmentDao {
 			}
 		}
 		return status;
-	}
-
+	}	
 }
