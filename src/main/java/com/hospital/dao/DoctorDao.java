@@ -5,8 +5,11 @@ package com.hospital.dao;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.dom4j.tree.DefaultDocumentType;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,10 +17,13 @@ import org.hibernate.Transaction;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Department;
 import com.hospital.model.Doctor;
+import com.hospital.model.DoctorsDefaultSchedule;
 import com.hospital.model.Patient;
 
 /**
@@ -59,6 +65,16 @@ public class DoctorDao {
 		try {
 			System.out.println("Inside Dao11 PATIENT");
 			session.save(user);
+			
+			ArrayList<DoctorsDefaultSchedule> doctorsDefaultSchedule =om.convertValue(doctor.get("timings"),new TypeReference<ArrayList<DoctorsDefaultSchedule>>() {
+			}) ;
+			
+			doctorsDefaultSchedule.forEach((v)->{
+				v.setDoctorDetails(user);
+				session.save(v);
+			});
+			
+			
 			transaction.commit();
 			System.out.println("Save doctors");
 			status.put("success", "User details saved");

@@ -37,6 +37,11 @@ public class AppointmentController {
 		return appointmentService.addAppointment(appointment);
 	}
 
+	@RequestMapping(value = "/getDoctorAvaliablities", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getDoctorAvaliablities(@RequestBody JSONObject doctor) {
+		return appointmentService.getDoctorAvaliablities(doctor);
+	}
+	
 	/**
 	 * List appointment.
 	 * 

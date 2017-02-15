@@ -19,6 +19,8 @@ public interface AppointmentService {
 	 */
 	public JSONObject addAppointment(JSONObject appointment);
 
+	public JSONObject getDoctorAvaliablities(JSONObject doctor);
+	
 	/**
 	 * List Appointment.
 	 * 

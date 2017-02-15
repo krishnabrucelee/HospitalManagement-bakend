@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
 import com.hospital.model.Doctor.DoctorType;
 import com.hospital.model.Doctor.UserType;
 import com.hospital.model.Finance;
@@ -24,6 +25,8 @@ import org.hibernate.Transaction;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Staff;
@@ -35,9 +38,8 @@ import com.hospital.service.PharmacistService;
 import com.hospital.service.UserService;
 import com.hospital.util.AESCrypt;
 import com.hospital.util.DateUtil;
-
 import com.hospital.util.EncryptionUtil;
-
+import com.hospital.model.DoctorsDefaultSchedule;
 import com.hospital.model.Role;
 import com.hospital.model.Department;
 import com.hospital.model.Doctor;
@@ -536,6 +538,15 @@ public class StaffDao {
 		try {
 			System.out.println("Inside Dao11 PATIENT");
 			session.save(appoint);
+			
+			ArrayList<DoctorsDefaultSchedule> doctorsDefaultSchedule =om.convertValue(staff.get("timings"),new TypeReference<ArrayList<DoctorsDefaultSchedule>>() {
+			}) ;
+			
+			doctorsDefaultSchedule.forEach((v)->{
+				v.setDoctorDetails(appoint.getDoctor());
+				session.save(v);
+			});
+			
 			transaction.commit();
 			System.out.println("Save staffs");
 			status.put("success", "User details saved");
