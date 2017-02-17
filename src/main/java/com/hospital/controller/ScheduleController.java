@@ -33,4 +33,27 @@ public class ScheduleController {
 	{
 		return scheduleService.saveNurseSchedule(scheduleInformation);
 	}	
+	
+	@RequestMapping(value="generateDoctorSchedule",method=RequestMethod.POST)
+	public @ResponseBody JSONObject generateDoctorSchedule(@RequestBody JSONObject scheduleInformation){
+		return scheduleService.generateDoctorSchedule(scheduleInformation);
+	}
+	
+	@RequestMapping(value="saveDoctorSchedule",method=RequestMethod.POST)
+	public @ResponseBody JSONObject saveDoctorSchedule(@RequestBody JSONObject scheduleInformation)
+	{
+		return scheduleService.saveDoctorSchedule(scheduleInformation);
+	}
+	
+	@RequestMapping(value="getCurrentMonthNurseSchedule",method=RequestMethod.POST)
+	public @ResponseBody JSONObject getCurrentMonthNurseSchedule(@RequestBody JSONObject nurseDetails)
+	{
+		return scheduleService.getCurrentMonthNurseSchedule(nurseDetails);
+	}
+	
+	@RequestMapping(value="getCurrentMonthDoctorSchedule",method=RequestMethod.POST)
+	public @ResponseBody JSONObject getCurrentMonthDoctorSchedule(@RequestBody JSONObject doctorDetails)
+	{
+		return scheduleService.getCurrentMonthDoctorSchedule(doctorDetails);
+	}
 }

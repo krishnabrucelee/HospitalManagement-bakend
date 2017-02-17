@@ -46,6 +46,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public JSONObject deleteAppointment(JSONObject appointmentId) {
 		return appointmentdao.deleteAppointment(appointmentId);
 	}
+	
+	@Override
+	public JSONObject getDoctorAppointmentForCurrentDate(JSONObject doctorDetails) {
+		return appointmentdao.getDoctorAppointmentForCurrentDate(doctorDetails);
+	}
 
 
 }

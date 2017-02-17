@@ -42,6 +42,13 @@ public class AppointmentController {
 		return appointmentService.getDoctorAvaliablities(doctor);
 	}
 	
+	@RequestMapping(value = "/getDoctorAppointmentForCurrentDate", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getDoctorAppointmentForCurrentDate(@RequestBody JSONObject doctor) {
+		return appointmentService.getDoctorAppointmentForCurrentDate(doctor);
+	}
+	
+	
+	
 	/**
 	 * List appointment.
 	 * 
