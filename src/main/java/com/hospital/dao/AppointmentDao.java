@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -241,6 +242,67 @@ public class AppointmentDao {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
+	public JSONObject getDoctorAppointmentForCurrentDate(JSONObject doctorId) {
+		JSONObject result = new JSONObject();
+		result.put("status", true);
+		Session session = null;
+		try {
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			
+			// 1. Get Doctor Details
+			Doctor doctorDetails = session.get(Doctor.class,(int)doctorId.get("doctorId"));
+			
+			if(doctorDetails == null)
+			{
+				result.put("status",false);
+				result.put("reason","doctor_details_id is wrong please check");
+				return result;
+			}
+			
+			
+			LocalDate ld = LocalDate.now();
+			
+			Date currentDate = Date.from(ld.atStartOfDay(ZoneId.of("UTC")).toInstant());
+			
+			// 2. Get Doctor Appointments for particular Date
+			Criteria cri = session.createCriteria(DoctorAppointment.class);
+			cri.setFetchMode("patientDetails",FetchMode.JOIN);
+			cri.add(
+					Restrictions.and(
+							Restrictions.ge("starttime",currentDate),
+							Restrictions.le("starttime",Date.from(ld.atTime(23,59).atZone(ZoneId.of("UTC")).toInstant())),
+							Restrictions.eq("doctorDetails",doctorDetails)
+					)
+			);
+				
+			List<DoctorAppointment> doctorAppointments = cri.list();	
+			
+			if(!doctorAppointments.isEmpty())
+			{
+				String jsonString = jsonViewObjectMapper.writeValueAsString(JsonView.with(doctorAppointments)
+						.onClass(DoctorAppointment.class, Match.match().exclude("doctorDetails"))
+						.onClass(Patient.class,  Match.match().exclude("*").include("email","patientId","patientName"))
+						);
+				
+				result.put("result", jsonViewObjectMapper.readValue(jsonString,new TypeReference<ArrayList<HashMap<String,Object>>>(){}));
+				
+			}
+			else
+			{
+				result.put("result",new ArrayList<>());
+			}	
+						
+		}
+		catch(Exception e){
+			result.put("status", false);
+			result.put("reason","Error Happend");
+			result.put("message",e.getMessage());
+			e.printStackTrace();
+		}
+		return result;
+	}	
 	
 	public JSONObject listAppointment() {
 		System.out.println("Inside Dao1Appointment");
@@ -330,5 +392,5 @@ public class AppointmentDao {
 			}
 		}
 		return status;
-	}	
+	}
 }

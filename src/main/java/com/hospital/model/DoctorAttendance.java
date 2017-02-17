@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.hospital.model;
 
 import java.util.Date;
@@ -13,18 +16,22 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.hospital.util.DateSerializer;
-import com.hospital.util.TimeSerializer;
 
+/**
+ * @author admin
+ *
+ */
 @Entity
-public class NurseAttendance {
+public class DoctorAttendance {
+
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name="nurse_id")
-	private Nurse nursedetails;
+	@JoinColumn(name="doctor_id")
+	private Doctor doctordetails;
 	
 	@Temporal(TemporalType.DATE)
 	@JsonSerialize(using=DateSerializer.class)
@@ -42,14 +49,14 @@ public class NurseAttendance {
 		this.id = id;
 	}
 
-	public Nurse getNursedetails() {
-		return nursedetails;
+	public Doctor getDoctordetails() {
+		return doctordetails;
 	}
 
-	public void setNursedetails(Nurse nursedetails) {
-		this.nursedetails = nursedetails;
+	public void setDoctordetails(Doctor doctordetails) {
+		this.doctordetails = doctordetails;
 	}
-	
+
 	public Date getDate() {
 		return date;
 	}
@@ -73,5 +80,4 @@ public class NurseAttendance {
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-
 }
