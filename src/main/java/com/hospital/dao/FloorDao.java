@@ -173,10 +173,13 @@ public class FloorDao {
 			session = this.sessionFactory.getCurrentSession();
 			session.beginTransaction();	
 			String convetedDate = null;
-			if (floor.get("classType") != null || floor.get("floor") != null) {
+			if (floor.get("classType") != null || floor.get("isAvailable") != null) {
 			
-			String hql = "FROM Floor floorDetails LEFT JOIN RoomManagement roomManagement ON roomManagement.classType = '"+floor.get("classType")+"' and roomManagement.floorNumber ='"+floor.get("floor")+"' order by roomManagement.wardNumber";
+				
+			String hql = "FROM RoomManagement WHERE class_type = :classType and is_available = :isAvailable order by ward_number";
 			Query query  = session.createQuery(hql);
+			query.setParameter("classType", floor.get("classType"));
+			query.setParameter("isAvailable", floor.get("isAvailable"));
 			List<Floor> results = query.list();
                    
 			status.put("Floors", results.iterator());
@@ -235,6 +238,43 @@ public class FloorDao {
 			}
 		}
 		return floorList;		
+	}
+
+	/**
+	 * @param object
+	 * @return
+	 */
+	public JSONObject getRoomDetailsByWard(JSONObject wardNumber) {
+		JSONObject status = new JSONObject();
+		status.put("status",true);
+		Session session = null;
+		List<Object[]> results = null;
+		List<Floor> floorList = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		try {			
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();	
+			String convetedDate = null;
+			if (wardNumber.get("wardNumber") != null) {
+			
+			Query query = session.createQuery("FROM RoomManagement WHERE ward_number = :wardNumber");
+			query.setParameter("wardNumber", wardNumber.get("wardNumber"));
+			floorList = query.list();
+			
+			status.put("Floors", floorList);
+			System.out.println(" Inside Rest DAO Bus Status="+status);
+			return status;	
+			}
+		} catch (Exception e) {
+			status.put("status",false);
+			status.put("originalErrorMsg", e.getMessage());
+			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return status;		
 	}
 	
 }

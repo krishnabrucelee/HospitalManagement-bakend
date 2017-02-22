@@ -56,4 +56,16 @@ public interface UserService {
 	 */
 	public JSONObject checkUser(JSONObject user) throws Exception;
 
+	/**
+	 * @param user
+	 * @return
+	 */
+	public JSONObject listActivityLog();
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	public JSONObject getUserById(JSONObject user);
+
 }

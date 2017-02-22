@@ -54,4 +54,14 @@ public class UserServiceImpl implements UserService {
 		return userdao.checkUser(user);
 	}
 
+	@Override
+	public JSONObject listActivityLog() {
+		return userdao.listActivityLog();
+	}
+
+	@Override
+	public JSONObject getUserById(JSONObject user) {
+		return userdao.getUserById(user);
+	}
+
 }

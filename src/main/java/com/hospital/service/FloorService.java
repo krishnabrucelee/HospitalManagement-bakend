@@ -64,4 +64,8 @@ public interface FloorService {
 	 */
 	public List<Floor> getRoomDetailsByWardNumber(JSONObject object);
 
+	/**
+	 * @param object
+	 */
+	public JSONObject getRoomDetailsByWard(JSONObject object);
 }

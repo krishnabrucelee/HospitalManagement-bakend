@@ -62,4 +62,9 @@ public class FloorServiceImpl implements FloorService {
 		return floordao.getFloor(floorId);
 	}
 
+	@Override
+	public JSONObject getRoomDetailsByWard(JSONObject object) {
+		return floordao.getRoomDetailsByWard(object);
+	}
+
 }

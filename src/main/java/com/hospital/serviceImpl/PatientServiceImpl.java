@@ -68,4 +68,9 @@ public class PatientServiceImpl implements PatientService {
 		}
 	}
 
+	@Override
+	public JSONObject addDischargeSummary(JSONObject patient) {
+		return patientdao.addDischargeSummary(patient);
+	}
+
 }

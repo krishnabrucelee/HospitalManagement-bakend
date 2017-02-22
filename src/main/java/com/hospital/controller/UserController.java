@@ -79,4 +79,16 @@ public class UserController {
 		public @ResponseBody JSONObject checkUser(@RequestBody JSONObject user) throws Exception {
 			return userService.checkUser(user);
 		}
+		
+		@RequestMapping(value = "/listActivityLog")
+		public @ResponseBody JSONObject listActivityLog() throws Exception {
+			return userService.listActivityLog();
+		}
+		
+		@RequestMapping(value = "/getUserById", method = RequestMethod.POST)
+		public @ResponseBody JSONObject getUserById(@RequestBody JSONObject user) {
+		
+			System.out.println(user);
+			return userService.getUserById(user);
+		}
 }

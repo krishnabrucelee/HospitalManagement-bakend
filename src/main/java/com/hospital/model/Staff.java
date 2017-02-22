@@ -45,7 +45,6 @@ public class Staff {
 	@Column(name = "staff_gender")
 	private String staffGender;
 	
-	@JsonFormat(pattern = "dd-MM-yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "staff_doj")
 	private Date staffDoj;
