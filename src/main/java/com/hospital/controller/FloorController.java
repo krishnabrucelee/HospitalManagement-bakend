@@ -74,4 +74,10 @@ public class FloorController {
 	public @ResponseBody JSONObject listRoomByFilter(@RequestBody JSONObject floor) {
 		return floorService.listRoomByFilter(floor);
 	}
+	
+	@RequestMapping(value = "/getRoomDetailsByWardNumber", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getRoomDetailsByWardNumber(@RequestBody JSONObject floor) {
+		return floorService.getRoomDetailsByWard(floor);
+	}
+	
 }

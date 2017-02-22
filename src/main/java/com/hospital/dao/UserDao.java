@@ -3,6 +3,8 @@
  */
 package com.hospital.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -15,7 +17,9 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hospital.model.ActivityLog;
 import com.hospital.model.EMedicalReport;
+import com.hospital.model.Patient;
 import com.hospital.model.Users;
 import com.hospital.util.AESCrypt;
 
@@ -97,8 +101,13 @@ public class UserDao {
 		try {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
-			Users userDetails = session.load(Users.class,
-					(Integer) user.get("userId"));
+			Long userId = Long.parseLong(user.get("userId").toString());
+			Users userDetails = session.load(Users.class, userId);
+			
+			String encryptedPassword = AESCrypt.encrypt(user.get("password").toString());
+			userDetails.setUserName(user.get("userName").toString());
+			userDetails.setUserEmail(user.get("userEmail").toString());
+			userDetails.setPassword(encryptedPassword);
 			session.update(userDetails);
 			transaction.commit();
 		} catch (Exception e) {
@@ -202,6 +211,12 @@ public class UserDao {
 					if (userDetails.getPassword().equals(encryptedPassword)) {
 						status.put("user", userList);
 						status.put("result", true);
+						
+						ActivityLog activity = new ActivityLog();
+						activity.setUserName(userDetails.getUserName());
+						activity.setUserId(userDetails.getUserId().intValue());
+						activity.setLoginTime(new Date());
+						session.save(activity);
 					} else {
 						status.put("user", "Password mismatch !!");
 						status.put("result", false);
@@ -225,5 +240,91 @@ public class UserDao {
 		}
 		return status;
 	}
+
+	/**
+	 * @return
+	 */
+	public JSONObject listActivityLog() {
+		System.out.println("Inside Dao1User");
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		List<Users> userList = null;
+		try {
+			Query query = session.createQuery("FROM ActivityLog");
+			userList = query.list();
+			status.put("ActivityLog", userList);
+			status.put("result", true);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * @param user
+	 * @return
+	 */
+	public JSONObject getUserById(JSONObject user) {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		List<Users> userList = null;
+//		  ObjectMapper mapper = new ObjectMapper();
+//        SimpleModule module = new SimpleModule();        
+//        module.addSerializer(com.monitorjbl.json.JsonView.class,new JsonViewSerializer());
+//        mapper.registerModule(module);
+		Integer userId = Integer.parseInt(user.get("id").toString());
+		try {
+			Query query = session.createQuery("FROM Users WHERE user_id = :id");
+			query.setParameter("id", userId);
+			userList = query.list();
+			transaction.commit();
+			if (userList.size() == 1) {
+				for (Users userDetails : userList) {
+
+					String decryptedPassword = AESCrypt.decrypt(userDetails.getPassword());
+					userDetails.setPassword(decryptedPassword);
+					List<Users> users = new ArrayList<>();
+					users.add(userDetails);
+					status.put("User", users.iterator());
+				}
+			}
+//			String json = mapper.writeValueAsString(JsonView.with(patientDetailsList)
+//					.onClass(BusAvailability.class,com.monitorjbl.json.Match.match().exclude("busDetails")));  
+//			
+//			
+//			System.out.println(json);
+//             ArrayList<Object> convertedValue = mapper.readValue(json,new TypeReference<ArrayList<Object>>() {});
+//                   
+//			if(convertedValue.isEmpty() | convertedValue == null)
+//			{
+//				status.put("status",false);
+//				return status;
+//			}		
+//			status.put("Buses", convertedValue.iterator());
+			
+			System.out.println(" Inside Rest DAO Bus Status="+status);
+			return status;	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return status;
+	}
+
 
 }

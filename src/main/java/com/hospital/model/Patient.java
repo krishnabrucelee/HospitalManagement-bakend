@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,6 +38,10 @@ public class Patient implements Serializable {
 	@Column(name = "patient_ref_number")
 	private String patientRefNumber;
 	
+	@OneToOne(targetEntity = Department.class)
+	@JoinColumn(name = "dept_id", referencedColumnName = "department_id", foreignKey = @ForeignKey(name = "department_patient_FK"))
+	private Department department;
+	
 	@Column(name = "email", unique = true)
 	private String email;
 
@@ -44,7 +52,7 @@ public class Patient implements Serializable {
 	private Integer patientAge;
 
 	@JsonFormat(pattern = "dd-MM-yyyy")
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.DATE)	
 	@Column(name = "patient_dob")
 	private Date patientDob;
 
@@ -68,6 +76,12 @@ public class Patient implements Serializable {
 
 	@Column(name = "patient_type")
 	private String patientType;
+	
+	@Column(name = "scheme_type")
+	private String schemeType;
+	
+	@Column(name = "scheme_description")
+	private String schemeDescription;
 
 	@OneToMany(mappedBy = "patient")
 	private List<MedicineToPatient> drugtopatient = new ArrayList<MedicineToPatient>();
@@ -75,6 +89,9 @@ public class Patient implements Serializable {
 	@Column(name = "created_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<DischargeSummary> dischargeSummary;
 	
 	/**
 	 * Get the patientId of Patient.
@@ -355,6 +372,78 @@ public class Patient implements Serializable {
 	 */
 	public void setWardNumber(String wardNumber) {
 		this.wardNumber = wardNumber;
+	}
+
+	/**
+	 * Get the schemeType of Patient.
+	 *
+	 * @return the schemeType
+	 */
+	public String getSchemeType() {
+		return schemeType;
+	}
+
+	/**
+	 * Set the schemeType of Patient.
+	 *
+	 * @param schemeType the schemeType to set
+	 */
+	public void setSchemeType(String schemeType) {
+		this.schemeType = schemeType;
+	}
+
+	/**
+	 * Get the dischargeSumary of Patient.
+	 *
+	 * @return the dischargeSumary
+	 */
+	public List<DischargeSummary> getDischargeSummary() {
+		return dischargeSummary;
+	}
+
+	/**
+	 * Set the dischargeSumary of Patient.
+	 *
+	 * @param dischargeSumary the dischargeSumary to set
+	 */
+	public void setDischargeSummary(List<DischargeSummary> dischargeSummary) {
+		this.dischargeSummary = dischargeSummary;
+	}
+
+	/**
+	 * Get the schemeDescription of Patient.
+	 *
+	 * @return the schemeDescription
+	 */
+	public String getSchemeDescription() {
+		return schemeDescription;
+	}
+
+	/**
+	 * Set the schemeDescription of Patient.
+	 *
+	 * @param schemeDescription the schemeDescription to set
+	 */
+	public void setSchemeDescription(String schemeDescription) {
+		this.schemeDescription = schemeDescription;
+	}
+
+	/**
+	 * Get the department of Patient.
+	 *
+	 * @return the department
+	 */
+	public Department getDepartment() {
+		return department;
+	}
+
+	/**
+	 * Set the department of Patient.
+	 *
+	 * @param department the department to set
+	 */
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 }

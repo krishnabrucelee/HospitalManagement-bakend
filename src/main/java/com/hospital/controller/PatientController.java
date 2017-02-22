@@ -75,4 +75,9 @@ public class PatientController {
 		System.out.println(patient);
 		return patientService.getPatientDetailsById(patient);
 	}
+
+	@RequestMapping(value = "/addDischargeSummary", method = RequestMethod.POST)
+	public @ResponseBody JSONObject addDischargeSummary(@RequestBody JSONObject patient) {
+		return patientService.addDischargeSummary(patient);
+	}
 }

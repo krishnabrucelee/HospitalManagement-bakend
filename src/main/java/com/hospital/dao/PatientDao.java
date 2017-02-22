@@ -19,12 +19,18 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.hospital.model.AdmitPatient;
+import com.hospital.model.Appointment;
+import com.hospital.model.Department;
+import com.hospital.model.DischargeSummary;
+import com.hospital.model.Doctor;
 import com.hospital.model.Floor;
 import com.hospital.model.Patient;
 import com.hospital.model.RoomManagement;
+import com.hospital.model.WaitingList;
 import com.hospital.service.AdmitPatientService;
 import com.hospital.service.FloorService;
 import com.hospital.service.RoomManagementService;
+import com.hospital.service.WaitingListService;
 
 /**
  * Patient Dao
@@ -48,6 +54,9 @@ public class PatientDao {
 	
 	@Autowired
 	private RoomManagementService roomManagementService;
+	
+	@Autowired
+	private WaitingListService waitingListService;
 	
 	@Autowired
 	private FloorService floorService;
@@ -85,11 +94,17 @@ public class PatientDao {
 				System.out.println(room);
 				if (room.getWardNumber().equals(patient.get("wardNumber"))) {
 					room.setIsAvailable(true);
-					roomManagementService.addRoomManagement(room);
+					session.update(room);
 				}
 			}
 		}
 		
+		if (patient.get("waitingListId") != null) {
+			WaitingList waiting = session.load(WaitingList.class, (Integer) patient.get("waitingListId"));
+			waiting.setStatus(patient.get("status").toString());
+			waiting.setWardNumber(patient.get("wardNumber").toString());
+			session.update(waiting);
+		}
 		try {
 			System.out.println("Inside Dao11 PATIENT");
 			session.save(patientDetails);
@@ -138,7 +153,9 @@ public class PatientDao {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
 			Patient patientDetails = session.load(Patient.class, (Integer) patient.get("patientId"));
-			patientDetails.setPatientName((String) patient.get("patientName"));
+			
+			Department departmentDetails = session.load(Department.class, (Integer) patient.get("departmentId"));
+			patientDetails.setDepartment(departmentDetails);
 			session.update(patientDetails);
 			transaction.commit();
 		} catch (Exception e) {
@@ -236,6 +253,35 @@ public class PatientDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * @param patient
+	 * @return
+	 */
+	public JSONObject addDischargeSummary(JSONObject patient) {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		ObjectMapper om = new ObjectMapper();
+		om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		DischargeSummary appoint = om.convertValue(patient, DischargeSummary.class);
+
+		try {
+			System.out.println("Inside Dao11 Discharge summary");
+			session.save(appoint);
+			transaction.commit();
+			System.out.println("Save appointments");
+			status.put("success", "User details saved");
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			if (session.isOpen()) {
 				// session.close();

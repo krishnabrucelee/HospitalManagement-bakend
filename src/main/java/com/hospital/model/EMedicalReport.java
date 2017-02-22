@@ -59,7 +59,7 @@ public class EMedicalReport implements Serializable {
 	
 	@OneToOne(targetEntity = PharmacyMedicine.class)
 	@JoinColumn(name = "pharmacy_medicine_id", referencedColumnName = "pharmacy_medicine_id", foreignKey = @ForeignKey(name = "pharmacy_EMR_FK"))
-	private PharmacyMedicine department;
+	private PharmacyMasterEntry department;
 	
 	@Column(name = "time_shedule")
 	@Temporal(TemporalType.TIMESTAMP)

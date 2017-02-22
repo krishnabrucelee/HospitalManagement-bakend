@@ -7,7 +7,7 @@
   
     <session-factory>  
     
-  <property name="hibernate.connection.password">mysql</property>
+    <property name="hibernate.connection.password">mysql</property>  
   <property name="hibernate.connection.username">root</property> 
   <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hospitalmanagement?useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
@@ -91,7 +91,11 @@
 		<mapping class="com.hospital.model.PurchaseOrderTransaction" />			                            
 		<mapping class="com.hospital.model.MaterialRecieveNote" />			                            
 		<mapping class="com.hospital.model.SurgeryRoom" />
-			
+		<mapping class="com.hospital.model.DischargeSummary" />
+		<mapping class="com.hospital.model.ActivityLog" />
+		<mapping class="com.hospital.model.WaitingList" />
+				                            
+				                            
 				                            
 		<mapping class="com.hospital.model.MasterMedicineOrder" />	
 		<mapping class="com.hospital.model.MedicineOrderTypes" />

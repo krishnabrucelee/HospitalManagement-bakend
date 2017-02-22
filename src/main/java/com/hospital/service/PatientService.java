@@ -46,4 +46,10 @@ public interface PatientService {
 	 * @return
 	 */
 	public JSONObject getPatientDetailsById(JSONObject patient);
+
+	/**
+	 * @param patient
+	 * @return
+	 */
+	public JSONObject addDischargeSummary(JSONObject patient);
 }
