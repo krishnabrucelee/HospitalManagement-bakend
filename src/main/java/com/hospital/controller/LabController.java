@@ -90,7 +90,7 @@ public class LabController {
 	
 	@RequestMapping(value = "/savePatientLabRequest",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject savePatientRequestLabTest(@RequestBody JSONObject patientRequestLabTest){		
-		System.out.println("savePatientLabRequest web services"); 
+		
 		return irestlab.savePatientRequestLabTest(patientRequestLabTest);		
 	}
 	

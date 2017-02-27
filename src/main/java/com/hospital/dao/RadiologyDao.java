@@ -16,12 +16,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.hospital.model.Doctor;
-import com.hospital.model.EquipmentData;
 import com.hospital.model.Patient;
 import com.hospital.model.PatientRadiologyReport;
 import com.hospital.model.PatientRadiologyTestNames;
 import com.hospital.model.PatientRequestRadiologyTest;
 import com.hospital.model.Radiology;
+import com.hospital.model.radiology.RadiologyTest;
 //import com.monitorjbl.json.JsonResult;
 import com.monitorjbl.json.JsonViewSerializer;
 
@@ -43,7 +43,7 @@ public class RadiologyDao {
 		Session session = null;
 		ObjectMapper om = new ObjectMapper();
 		   om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		   Radiology radiologydatas = om.convertValue(radiology,  Radiology.class);
+		   RadiologyTest radiologydatas = om.convertValue(radiology,  RadiologyTest.class);
 		try {
 			session = this.sessionFactory.getCurrentSession();
 			session.beginTransaction();
@@ -62,14 +62,14 @@ public class RadiologyDao {
 		JSONObject status = new JSONObject();
 		status.put("status", true);
 		Session session = null;
-		List<Radiology> radiologyDatas =null;	
+		List<RadiologyTest> radiologyDatas =null;	
 		try {
 			session = this.sessionFactory.getCurrentSession();
 			session.beginTransaction();
-			radiologyDatas = session.createQuery("FROM Radiology").list();
+			radiologyDatas = session.createQuery("FROM RadiologyTest").list();
 			session.getTransaction().commit();
 			if(radiologyDatas!=null &&!radiologyDatas.isEmpty() ){
-				status.put("Radiology", radiologyDatas);
+				status.put("RadiologyTest", radiologyDatas);
 			}		
 			status.put("status", true);
 		} catch (Exception e) {

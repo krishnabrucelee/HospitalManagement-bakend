@@ -62,7 +62,7 @@ public class HouseKeepingDao {
 		}
 		return status;
 	}
-
+	@SuppressWarnings("unchecked")
 	public JSONObject listHouseKeeping() {
 		System.out.println("Inside Dao1HouseKeeping");
 		JSONObject status = new JSONObject();
@@ -86,7 +86,7 @@ public class HouseKeepingDao {
 		}
 		return status;
 	}
-
+	@SuppressWarnings("unchecked")
 	public JSONObject updateHouseKeeping(JSONObject houseKeeping) {
 		JSONObject status = new JSONObject();
 		status.put("status", true);

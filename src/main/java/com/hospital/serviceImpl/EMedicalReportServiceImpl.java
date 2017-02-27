@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.hospital.dao.EMedicalReportDao;
 import com.hospital.model.EMedicalReport;
+import com.hospital.model.Patient;
 import com.hospital.service.EMedicalReportService;
 
 /**
@@ -51,6 +52,11 @@ public class EMedicalReportServiceImpl implements EMedicalReportService {
 	@Override
 	public JSONObject listByPatientId(JSONObject patientId) {
 		return eMedicalReportdao.listByPatientId(patientId);
+	}
+
+	@Override
+	public EMedicalReport listEmrByPatientId(Integer patientId) {
+		return eMedicalReportdao.listEmrByPatientId(patientId);
 	}
 
 }

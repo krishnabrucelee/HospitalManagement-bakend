@@ -45,6 +45,10 @@ public class EMedicalReport implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<PatientHistory> patientHistory;
 	
+	@OneToOne(cascade= CascadeType.ALL)
+	@JoinColumn(name="patientLabRequestId")
+	private LabPatientRequestTest patientRequestLabTest;
+	
 	@OneToOne(targetEntity = Doctor.class)
 	@JoinColumn(name="doctor_id", referencedColumnName="doctor_id", foreignKey=@ForeignKey(name="doctor_EMR_FK"))
 	private  Doctor  doctor;
@@ -262,5 +266,26 @@ public class EMedicalReport implements Serializable {
 	public void setNurse(Nurse nurse) {
 		this.nurse = nurse;
 	}
+	
+	/**
+	 * Get the patient Labrequest.
+	 *
+	 * @return the labrequest
+	 */
+	public LabPatientRequestTest getPatientRequestLabTest() {
+		return patientRequestLabTest;
+	}
+	
+	/**
+	 * Set the the patient Labrequest.
+	 *
+	 * @param labrequest to set
+	 */
+	public void setPatientRequestLabTest(
+			LabPatientRequestTest patientRequestLabTest) {
+		this.patientRequestLabTest = patientRequestLabTest;
+	}
 
+	
+	
 }

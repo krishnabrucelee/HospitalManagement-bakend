@@ -18,7 +18,7 @@ public interface FloorService {
 	/**
 	 * Create Floor.
 	 * 
-	 * @param Floor
+	 * @param FloorData
 	 * @return Floor
 	 */
 	public JSONObject addFloor(JSONObject floor);
@@ -26,7 +26,7 @@ public interface FloorService {
 	/**
 	 * List Floor.
 	 * 
-	 * @param Floor
+	 * @param FloorData
 	 * @return Floor
 	 */
 	public JSONObject listFloor();
@@ -34,7 +34,7 @@ public interface FloorService {
 	/**
 	 * Update Floor.
 	 * 
-	 * @param Floor
+	 * @param FloorData
 	 * @return Floor
 	 */
 	public JSONObject updateFloor(JSONObject floor);
@@ -42,7 +42,7 @@ public interface FloorService {
 	/**
 	 * Delete Floor.
 	 * 
-	 * @param Floor
+	 * @param FloorData
 	 * @return Floor
 	 */
 	public JSONObject deleteFloor(JSONObject floorId);

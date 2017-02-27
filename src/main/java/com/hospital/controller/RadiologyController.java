@@ -77,7 +77,7 @@ public class RadiologyController {
 		return iradiology.savePatientRequestRadiologyTest(parientradiology);
 	}
 	/**
-	 * List listPatientRadiologyTest.
+	 * List listPatientRadiologyTestdata.
 	 * 
 	 * @return listPatientRadiologyTest
 	 */

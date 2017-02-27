@@ -89,7 +89,7 @@ public class LabServiceImpl implements ILabService {
 	}
 	@Override
 	public JSONObject savePatientRequestLabTest(JSONObject patientRequestLabTest) {
-		System.out.println("savePatientLabRequest Interface");
+		
 		return labdao.savePatientRequestLabTest(patientRequestLabTest);
 	}
 	@Override

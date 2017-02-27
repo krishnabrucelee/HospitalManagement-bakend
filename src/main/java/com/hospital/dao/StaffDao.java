@@ -575,7 +575,7 @@ public class StaffDao {
 		}
 		return status;
 	}
-
+	@SuppressWarnings("unchecked")
 	private void assignLeave(JSONObject staff,Staff user)
 	{
 		session = sessionFactory.openSession();
@@ -803,6 +803,7 @@ public class StaffDao {
 		try {
 			Query query = session.createQuery("FROM Staff");
 			staffList = query.list();
+			System.out.println("Staff size=$$$="+staffList.size());
 			status.put("Staff", staffList);
 			status.put("result", true);
 			transaction.commit();
