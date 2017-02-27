@@ -7,16 +7,15 @@
   
     <session-factory>  
     
-    <property name="hibernate.connection.password">mysql</property>  
+    
   <property name="hibernate.connection.username">root</property> 
-  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hospitalmanagement?useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
+  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/new_hospitalmanagement?useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   <property name="hibernate.show_sql">true</property>
   <property name="hibernate.current_session_context_class">thread</property>
    <property name="hibernate.hbm2ddl.auto">update</property>  
          
-          <!-- mapping properties -->
 		<mapping class="com.hospital.model.Department" />
 		<mapping class="com.hospital.model.Doctor" /> 
 		<mapping class="com.hospital.model.DoctorsDefaultSchedule" /> 		
@@ -102,7 +101,7 @@
 		<mapping class="com.hospital.model.PharmacyRequestMedicine" />	
 		<mapping class="com.hospital.model.RequestMedicineList" />	
 		
-		<!-- Pharmacy New Type -->
+		
 		<mapping class="com.hospital.model.MedicineItemMaster" />
 		<mapping class="com.hospital.model.MedicineMasterStock" />
 		 <mapping class="com.hospital.model.PharmacyMasterEntry" /> 
@@ -126,7 +125,7 @@
 	<mapping class="com.hospital.model.MedicineMaster" />
 	<mapping class="com.hospital.model.MedicineEntryMaster" />
 	
-	<!-- Lab New Type -->	
+	
 	<mapping class="com.hospital.model.LabMasterName" />
 	<mapping class="com.hospital.model.LabMasterSubCategories" />
 	<mapping class="com.hospital.model.LabTestMasterReport" />
@@ -143,49 +142,65 @@
 	<mapping class="com.hospital.model.LabTestName" />
 	<mapping class="com.hospital.model.NewLabRequest" />
 
-	<!-- LabrequestByPatient -->
+	
 	<mapping class="com.hospital.model.LabrequestByPatient" />
 	<mapping class="com.hospital.model.PatientRequestLabTest" />
 	<mapping class="com.hospital.model.PatientRequestSubCatTest" />
-	<!-- PatientLabtestReport -->
+	
 	<mapping class="com.hospital.model.PatientLabtestReportNames" />
 	<mapping class="com.hospital.model.PatientLabReportSubcategeriesNames" />
-	<!-- ExternalLabrequest -->
+	
 	<mapping class="com.hospital.model.ExternalLabRequest" />
-	<!-- Equipment -->
-	<mapping class="com.hospital.model.EquipmentData" />
-	<!-- Equipment check final -->
-	<mapping class="com.hospital.model.EquipmentCheckRequest" />
-	<mapping class="com.hospital.model.EquipmentCheckSubCategeries" />
 
-	<!-- Equipment Name All checklist -->
-	<mapping class="com.hospital.model.EquipmentCheckData" />
-	<mapping class="com.hospital.model.EquipmentCheckSubcategry" />
-	<mapping class="com.hospital.model.MaintananceSchedule" />
-	<mapping class="com.hospital.model.OrderRepairProduct" />
-	<!-- Maintanance Schedule -->
-	<mapping class="com.hospital.model.MaintananceScheduling" />
-	<mapping class="com.hospital.model.MaintananceScheduleSubCategeries" />
-	<!-- Periodic Maintanance Schedule Data Save -->
-	<mapping class="com.hospital.model.PeriodicScheduleMaintanaceData" />
-	<mapping class="com.hospital.model.PeriodicMaintanaceSubCategeries" />
-	<!-- House Keeping Data -->
+	
 	<mapping class="com.hospital.model.HouseKeepingItemMaster" />
 	<mapping class="com.hospital.model.LaundryProcessState" />
 	<mapping class="com.hospital.model.RequestHouseKeep" />
 	<mapping class="com.hospital.model.RequestHouseKeepSubCat" />
 		
-			<!-- Radiology-->
-	<mapping class="com.hospital.model.Radiology" />
-	 <mapping class="com.hospital.model.PatientRequestRadiologyTest" />
-			<mapping class="com.hospital.model.PatientRadiologyTestNames" /> 
-			 <mapping class="com.hospital.model.PatientRadiologyReport" />
-			<mapping class="com.hospital.model.RadiologyReportSubCategeries" /> 
 			
-	<!-- Nurse Scheduling -->
-	<mapping class="com.hospital.model.NurseAttendance" />		
-	<mapping class="com.hospital.model.DoctorAttendance" />
+	<mapping class="com.hospital.model.Radiology"/>
+	  <mapping class="com.hospital.model.PatientRequestRadiologyTest"/>
+		<mapping class="com.hospital.model.PatientRadiologyTestNames"/> 
+		  <mapping class="com.hospital.model.PatientRadiologyReport"/>
+			<mapping class="com.hospital.model.RadiologyReportSubCategeries"/> 
 			
+		<!-- Nurse Scheduling -->
+		<mapping class="com.hospital.model.NurseAttendance" />		
+		<mapping class="com.hospital.model.DoctorAttendance" />
+			<!-- Asset tracking-->
+			<mapping class="com.hospital.model.equipmenttracking.Building"/>
+	         <mapping class="com.hospital.model.equipmenttracking.FloorData"/>
+	          <mapping class="com.hospital.model.equipmenttracking.RoomData"/>
+				  <mapping class="com.hospital.model.equipmenttracking.Device"/>
+				  <mapping class="com.hospital.model.equipmenttracking.MaintananceConfiguration"/> 
+				   <mapping class="com.hospital.model.equipmenttracking.Equipment"/> 
+				    <mapping class="com.hospital.model.equipmenttracking.EquipmentMaintanaceRequest"/> 
+					<mapping class="com.hospital.model.equipmenttracking.EquipmentMaintanaceStatus"/> 
+					
+					<!--Radiology -->
+					<mapping class="com.hospital.model.radiology.RadiologyTest"/>
+					<mapping class="com.hospital.model.radiology.PatientRadiologyTest"/>
+					<mapping class="com.hospital.model.radiology.PatientRadiologyTestStatus"/>
+					
+					<!-- HR Modules -->
+    <mapping class="com.hospital.payroll.model.EarnedSalaryConfigDetails" />
+    <mapping class="com.hospital.payroll.model.Incentive_BonusManagement" />
+    <mapping class="com.hospital.payroll.model.SalaryComponents" />
+    <mapping class="com.hospital.payroll.model.StaffHikeDetails" />
+    <mapping class="com.hospital.payroll.model.StaffSalaryConfigDetails" />
+    <mapping class="com.hospital.payroll.model.StaffSalaryConfigs" />
+    <mapping class="com.hospital.payroll.model.StaffSalaryPayoutDetails" />
+    <mapping class="com.hospital.payroll.model.PayrollEntries" />
+    
+    
+    <!-- Leave Module -->
+     <mapping class="com.hospital.leave.model.Leavedetails"/>
+   <mapping class="com.hospital.leave.model.Financialyear"/>
+   <mapping class="com.hospital.leave.model.EmployeeFiscalYearLeaveDetails"/>
+   <mapping class="com.hospital.leave.model.EmployeeLeaveTransaction"/>
+   <mapping class="com.hospital.leave.model.Holidays"/>
+   <mapping class="com.hospital.leave.model.HolidaysDetails"/>
 </session-factory>  
   
 </hibernate-configuration>  
