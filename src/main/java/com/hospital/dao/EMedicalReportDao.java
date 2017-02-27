@@ -5,6 +5,7 @@ package com.hospital.dao;
 
 import java.util.Date;
 import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,6 +13,7 @@ import org.hibernate.Transaction;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.EMedicalReport;
@@ -205,6 +207,25 @@ public class EMedicalReportDao {
 			}
 		}
 		return status;
+	}
+
+	public EMedicalReport listEmrByPatientId(Integer patientId) {
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		EMedicalReport eMedicalReport = null;
+		try {
+			Query query = session.createQuery("FROM EMedicalReport WHERE patient_id = :id");
+			query.setParameter("id", patientId);
+			eMedicalReport = (EMedicalReport) query.list().get(0);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return eMedicalReport;
 	}
 
 }

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Department;
 import com.hospital.model.Doctor;
+import com.hospital.model.EMedicalReport;
 import com.hospital.model.ExternalLab;
 import com.hospital.model.LabMasterName;
 import com.hospital.model.LabMasterSubCategories;
@@ -39,6 +40,12 @@ import com.hospital.model.PatientData;
 import com.hospital.model.PatientLabTestStatus;
 import com.hospital.model.PatientLabtestReportNames;
 import com.hospital.model.PatientRequestRadiologyTest;
+import com.hospital.model.Staff;
+import com.hospital.model.radiology.PatientRadiologyTest;
+import com.hospital.model.radiology.PatientRadiologyTestStatus;
+import com.hospital.model.radiology.RadiologyTest;
+import com.hospital.service.EMedicalReportService;
+import com.hospital.service.PatientService;
 @Repository
 public class LabDao {
 	@Autowired
@@ -48,6 +55,8 @@ public class LabDao {
 	@Qualifier("jsonViewObjectMapper")
 	ObjectMapper jsonViewObjectMapper;
 	
+	@Autowired
+	private EMedicalReportService eMedicalReportService;
 	
 	@SuppressWarnings("unchecked")
 	public JSONObject addLabConfigure(JSONObject labconfigure) {
@@ -292,8 +301,7 @@ public class LabDao {
 		status.put("status", true);
 		Session session = null;
 		ObjectMapper om = new ObjectMapper();
-		   om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);		
-		   System.out.println("Inside try66");//RequestLabtestByPatient		 
+		   om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);				  
 		   PatientLabtestReportNames labRequests = om.convertValue(savepatientLabtestReport, PatientLabtestReportNames.class);		  
 		try {			
 			session = this.sessionFactory.getCurrentSession();
@@ -536,14 +544,45 @@ public class LabDao {
 			patientRequestLabtest.setDepartment(departmentDetails);
 			patientRequestLabtest.setPatient(patientDetails);
 			patientRequestLabtest.setLabRequestDate(new Date());
-			patientRequestLabtest.setAllTestCompleted(false);
-			
-			//patientRequestLabtest.setPatientlabtestsubcategories(labMasterSubCategorieslist);
-			
+			patientRequestLabtest.setAllTestCompleted(false);					
+			EMedicalReport  emr = eMedicalReportService.listEmrByPatientId(patientDetails.getPatientId());
+			emr.setPatientRequestLabTest(patientRequestLabtest);
+		
 			patientRequestLabtest.setPatientLabTestStatus(patientLabTestStatus);
 			
+			ArrayList<RadiologyTest> list = (ArrayList<RadiologyTest>)patientRequestLabTest.get("radiologyTestList");
+			PatientRadiologyTest patientRadiologyTest=new  PatientRadiologyTest();
+			ArrayList<PatientRadiologyTestStatus> patientRadiologyTestStatus = new ArrayList<PatientRadiologyTestStatus>();	
+			if (list.size()>0) {	
+				
+				patientRadiologyTest.setPatient(patientDetails);
+				patientRadiologyTest.setDoctor(doctorDetails);
+				patientRadiologyTest.setDepartment(departmentDetails);
+				patientRadiologyTest.setRadiologyRequestDate(new Date());
+				patientRadiologyTest.setAllTestCompleted(false);
+				
+				System.out.println("PatientRadiologyTest DAO inside try createCriteria");
+				Criteria criteria = session.createCriteria(RadiologyTest.class);
+				criteria.add(Restrictions.in("radiologyTestId",(List<Integer>)patientRequestLabTest.get("radiologyTestList")));
+				
+				List<RadiologyTest> radiologyTestlist = criteria.list();
+				
+				radiologyTestlist.forEach((v)->{
+					PatientRadiologyTestStatus radiologyTestStatus = new PatientRadiologyTestStatus();
+					radiologyTestStatus.setTestCompleted(false);
+					radiologyTestStatus.setTestDetails(v);
+					patientRadiologyTestStatus.add(radiologyTestStatus);
+				});
+			} else {
+				System.out.println("PatientRadiologyTest is not selected");//radiologyTestList
+
+			}						
+			patientRadiologyTest.setPatientRadiologyTestStatus(patientRadiologyTestStatus);
 			System.out.println("savePatientLabRequest before call session save");	
-			session.save(patientRequestLabtest);	
+			System.out.println("PatientRadiologyTest="+patientRadiologyTest);
+			session.save(patientRequestLabtest);
+			session.save(patientRadiologyTest);
+			//session.update(emr);
 			System.out.println("savePatientLabRequest after call sesion save");		
 			session.getTransaction().commit();
 			status.put("status", true);			
@@ -597,6 +636,8 @@ public class LabDao {
 		}
 		return status;
 	}
+	
+	
 	@SuppressWarnings("unchecked")
 	public JSONObject getPatientRequestLabTestById(
 			JSONObject patientRequestLabTestId) {
@@ -674,44 +715,83 @@ public class LabDao {
 		JSONObject result = new JSONObject();
 		result.put("status",true);
 		Session session = null;
+		Integer stafid = Integer.parseInt(patientLabTestStatus.get("staffId").toString());
+		Staff s=new Staff();
+		s.setStaffId(stafid);	
 		try {			
 			
 			session = sessionFactory.openSession();
 			session.beginTransaction();			
 			// Update PatientLabTestStatus Table
 			
-			PatientLabTestStatus patientLabTest = session.get(PatientLabTestStatus.class,(int)patientLabTestStatus.get("patientLabTestStatus"));
-			
-			if(patientLabTest == null)
+			if(patientLabTestStatus.get("updateTable").equals("lab"))
 			{
-				result.put("status",false);
-				result.put("reason","PatientLabTestStatus is not found. Please check this field patientLabTestStatus");
-				return result;
-			}
-			
-			// TODO attach testPreparedBy field based on user login
-			
-			patientLabTest.setTestResult((String)patientLabTestStatus.get("testResult"));
-			patientLabTest.setNotes((String)patientLabTestStatus.get("notes"));
-			patientLabTest.setCompletedDate(new Date());
-			patientLabTest.setTestCompleted(true);
-			
-			
-			if((boolean)patientLabTestStatus.get("isUpdateLabPatientRequest"))
-			{
-				
-				LabPatientRequestTest labPatientRequest = 
-						session.get(LabPatientRequestTest.class,(int)patientLabTestStatus.get("patientLabRequestId"));
-				
-				if(labPatientRequest == null)
+				PatientLabTestStatus patientLabTest = session.get(PatientLabTestStatus.class,(int)patientLabTestStatus.get("patientLabTestStatus"));
+				LabPatientRequestTest labPatientRequest = null;
+				if(patientLabTest == null)
 				{
 					result.put("status",false);
-					result.put("reason","LabPatientRequestTest is not found. Please check this field patientLabRequestId");
+					result.put("reason","PatientLabTestStatus is not found. Please check this field patientLabTestStatus");
 					return result;
 				}
 				
-				labPatientRequest.setAllTestCompleted(true);
+				patientLabTest.setNotes((String)patientLabTestStatus.get("notes"));
+				patientLabTest.setCompletedDate(new Date());
+				patientLabTest.setTestCompleted(true);	
+				patientLabTest.setTestPreparedBy(stafid);
+				if((boolean)patientLabTestStatus.get("isUpdateLabPatientRequest")){				
+					 labPatientRequest = 
+							session.get(LabPatientRequestTest.class,(int)patientLabTestStatus.get("patientLabRequestId"));
+					
+					if(labPatientRequest == null)
+					{
+						result.put("status",false);
+						result.put("reason","LabPatientRequestTest is not found. Please check this field patientLabRequestId");
+						return result;
+					}
+					
+					labPatientRequest.setAllTestCompleted(true);
+				}
+				
+				
 			}
+			else if(patientLabTestStatus.get("updateTable").equals("radiology"))
+			{
+
+				PatientRadiologyTestStatus patientRadiologyTest = session.get(PatientRadiologyTestStatus.class,(int)patientLabTestStatus.get("patientRadiologyTestStatus"));
+				PatientRadiologyTest radiologyPatientRequest = null;
+				if(patientRadiologyTest == null)
+				{
+					result.put("status",false);
+					result.put("reason","PatientRadiologyTestStatus is not found. Please check this field patientLabTestStatus");
+					return result;
+				}
+				
+				patientRadiologyTest.setNotes((String)patientLabTestStatus.get("notes"));
+			
+				patientRadiologyTest.setTestResult((String)patientLabTestStatus.get("testResult"));
+				patientRadiologyTest.setCompletedDate(new Date());
+				patientRadiologyTest.setTestCompleted(true);
+				patientRadiologyTest.setStaff(s);
+				if((boolean)patientLabTestStatus.get("isUpdateRadiologyPatientRequest")){			
+					radiologyPatientRequest = session.get(PatientRadiologyTest.class, (int)patientLabTestStatus.get("patientRadiologyRequestId"));
+				
+					if(radiologyPatientRequest == null){
+						result.put("status",false);
+						result.put("reason","PatientRadiologyTest is not found. Please check this field patientLabRequestId");
+						return result;
+					}
+					radiologyPatientRequest.setAllTestCompleted(true);
+				}
+				
+			}
+			else
+			{
+				System.err.println("updateTable field must be required. It should be either [lab,radiology]");
+				result.put("status",false);
+				result.put("reason","updateTable field must be required. It should be either [lab,radiology]");
+				return result;
+			}	
 			
 			session.getTransaction().commit();
 			
@@ -728,20 +808,7 @@ public class LabDao {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public JSONObject deletePatientRequestLabTestById(
-			JSONObject patientRequestLabTest) {
-		return null;
-	}
-	@SuppressWarnings("unchecked")
-	public JSONObject savePatientLabTestReport(JSONObject patientLabTestReport) {
-		return null;
-	}
 	
-	@SuppressWarnings("unchecked")
-	public JSONObject listPatientLabTestReport() {
-		return null;
-	}
 	
 	@SuppressWarnings("unchecked")
 	public JSONObject getPatientLabTestReportById(

@@ -5,6 +5,9 @@ package com.hospital.service;
 
 import org.json.simple.JSONObject;
 
+import com.hospital.model.EMedicalReport;
+import com.hospital.model.Patient;
+
 /**
  * @author Krishna
  *
@@ -50,5 +53,7 @@ public interface EMedicalReportService {
 	 * @return
 	 */
 	public JSONObject listByPatientId(JSONObject patientId);
+
+	public EMedicalReport listEmrByPatientId(Integer patientId);
 
 }
