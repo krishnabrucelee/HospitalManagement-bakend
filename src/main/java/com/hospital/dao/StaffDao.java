@@ -3,10 +3,15 @@
  */
 package com.hospital.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +31,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.hospital.leave.model.Financialyear;
+import com.hospital.leave.dao.LeaveDuration;
+import com.hospital.leave.model.EmployeeFiscalYearLeaveDetails;
+import com.hospital.leave.model.Leavedetails;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -539,15 +548,22 @@ public class StaffDao {
 			System.out.println("Inside Dao11 PATIENT");
 			session.save(appoint);
 			
-			ArrayList<DoctorsDefaultSchedule> doctorsDefaultSchedule =om.convertValue(staff.get("timings"),new TypeReference<ArrayList<DoctorsDefaultSchedule>>() {
-			}) ;
+			if (staff.containsKey("Doctor"))
+			{
+				ArrayList<DoctorsDefaultSchedule> doctorsDefaultSchedule =om.convertValue(staff.get("timings"),new TypeReference<ArrayList<DoctorsDefaultSchedule>>() {
+				}) ;
+				
+				doctorsDefaultSchedule.forEach((v)->{
+					v.setDoctorDetails(appoint.getDoctor());
+					session.save(v);
+				});
+				
+			}
 			
-			doctorsDefaultSchedule.forEach((v)->{
-				v.setDoctorDetails(appoint.getDoctor());
-				session.save(v);
-			});
+			assignLeave(staff,appoint);
 			
 			transaction.commit();
+			
 			System.out.println("Save staffs");
 			status.put("success", "User details saved");
 		} catch (Exception e) {
@@ -560,6 +576,223 @@ public class StaffDao {
 		return status;
 	}
 
+	private void assignLeave(JSONObject staff,Staff user)
+	{
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		
+		Date joindate =null; Date dbtodate=null;
+		int joinmonth =0;int joinyear=0;int dbfromyear=0;int dbtoyear=0;int allowedday=0;
+		 double totholiday=0.0;
+		int diff=0;
+		Integer financialYearId = getCurrentFinancialYearId();
+		
+		if(financialYearId == 0)
+			return;
+		
+		SimpleDateFormat sddf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		 try {
+			 joindate = sddf.parse(staff.get("staffDoj").toString());
+			
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		 
+		// Leave Calculation begin
+			
+			//get from financial year
+		   List<Financialyear> financialYear = session.createQuery("FROM Financialyear ld WHERE ld.financialyearid=:year").setParameter("year", financialYearId).list();
+		   
+		  /* 
+		   int financialSize =0;
+		   
+		   financialSize= financialYear.size();
+		   //if(financialYear != null && financialYear.size()>0)//
+		   */
+		    
+		   if(financialYear != null && financialYear.size()>0){
+			   System.out.println("Inside financial year ID");
+				dbfromyear = financialYear.get(0).getFromyear();
+				dbtoyear = financialYear.get(0).getToyear();
+				dbtodate = financialYear.get(0).getFinancialYear_To();
+				// pass this fiancial year id get leave details
+				List<Leavedetails> ld = session.createQuery("from Leavedetails ld where ld.financialyear_id=:year")
+						.setParameter("year",financialYear.get(0).getFinancialyearid()).list();
+				// String pro = null; pro = leavedetails.getPro_leave();
+				if (ld == null || ld.isEmpty()) {
+					System.err.println("Leave Details is empty for financial year");
+				} else {
+					int day = 0;
+					for (Leavedetails leavedetails : ld) {						
+						String leavetype = leavedetails.getLeave_days_type();
+						String pro = leavedetails.getPro_leave();
+						// allowedday=leavedetails.getAllowed_days();
+						if ((leavetype.equals("yearly"))&& (pro.equals("yes"))) {
+							System.out.println("Enter  yearly leave calculate proleave");
+							Integer lid = leavedetails.getId();
+							System.out.println("Pro leave type ID=" + lid);
+							allowedday = leavedetails.getAllowed_days();
+							System.out.println("DB yearly allowed days if it is pro leave="+allowedday);
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(joindate);
+							joinmonth = calendar.get(Calendar.MONTH);
+							joinyear = calendar.get(Calendar.YEAR);
+							diff = differenceInMonths(joindate, dbtodate);							
+							totholiday = (double) allowedday;
+							double permonth = totholiday / 12;							
+							double proleavedays = permonth * diff;							
+							double finall = Math.round(proleavedays * 10000.0) / 10000.0;							
+							double round = Math.ceil(finall);
+							int remainingdays = (int) round;
+							System.out.println("Total is   leave date="+ allowedday);
+							System.out.println("Total is  Pro leave date after calculation="+ remainingdays);
+							EmployeeFiscalYearLeaveDetails employefiscalyear = new EmployeeFiscalYearLeaveDetails();
+							employefiscalyear.setLeaveConfiguration_Id(leavedetails.getId());
+							employefiscalyear.setFinancialyear_id(leavedetails.getFinancialyear_id());
+							employefiscalyear.setRemainingdays(remainingdays);
+							employefiscalyear.setEmployee_id(user.getStaffId());
+							employefiscalyear.setFromDate(financialYear.get(0).getFinancialYear_From());
+							employefiscalyear.setToDate(financialYear.get(0).getFinancialYear_To());
+							session.save(employefiscalyear);								
+						}
+						else if (leavetype.equals("halfyearly")) {
+							System.out.println("Enter halfyearly leave");
+							Date from = financialYear.get(0).getFinancialYear_From();
+							Date to = financialYear.get(0).getFinancialYear_To();
+							ArrayList<Object> allowedDays = calculateLeaveDuration(from, to,LeaveDuration.Halfyearly.addmonthCount);
+							int size = allowedDays.size();
+							for (int k = 0; k < size; k++) {
+								HashMap<Object, Object> datesss = (HashMap<Object, Object>) allowedDays.get(k);
+								EmployeeFiscalYearLeaveDetails financialyear = new EmployeeFiscalYearLeaveDetails();
+								for (Map.Entry<Object, Object> ss : datesss.entrySet()) {
+									Calendar fromD = (Calendar) ss.getKey();
+									Calendar toD = (Calendar) ss.getValue();
+									System.out.println("leave type half yearly add start");
+									financialyear.setLeaveConfiguration_Id(leavedetails.getId());
+									financialyear.setEmployee_id(user.getStaffId());
+									financialyear.setFromDate(fromD.getTime());
+									financialyear.setToDate(toD.getTime());
+									financialyear.setRemainingdays(leavedetails.getAllowed_days());
+									financialyear.setFinancialyear_id(leavedetails.getFinancialyear_id());
+									session.save(financialyear);								
+															
+								}
+							}
+						}
+						else if (leavetype.equals("quarterly")) {
+							System.out.println("Enter inside quarterly leave");
+							Date from = financialYear.get(0).getFinancialYear_From();
+							Date to = financialYear.get(0).getFinancialYear_To();
+							ArrayList<Object> allowedDays = calculateLeaveDuration(from, to,LeaveDuration.Quartarly.addmonthCount);
+							int size = allowedDays.size();
+							for (int k = 0; k < size; k++) {
+								HashMap<Object, Object> datesss = (HashMap<Object, Object>) allowedDays.get(k);
+								EmployeeFiscalYearLeaveDetails financialyear = new EmployeeFiscalYearLeaveDetails();
+								for (Map.Entry<Object, Object> ss : datesss.entrySet()) {
+									Calendar fromD = (Calendar) ss.getKey();
+									Calendar toD = (Calendar) ss.getValue();
+									System.out.println("leave type quarterly add start");
+									financialyear.setLeaveConfiguration_Id(leavedetails.getId());
+									financialyear.setEmployee_id(user.getStaffId());
+									financialyear.setFromDate(fromD.getTime());
+									financialyear.setToDate(toD.getTime());
+									financialyear.setRemainingdays(leavedetails.getAllowed_days());
+									financialyear.setFinancialyear_id(leavedetails.getFinancialyear_id());
+									session.save(financialyear);								
+																		
+								}
+							}
+						}
+						else if (leavetype.equals("monthly")) {
+							System.out.println("Enter inside monthly leave");
+							Date from = financialYear.get(0).getFinancialYear_From();
+							Date to = financialYear.get(0).getFinancialYear_To();
+					ArrayList<Object> allowedDays = calculateLeaveDuration(from, to,LeaveDuration.Month.addmonthCount);
+							int size = allowedDays.size();
+							for (int k = 0; k < size; k++) {
+								HashMap<Object, Object> datesss = (HashMap<Object, Object>) allowedDays.get(k);
+								EmployeeFiscalYearLeaveDetails financialyear = new EmployeeFiscalYearLeaveDetails();
+								for (Map.Entry<Object, Object> ss : datesss.entrySet()) {
+									Calendar fromD = (Calendar) ss.getKey();
+									Calendar toD = (Calendar) ss.getValue();
+									System.out.println("leave type quarterly add start");
+									financialyear.setLeaveConfiguration_Id(leavedetails.getId());
+									financialyear.setEmployee_id(user.getStaffId());
+									financialyear.setFromDate(fromD.getTime());
+									financialyear.setToDate(toD.getTime());
+									financialyear.setRemainingdays(leavedetails.getAllowed_days());
+									financialyear.setFinancialyear_id(leavedetails.getFinancialyear_id());
+									session.save(financialyear);																
+								}
+							}
+						} else {
+							
+							System.err.println("Allowed leave types are [halfyearly,quarterly,monthly ].But founded is "+leavetype+" so we won't assign this leave type to employee");								
+						}
+					}
+				}
+			}
+		   else
+		   {
+			   System.err.println("Financial id is null.So Admin configure finanacial year detais must be first");				  
+		   }	   			   
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Integer getCurrentFinancialYearId(){
+		JSONObject result = new JSONObject();
+		result.put("status",true);
+		Session session = null;
+		Integer financialYearId=0;
+		try {
+			
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			Query query = session.createQuery("FROM Financialyear");			
+			ArrayList<Financialyear> financialYearDetails = (ArrayList<Financialyear>) query.list();
+			
+			boolean isMatched = false;
+			if(financialYearDetails != null && !financialYearDetails.isEmpty())
+			{
+				Date currentDate =null;
+				for (Financialyear financialyear : financialYearDetails) {
+					Date fromFinancialYear = financialyear.getFinancialYear_From();
+					Date toFinancialYear = financialyear.getFinancialYear_To();
+					
+					currentDate = new Date();
+					
+					if(fromFinancialYear.before(currentDate) && toFinancialYear.after(currentDate))
+					{
+						financialYearId=financialyear.getFinancialyearid();
+						result.put("financialyearid",financialyear.getFinancialyearid());
+						isMatched = true;
+						break;
+					}
+				}
+				
+				if(!isMatched)
+				{
+					result.put("status",false);
+					result.put("reason","Financial Year id not found for [ "+currentDate+" ]");
+				}
+			}
+			else
+			{
+				System.err.println("Admin still not configured Financial year table");
+				result.put("status",false);
+				result.put("reason","Financial year table is empty");
+			}	
+			
+		} catch (Exception e) {
+			result.put("status",false);
+			result.put("reason","error happend");
+			result.put("error message",e.getMessage());
+			e.printStackTrace();
+		}
+		return financialYearId;
+	}
+	
 	public JSONObject listStaff() {
 		System.out.println("Inside Dao1Staff");
 		JSONObject status = new JSONObject();
@@ -650,4 +883,57 @@ public class StaffDao {
 		return status;
 	}
 
+	
+	private static int differenceInMonths(Date d1, Date d2) {
+	    Calendar c1 = Calendar.getInstance();
+	    c1.setTime(d1);
+	    Calendar c2 = Calendar.getInstance();
+	    c2.setTime(d2);
+	    int diff = 0;
+	    if (c2.after(c1)) {
+	    	diff++;
+	        while (c2.after(c1)) {
+	            c1.add(Calendar.MONTH, 1);
+	            if (c2.after(c1)) {
+	                diff++;
+	            }
+	        }
+	    } else if (c2.before(c1)) {
+	        while (c2.before(c1)) {
+	            c1.add(Calendar.MONTH, -1);
+	            if (c1.before(c2)) {
+	                diff--;
+	            }
+	        }
+	    }
+	    return diff;
+	}
+	
+	private ArrayList<Object> calculateLeaveDuration(Date from,Date to, int monthstoadd){		 
+        ArrayList<Object> dateIntervals = new ArrayList<Object>();		 
+		 try {
+			 Calendar calendar = Calendar.getInstance();
+			 calendar.setTime(from);			 			 
+			 // TODO Financial year should be 12 or it is won't work
+			 int loopCount = 12/monthstoadd;		 
+			 for(int i=0;i<loopCount;i++) {
+				HashMap<Object, Object> dateInterval = new HashMap<Object, Object>();					
+				Calendar from_date= Calendar.getInstance();
+				from_date.setTime(from);				
+				Calendar to_date = Calendar.getInstance();
+				to_date.setTime(from);
+				to_date.add(Calendar.MONTH, monthstoadd);
+				to_date.add(Calendar.DAY_OF_MONTH,-1);
+				dateInterval.put(from_date, to_date);
+				dateIntervals.add(dateInterval);				
+				Calendar set_from_date = Calendar.getInstance();
+				set_from_date.setTime(to_date.getTime());
+				set_from_date.add(Calendar.DAY_OF_MONTH,1);			
+				from = set_from_date.getTime();			
+			 }	 			 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		 return dateIntervals;
+	 }
 }
