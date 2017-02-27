@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.hospital.controller;
 
 import org.json.simple.JSONObject;

@@ -28,6 +28,7 @@ public class AnnotationConfiguration {
 	public ObjectMapper jsonViewObjectMapper()
 	{
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     	SimpleModule module = new SimpleModule();
     	module.addSerializer(JsonView.class, new JsonViewSerializer());
     	mapper.registerModule(module);

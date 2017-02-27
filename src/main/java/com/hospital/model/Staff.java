@@ -61,6 +61,8 @@ public class Staff {
 	@Column(name = "staff_role")
 	private String staffRole;
 	
+	
+	
 	@OneToOne(targetEntity = Nurse.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "nurse_id", referencedColumnName = "nurse_id", foreignKey = @ForeignKey(name = "nurse_STF_FK"))
 	private Nurse nurse;
