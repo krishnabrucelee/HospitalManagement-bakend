@@ -9,7 +9,8 @@
     
     
   <property name="hibernate.connection.username">root</property> 
-  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/new_hospitalmanagement?useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
+  <property name="hibernate.connection.password">mysql</property> 
+  <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hospitalmanagement?useLegacyDatetimeCode=false&amp;serverTimezone=UTC</property>
   <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
   <property name="hibernate.show_sql">true</property>
@@ -182,6 +183,20 @@
 					<mapping class="com.hospital.model.radiology.RadiologyTest"/>
 					<mapping class="com.hospital.model.radiology.PatientRadiologyTest"/>
 					<mapping class="com.hospital.model.radiology.PatientRadiologyTestStatus"/>
+	 <mapping class="com.hospital.leave.model.Leavedetails"/> 
+    <mapping class="com.hospital.leave.model.Financialyear"/>
+    <mapping class="com.hospital.leave.model.EmployeeFiscalYearLeaveDetails"/>
+    <mapping class="com.hospital.leave.model.EmployeeLeaveTransaction"/>
+    <mapping class="com.hospital.leave.model.Holidays"/>
+    <mapping class="com.hospital.leave.model.HolidaysDetails"/>
+    
+    <!-- Finanace Module -->
+    <mapping class="com.hospital.finanace.model.AccountDetailType"/>
+    <mapping class="com.hospital.finanace.model.AccountType"/>
+    <mapping class="com.hospital.finanace.model.CashInflowandOutflowTypes"/>
+    <mapping class="com.hospital.finanace.model.ProfitLossTypes"/>
+    <mapping class="com.hospital.finanace.model.FinanceTransaction"/>
+    
 					
 					<!-- HR Modules -->
     <mapping class="com.hospital.payroll.model.EarnedSalaryConfigDetails" />
