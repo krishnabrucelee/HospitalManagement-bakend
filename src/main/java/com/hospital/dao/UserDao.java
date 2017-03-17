@@ -56,7 +56,7 @@ public class UserDao {
 		Users appoint = om.convertValue(user, Users.class);
 
 		try {
-			System.out.println("Inside Dao11 PATIENT");
+			System.out.println("Inside Dao11 Add USER");
 			session.save(appoint);
 			transaction.commit();
 			System.out.println("Save users");

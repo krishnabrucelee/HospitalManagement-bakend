@@ -12,6 +12,8 @@ import org.json.simple.JSONObject;
 public interface IStaffPayrollService {
 
 	JSONObject createSalaryComponents(JSONObject salaryDetails);
+	
+	JSONObject getAllSalaryComponents();
 
 	JSONObject createSalaryConfigurationForStaff(JSONObject salary_staff_details);
 	
@@ -28,4 +30,8 @@ public interface IStaffPayrollService {
 	JSONObject generatePaySlip(JSONObject staffDetails);
 	
 	JSONObject generatePayrollForMonth(JSONObject payrollMonthDetails);
+	
+	JSONObject listSalaryPaySlipForMonth();
+	
+	JSONObject listAllSalaryPaySlipForMonth();
 }

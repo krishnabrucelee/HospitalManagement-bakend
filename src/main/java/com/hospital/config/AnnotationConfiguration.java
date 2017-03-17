@@ -25,8 +25,7 @@ public class AnnotationConfiguration {
 	}
 	
 	@Bean(name="jsonViewObjectMapper")
-	public ObjectMapper jsonViewObjectMapper()
-	{
+	public ObjectMapper jsonViewObjectMapper(){
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     	SimpleModule module = new SimpleModule();

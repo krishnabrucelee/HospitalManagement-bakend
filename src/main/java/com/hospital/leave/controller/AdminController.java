@@ -28,9 +28,9 @@ public class AdminController {
 		 return iadminservice.saveLeaveData(leaveData);		
 	}
 	
-	@RequestMapping(value = "/getLeavedataList	",method=RequestMethod.POST)
+	@RequestMapping(value = "/listLeavetypes",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject getLeavedataList( ){
-				
+			System.out.println("Inside getLeavedataList controlller");	
 		 return iadminservice.getLeavedetailsByFid();
 	}	
 	
@@ -114,7 +114,7 @@ public class AdminController {
     //////*******NEW TYPE LEAVE APPROVE BY ADMIN*****////////
 	@RequestMapping(value = "/approveLeaverequestByEmpByAdmin",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject approveLeaverequestByEmpByAdmin(@RequestBody JSONObject approveleave)throws Exception{
-			System.out.println("Approval controller");	
+		
 		 return iadminservice.approveLeaverequestByEmpByAdmin(approveleave);
 	}
 	
@@ -185,6 +185,11 @@ public class AdminController {
 		return iadminservice.setYearlyHolidays(holidays);
 	}
 	
+	@RequestMapping(value = "/getHolidaysByTypes",method=RequestMethod.POST)
+	public @ResponseBody JSONObject listHolidaysByTypes(@RequestBody JSONObject holidaytypes) {
+		
+		return iadminservice.listHolidaysByTypes(holidaytypes);
+	}
 	//setWeekoffdays
 	@RequestMapping(value = "/setWeekoffdays",method=RequestMethod.POST)
 	public @ResponseBody JSONObject setWeekoffdays(@RequestBody JSONObject weekoff) {
@@ -202,6 +207,10 @@ public class AdminController {
 		return iadminservice.getFiscalyearDetailByEmpIdYear(fiscaldata);
 	}
 	
+	@RequestMapping(value = "/getLOPSumByEmpId",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject getLOPSumByEmpId(@RequestBody JSONObject lopsumdata ){		
+		 return iadminservice.getLOPSumByEmpId(lopsumdata);
+	}
 	@RequestMapping(value = "/deleteFiscalLeaveDetailsByEmpIdFid",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject deleteFiscalLeaveDetailsByEmpIdYear(@RequestBody JSONObject fiscaldataid ){				
 		 return iadminservice.deleteFiscalyearDetailByEmpIdYear(fiscaldataid);
@@ -220,5 +229,11 @@ public class AdminController {
 	@RequestMapping(value = "/deleteHolidayById",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject deleteHolidayById(@RequestBody JSONObject holidayid ){		
 		 return iadminservice.deleteHolidayById(holidayid);
+	}
+	//listLeaveRequestBetweenDates
+	
+	@RequestMapping(value = "/listLeaveRequestBetweenDates",method=RequestMethod.POST)
+	public 	@ResponseBody JSONObject listLeaveRequestBetweenDates(@RequestBody JSONObject leaverequest ){		
+		 return iadminservice.listLeaveRequestBetweenDates(leaverequest);
 	}
 }

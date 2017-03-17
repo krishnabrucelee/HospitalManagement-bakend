@@ -3,9 +3,14 @@
  */
 package com.hospital.payroll.dao;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -15,7 +20,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -23,6 +30,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Staff;
@@ -83,7 +91,37 @@ public class StaffPayrollDao {
 		}
 		return result;
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject getAllSalaryComponents() {
+		JSONObject result = new JSONObject();
+		result.put("status",true);
+		Session session = null;
+		List<SalaryComponents> listSalaryConfig=null;	
+		try {						
+			session = sessionFactory.getCurrentSession();
+			session.beginTransaction();			
+		    listSalaryConfig=session.createQuery("FROM SalaryComponents").list();	
+			session.getTransaction().commit();
+			if (listSalaryConfig!=null &&!listSalaryConfig.isEmpty()) {
+			    result.put("SalaryConfig", listSalaryConfig);
+			} else {
+				result.put("status",false);
+				result.put("reason","Admin still not configure values");
+			}
+			
+		} catch (Exception e) {
+			result.put("status",false);
+			result.put("error",e.getMessage());
+			e.printStackTrace();
+		}
+		finally{
+			if(session!= null && session.isOpen())
+				session.close();
+		}
+		return result;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public JSONObject createSalaryConfigurationForStaff(JSONObject salary_staff_details) {
 		JSONObject result = new JSONObject();
@@ -427,7 +465,7 @@ public class StaffPayrollDao {
 					.onClass(StaffSalaryConfigs.class, Match.match().exclude("staff"))
 					);
 			String earnedJson = jsonViewObjectMapper.writeValueAsString(JsonView.with(staffSalaryPayoutDetails)
-					.onClass(StaffSalaryPayoutDetails.class, Match.match().exclude("staff"))
+					.onClass(StaffSalaryPayoutDetails.class, Match.match().include("staff"))
 					);
 			result.put("defaultSalaryConfig",jsonViewObjectMapper.readValue(json,new TypeReference<HashMap<String,Object>>(){}));
 			result.put("earnedSalaryConfig",jsonViewObjectMapper.readValue(earnedJson,new TypeReference<HashMap<String,Object>>(){}));
@@ -516,6 +554,8 @@ public class StaffPayrollDao {
 		JSONObject result = new JSONObject();
 		result.put("status",true);
 		Session session = null;
+		
+	    
 		try {
 			
 			// 1. Check if payroll already existed for this month and year
@@ -529,13 +569,11 @@ public class StaffPayrollDao {
 			
 			session = sessionFactory.getCurrentSession();
 			session.beginTransaction();
-			
-			String month = payrollMonthDetails.get("month").toString();
+            String month = payrollMonthDetails.get("month").toString();
 			
 			LocalDate payrollLocalDate = LocalDate.parse(month, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 			
 			Date payrollDate = Date.from(payrollLocalDate.atStartOfDay(ZoneId.of("UTC")).toInstant());
-			
 			// 1. Check if payroll already existed for this month and year
 			Criteria cri = session.createCriteria(PayrollEntries.class);
 			cri.add(Restrictions.eq("fromDate",payrollDate));
@@ -720,6 +758,101 @@ public class StaffPayrollDao {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public JSONObject listSalaryPaySlipForMonth() {
+		JSONObject result = new JSONObject();
+		result.put("status",true);
+		Session session = null;		
+		try {
+			
+			// 1. Load Staff Salary Config Details
+						// 2. Load Actual Earned Salary Config Details
+						
+						// Enable Payroll Process lock			
+						/*boolean payRollProcessingLock = (boolean) payRollProcessDetails.get("isLockAvailable");	
+						
+						if(!payRollProcessingLock)
+						{
+							result.put("reason","you cann't run payroll process now because "+payRollProcessDetails.get("processname")+" process is running. Please try after some time");
+							result.put("status",false);
+							return result;
+						}
+						
+						// Accquire payrollProcessLock lock
+						payRollProcessDetails.put("isLockAvailable",false);
+						payRollProcessDetails.put("processname","payroll");	*/
+						
+						session = sessionFactory.getCurrentSession();			
+						session.beginTransaction();
+						
+						
+						Criteria  cri = session.createCriteria(StaffSalaryPayoutDetails.class); 
+						List<StaffSalaryPayoutDetails> staffSalaryPayoutDetails = (List<StaffSalaryPayoutDetails>) cri.list();
+						
+						if(staffSalaryPayoutDetails == null)
+						{
+							result.put("status",false);//"+staffDetail.get("salaryDate").toString()+"
+							result.put("message","PaySlip not generated for this  month");
+							return result;
+						}
+						
+						
+						String earnedJson = jsonViewObjectMapper.writeValueAsString(JsonView.with(staffSalaryPayoutDetails)
+								.onClass(StaffSalaryPayoutDetails.class, Match.match().exclude("staff"))
+								);
+						
+						result.put("earnedSalaryConfigAll",jsonViewObjectMapper.readValue(earnedJson,new TypeReference<HashMap<String,Object>>(){}));
+						
+						
+						// release payrollProcessLock lock
+						payRollProcessDetails.put("isLockAvailable",true);
+						payRollProcessDetails.remove("processname");	
+						
+						
+		} catch (Exception e) {
+			result.put("status",false);
+			result.put("error",e.getMessage());
+			e.printStackTrace();
+		}
+		finally{
+			if(session!= null && session.isOpen())
+				session.close();
+		}
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject listAllSalaryPaySlipForMonth() {
+		JSONObject result = new JSONObject();
+		Session  session =null;
+		List<StaffSalaryPayoutDetails> details = null;
+		try {
+			session = this.sessionFactory.getCurrentSession();
+			session.beginTransaction();
+			Query query = session.createQuery("FROM StaffSalaryPayoutDetails");
+			details = query.list();
+			session.getTransaction().commit();
+			if(details == null){
+				result.put("status",false);//"+staffDetail.get("salaryDate").toString()+"
+				result.put("message","PaySlip not generated for this  month");
+				return result;
+			}
+			String earnedJson = jsonViewObjectMapper.writeValueAsString(JsonView.with(details)
+					.onClass(StaffSalaryPayoutDetails.class, Match.match().exclude("staff"))
+					);
+			//ArrayList<User> convertedValue = objectMapper.readValue(json,new TypeReference<ArrayList<User>>() {});
+			result.put("StaffSalaryList", earnedJson);
+		} catch (Exception e) {
+			result.put("status",false);
+			result.put("error",e.getMessage());
+			e.printStackTrace();
+		}
+		finally{
+			if(session!= null && session.isOpen())
+				session.close();
+		}
+		return result;
+	}
 	
 	/*@SuppressWarnings("unchecked")
 	public JSONObject getPaySlipForMonth(JSONObject staffDetail) {

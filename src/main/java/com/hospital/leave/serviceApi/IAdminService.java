@@ -49,7 +49,16 @@ public interface IAdminService {
 	public JSONObject deleteEmployeeLeaveRequestById(JSONObject employeeLeaveRequestid);
 	
     public JSONObject deleteFinancialyearById(JSONObject financialyearid);
-	
+    public JSONObject listHolidaysByTypes(JSONObject holidaytypes); 
+    
+  
+    
 	public JSONObject deleteHolidayById(JSONObject holidayid);
+	//GetLOP SUM//
+	
+	public JSONObject getLOPSumByEmpId(JSONObject lopsumdata);
+	
+	public JSONObject listLeaveRequestBetweenDates(JSONObject leaverequest);
+	
 	
 }

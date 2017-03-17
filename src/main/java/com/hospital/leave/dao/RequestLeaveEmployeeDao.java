@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -28,6 +29,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+
 import com.hospital.model.Staff;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -56,18 +58,26 @@ public class RequestLeaveEmployeeDao {
 	public JSONObject employeeApplyLeave(JSONObject employeerequestLeave){
 		JSONObject result = new JSONObject();
 		Session session =  null;
+		LocalDate fromDate = LocalDate.parse(employeerequestLeave.get("From_Date").toString(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));       
+        LocalDate toDate = LocalDate.parse(employeerequestLeave.get("To_Date").toString(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));    
+        Date applyFromDate = Date.from(fromDate.atStartOfDay(ZoneId.of("UTC")).toInstant());        
+        Date applytoFromDate = Date.from(toDate.atStartOfDay(ZoneId.of("UTC")).toInstant());
+        System.out.println("From Date="+applyFromDate);
+        System.out.println("To Date="+applytoFromDate);  
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Date apply_fromDate = null;Date apply_todate =null;
 		try {	
 			
 			session = this.sf.getCurrentSession();
 			session.beginTransaction();
 			
 			// 1. Apply date not before current date end
-			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			
 			Date today = new Date();
 			Date now = formatter.parse(formatter.format(today));
-			Date apply_fromDate = formatter.parse((String)employeerequestLeave.get("From_Date"));
-			Date apply_todate = formatter.parse((String)employeerequestLeave.get("To_Date"));
-			System.out.println("Employee apply date="+apply_todate);
+			apply_fromDate = formatter.parse((String)employeerequestLeave.get("From_Date"));
+			 apply_todate = formatter.parse((String)employeerequestLeave.get("To_Date"));
+			System.out.println("Employee apply  TO date="+apply_todate);
 			if( now.compareTo(apply_fromDate) > 0 )
 			{
 				result.put("status",false);
@@ -75,6 +85,7 @@ public class RequestLeaveEmployeeDao {
 				return result;
 			}	
 			//A.To check applied date within accounting year range
+			System.out.println("Enter into before get getFianacialYear()");
 			Financialyear financialyear =getFianacialYear((Integer)employeerequestLeave.get("financialyearid"));
 			
 			if(financialyear ==null){
@@ -125,8 +136,8 @@ public class RequestLeaveEmployeeDao {
 				boolean isAlreadyApplied = isOverlapDates(						
 						formatter.parse(formatter.format(employeeLeaveTransactions.get(0).getFromDate())),
 						formatter.parse(formatter.format(employeeLeaveTransactions.get(0).getToDate())),
-						apply_fromDate,
-						formatter.parse((String)employeerequestLeave.get("To_Date"))
+						applyFromDate,
+						applytoFromDate
 						);
 				
 				
@@ -159,8 +170,8 @@ public class RequestLeaveEmployeeDao {
 			
 			
 			JSONObject rangeResult = matchTwoRange(employeeLeaveDetails,
-									formatter.parse((String)employeerequestLeave.get("From_Date")),
-									formatter.parse((String)employeerequestLeave.get("To_Date")));
+					applyFromDate,
+					applytoFromDate);
 			System.out.println("JSONObject rangeResult="+rangeResult);
 			/*if(!(boolean)rangeResult.get("matched")){
 				result.put("status",false);
@@ -216,7 +227,8 @@ public class RequestLeaveEmployeeDao {
 				elt.setLeaveConfigurationId((int)employeerequestLeave.get("leaveconfigid"));
 				elt.setReason((String)employeerequestLeave.get("Reason"));
 				elt.setStatus("pending");
-				elt.setTotaldays((int)totalApplyday);				
+				elt.setTotaldays((int)totalApplyday);	
+				System.out.println("EmployeeLeaveTransaction="+elt);
 				session.save(elt);				
 				System.out.println(" Your current and previous+appliedDays= "+allApplydays);
 				result.put("status",true);
@@ -748,14 +760,18 @@ public class RequestLeaveEmployeeDao {
 	public JSONObject employeeAllPARViewStatus(JSONObject leaveRequestStatus) {
 		JSONObject status = new JSONObject();
 		status.put("status", true);
+		System.out.println("Enter into employeeAllPARViewStatus DAO");
 		Integer employid = (Integer)leaveRequestStatus.get("employee_id");
 		Integer financialYearId = getCurrentFinancialYearId();	
+		System.out.println("Enter into after get financial id");
 		HashMap<String, Object> resultDatas = new HashMap<String, Object>();
 		List<EmployeeLeaveTransaction> value = null;
 		value = getAllPARData(employid);
+		System.out.println("Enter into after get ALL pending  APP REJ data="+value);
 		HashSet<Integer> employe = new HashSet<Integer>();
 		HashSet<Integer> leave = new HashSet<Integer>();
 		if (value != null) {
+			System.out.println("Enter into value not null");
 			ObjectMapper om = new ObjectMapper();
 			om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
 			ArrayList<Object> object = om.convertValue(value, ArrayList.class);
@@ -777,10 +793,11 @@ public class RequestLeaveEmployeeDao {
 			Transaction tr = null;
 			List<Staff> users = null;
 			try {
+				System.out.println("Enter intoJSON VIEW try");
 				session = this.sf.getCurrentSession();
 				tr = session.beginTransaction();
 				Criteria crt = session.createCriteria(Staff.class);
-				crt.add(Property.forName("user_id").in(employe.toArray()));
+				crt.add(Property.forName("staffId").in(employe.toArray()));
 				users = crt.list();
 				
 				String json = jsonViewObjectMapper.writeValueAsString(com.monitorjbl.json.JsonView.with(users).onClass(
@@ -838,7 +855,7 @@ public class RequestLeaveEmployeeDao {
 				resultDatas.put("result", leaveTransaction);
 				status.put("result", resultDatas);
 				status.put("result", object);
-
+				System.out.println("Enter into all value return");
 				System.out.println("New Code3");
 				tr.commit();
 			} catch (Exception e) {
@@ -1541,13 +1558,11 @@ if((((dbFromDate.before(FormfromDate))||(dbFromDate.compareTo(FormfromDate)==0 )
 			result.put("status",true);
 			Session session = null;
 			Integer financialYearId=0;
-			try {
-				
+			try {		
 				session = this.sf.getCurrentSession();
 				session.beginTransaction();
 				Query query = session.createQuery("FROM Financialyear");			
-				ArrayList<Financialyear> financialYearDetails = (ArrayList<Financialyear>) query.list();
-				
+				ArrayList<Financialyear> financialYearDetails = (ArrayList<Financialyear>) query.list();				
 				boolean isMatched = false;
 				if(financialYearDetails != null && !financialYearDetails.isEmpty())
 				{
@@ -1665,7 +1680,8 @@ if((((dbFromDate.before(FormfromDate))||(dbFromDate.compareTo(FormfromDate)==0 )
 		 public  List<EmployeeLeaveTransaction> getAllPARData(Integer employeId){
 	    	Session session = null;
 			Transaction tr = null;
-	    	Integer financialId = getCurrentFinancialYearId();		
+	    	Integer financialId = getCurrentFinancialYearId();
+	    	System.out.println("Enter into after get = getCurrentFinancialYearId();=");
 			List<EmployeeLeaveTransaction> employeeLeaveTransaction = null;
 			List<Financialyear> financialyears =null;Integer fid = 0;
 			try {

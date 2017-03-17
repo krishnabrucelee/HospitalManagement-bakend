@@ -2,6 +2,10 @@ package com.hospital.leave.dao;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +26,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
@@ -62,7 +67,7 @@ public class AdminDao {
 		 String leavetype = null; String proleave = null;
 		 Date joindate =null; Date dbtodate=null;
 			int joinmonth =0; int joinyear=0;int dbfromyear=0;int dbtoyear=0;int allowedday=0;
-			 double totholiday=0.0;
+			 double totyearlyday=0.0;
 			int diff=0;			
 		ObjectMapper om = new ObjectMapper();
 		   om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -85,6 +90,7 @@ public class AdminDao {
 		    	 dbtodate=financialyear.getFinancialYear_To();
 			}		   
 			    leavedetails.setFinancialyear_id(financialYearId);
+			    System.out.println("Leave datas="+leavedetails);
 			session.save(leavedetails);	
 			System.out.println("Finanacial year id="+leavedetails.getFinancialyear_id());
 			 System.out.println("LEAVE DETAILS ARE  saved");   		
@@ -99,10 +105,10 @@ public class AdminDao {
 						
 						 leavetype = leavedetails.getLeave_days_type();	
 						 joindate = user.getStaffDoj();
+						 
 							SimpleDateFormat sddf = new SimpleDateFormat("dd-MM-yyyy");
 							
-						 if((leavetype.equals("yearly"))&&(proleave.equals("yes"))){
-							 
+						 if((leavetype.equals("yearly"))&&(proleave.equals("yes"))){							 
 							 System.out.println("Enter  yearly leave Inside ADD");
 								Integer lid = leavedetails.getId();
 								System.out.println("Pro leave type ID=" + lid);
@@ -113,26 +119,16 @@ public class AdminDao {
 								joinmonth = calendar.get(Calendar.MONTH);
 								joinyear = calendar.get(Calendar.YEAR);								
 								diff = differenceInMonths(joindate, dbtodate);								
-								totholiday = (double) allowedday;
-								/*double permonth = totholiday / 12;								
-								double proleavedays = permonth * diff;								
-								double finall = Math
-										.round(proleavedays * 10000.0) / 10000.0;								
-								double round = Math.ceil(finall);
-								int remainingdays = (int) round;
-								System.out.println("Total is   leave date="
-										+ allowedday);
-								System.out.println("Total is  Pro leave date after calculation="
-										+ remainingdays);
-							 */
-								double permonth = totholiday / 12;							
+								totyearlyday = (double) allowedday;
+							System.out.println("Total remaining days="+totyearlyday);
+								double permonth = totyearlyday / 12;							
 								double proleavedays = permonth * diff;	
 								System.out.println("proleavedays before Math.round="+proleavedays);
 								double finall = Math.round(proleavedays * 10000.0) / 10000.0;							
 								double round = Math.ceil(finall);
 								int remainingdays = (int) round;
 								System.out.println("Total   leave date="+ allowedday);
-								System.out.println("Total  Pro leave date after calculation="+ remainingdays);
+								System.out.println("Total  Pro leave days after calculation="+ remainingdays);
 								
 							 EmployeeFiscalYearLeaveDetails financialyear = new EmployeeFiscalYearLeaveDetails();								
 							 System.out.println("leave type yearly add start");		
@@ -142,6 +138,7 @@ public class AdminDao {
 							 financialyear.setToDate(financialyears.get(0).getFinancialYear_To());
 							 financialyear.setRemainingdays(remainingdays);	
 								financialyear.setFinancialyear_id(leavedetails.getFinancialyear_id());
+								System.out.println("EmployeeFiscalYearLeaveDetails="+financialyear);
 								session.save(financialyear);
 								System.out.println("leave type yearly add  with proleave calculation end");
 						 }
@@ -164,12 +161,13 @@ public class AdminDao {
 										 financialyear.setToDate(toD.getTime());
 										 financialyear.setRemainingdays(leavedetails.getAllowed_days());	
 											financialyear.setFinancialyear_id(leavedetails.getFinancialyear_id());
+											System.out.println("EmployeeFiscalYearLeaveDetails="+financialyear);
 											session.save(financialyear);
 											 System.out.println("leave type half yearly add end");													
 									}
 								}															     																							       							    							       
 						 }	
-						 //Quarterly
+						
 						 if(leavetype.equals("quarterly")){
 							 System.out.println("Inside ADD quarterly");
 							 Date from = financialyears.get(0).getFinancialYear_From();							 
@@ -189,12 +187,13 @@ public class AdminDao {
 										 financialyear.setToDate(toD.getTime());
 										 financialyear.setRemainingdays(leavedetails.getAllowed_days());	
 											financialyear.setFinancialyear_id(leavedetails.getFinancialyear_id());
+											System.out.println("EmployeeFiscalYearLeaveDetails="+financialyear);
 											session.save(financialyear);
 											 System.out.println("leave type quarterly  add end");													
 									}
 								}															     																							       							    							       
 						 }
-						 //MONTHLY
+						
 						 if(leavetype.equals("monthly")){
 							 System.out.println("Inside ADD monthly");
 							 Date from = financialyears.get(0).getFinancialYear_From();							 
@@ -214,6 +213,7 @@ public class AdminDao {
 										 financialyear.setToDate(toD.getTime());
 										 financialyear.setRemainingdays(leavedetails.getAllowed_days());	
 											financialyear.setFinancialyear_id(leavedetails.getFinancialyear_id());
+											System.out.println("EmployeeFiscalYearLeaveDetails="+financialyear);
 											session.save(financialyear);
 											 System.out.println("leave type monthly add end");													
 									}
@@ -754,10 +754,32 @@ public class AdminDao {
 	
 		@SuppressWarnings("unchecked")
 		public JSONObject approveLeaverequestByEmpByAdmin(JSONObject approveleave)  {
-			System.out.println("Inside dao1");
+			
 			System.out.println("Approval Inside dao1");	
 			JSONObject status = new JSONObject();
 			status.put("status",true);
+			String quotation_date =approveleave.get("fromDate").toString();
+			String todate =approveleave.get("toDate").toString();
+			long fr = Long.valueOf(quotation_date);
+			long todat = Long.valueOf(todate);
+			LocalDate utcDatefrom = Instant.ofEpochMilli(fr).atZone(ZoneId.of("UTC")).toLocalDate();
+		     System.out.println("From dateutcDatefrom="+utcDatefrom);
+		     LocalDate utcDateto = Instant.ofEpochMilli(todat).atZone(ZoneId.of("UTC")).toLocalDate();
+		     System.out.println("From dateutcDateto="+utcDateto);
+		    
+			  /*long currentDateTime = Long.parseLong(quotation_date);
+              Date currentDate = new Date(currentDateTime);
+              long to = Long.parseLong(todate);
+              Date applytodate = new Date(to);
+              System.out.println("From date="+currentDate);
+              System.out.println("To date="+to);*/
+              status.put("status", false);
+			//LocalDate fromDate = LocalDate.parse(approveleave.get("fromDate").toString(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));       
+	        //LocalDate toDate = LocalDate.parse(approveleave.get("toDate").toString(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));    
+	        Date applyFromDate = Date.from(utcDatefrom.atStartOfDay(ZoneId.of("UTC")).toInstant());        
+	        Date applytoDate = Date.from(utcDateto.atStartOfDay(ZoneId.of("UTC")).toInstant());
+	        System.out.println("Front end UTC From Date="+applyFromDate);
+	        System.out.println(" Front end UTC To Date="+applytoDate);  
 			SimpleDateFormat sddf = new SimpleDateFormat("dd-MM-yyyy");
 			String leave_status = approveleave.get("status").toString(); 		
 			Integer empid = (Integer)approveleave.get("employee_id");
@@ -766,7 +788,7 @@ public class AdminDao {
 			Integer day = (Integer)approveleave.get("totaldays");	
 			System.out.println("Requested day="+day);
 			Integer finid = (Integer)approveleave.get("financialyearid");
-			Date empfrom =null;Date empto = null;
+			//Date empfrom =null;Date empto = null;
 			String leavetype =null;
 			ArrayList<Date> halfyearly = new ArrayList<Date>();
 			ArrayList<Date> quarterly = new ArrayList<Date>();
@@ -776,12 +798,13 @@ public class AdminDao {
 			List<EmployeeFiscalYearLeaveDetails> employeeFiscal = null;
 			List<EmployeeLeaveTransaction> leaveTransaction=null;
 			 List<Leavedetails> leave =null;
-			try {
+			 String leavename =null;
+			/*try {
 				 empfrom = sddf.parse(approveleave.get("FromDate").toString());
 				 empto = sddf.parse(approveleave.get("ToDate").toString());
 			} catch (ParseException e1) {
 				e1.printStackTrace();
-			}
+			}*/
 			if(leave_status.equals("approve"))
 			{// approve Log   
 				System.out.println("##$$Inside approve##$$=");
@@ -801,7 +824,8 @@ public class AdminDao {
 						System.out.println("Inside dao1 try11");
 			           Query query = session.createQuery("FROM Leavedetails WHERE financialyear_id=:searchA AND id=:searchB");		
 			           leave = query.setParameter("searchA", finid).setParameter("searchB", lcfid).list();
-			         leavetype = leave.get(0).getLeave_days_type(); 	
+			         leavetype = leave.get(0).getLeave_days_type(); 
+			         leavename = leave.get(0).getLeave_name();
 			         System.out.println("Admin approve  Employe lave types="+leavetype);
 						Query qur = session.createQuery("FROM EmployeeLeaveTransaction WHERE id=:searchA");
 					 leaveTransaction= qur.setParameter("searchA", id).list();
@@ -846,7 +870,7 @@ public class AdminDao {
 					}*/
 					
 				if(leavetype.equals("yearly")){
-					if((empfrom.after(dbfrom))&&(empto.before(dbto))){
+					if((applyFromDate.after(dbfrom))&&(applytoDate.before(dbto))){
 						
 						Session ses =null;
 						Transaction trns =null;
@@ -890,7 +914,7 @@ public class AdminDao {
        		    		matchedDetails = employeeFiscal.get(j);       		    		 
        		    		Session sessionh = null;
     					Transaction trans = null;   					     					
-    					if( (matchedDetails.getFromDate().compareTo(empto) == -1 || matchedDetails.getFromDate().compareTo(empto) == 0) &&  (matchedDetails.getToDate().compareTo(empto) == 1 || matchedDetails.getToDate().compareTo(empto) == 0) )
+    					if( (matchedDetails.getFromDate().compareTo(applytoDate) == -1 || matchedDetails.getFromDate().compareTo(applytoDate) == 0) &&  (matchedDetails.getToDate().compareTo(applytoDate) == 1 || matchedDetails.getToDate().compareTo(applytoDate) == 0) )
     					{
        		    			System.out.println("Enter exact matched  halfyearly");   
        		    			System.out.println("Exact matched  halfyearly Id="+matchedDetails.getId());
@@ -935,7 +959,7 @@ public class AdminDao {
       		    		matchedDetails = employeeFiscal.get(j);     		    		      		    		
       		    		Session sessionq = null;
    					Transaction trans = null;   					
-   					if( (matchedDetails.getFromDate().compareTo(empto) == -1 || matchedDetails.getFromDate().compareTo(empto) == 0) &&  (matchedDetails.getToDate().compareTo(empto) == 1 || matchedDetails.getToDate().compareTo(empto) == 0) )
+   					if( (matchedDetails.getFromDate().compareTo(applytoDate) == -1 || matchedDetails.getFromDate().compareTo(applytoDate) == 0) &&  (matchedDetails.getToDate().compareTo(applytoDate) == 1 || matchedDetails.getToDate().compareTo(applytoDate) == 0) )
 					{   						
    						System.out.println("EFISID="+matchedDetails.getId());
                 		try {
@@ -967,20 +991,18 @@ public class AdminDao {
 						}  
 					}
           		   }        		   
-                	//Minimise code end                                                                                        
-                	         
-          		   }
+                	        
+          		   }//Minimise code end  
                
+              
                 if(leavetype.equals("monthly")){
-                	//Date apr = monthly.get(0);Date aprend = monthly.get(1);               	        	
-                	Date endd = findEndDate(empto);     		      	       
+                	//Date apr = monthly.get(0);Date aprend = monthly.get(1); endd              	        	
+                	Date endd = findEndDate(applytoDate);     		      	       
       		       int ficalsizee = employeeFiscal.size();
       		     EmployeeFiscalYearLeaveDetails matchedDetailss = null;    		           		      		     
-      		       for(int i=0;i<ficalsizee;i++)
-      		       {      		    	   
-      		    	 matchedDetailss = employeeFiscal.get(i);
-      		    	
-      		    	 if((matchedDetailss.getToDate().before(endd))||(matchedDetailss.getToDate().compareTo(endd)==0))	    		 
+      		       for(int i=0;i<ficalsizee;i++){      		    	   
+      		    	 matchedDetailss = employeeFiscal.get(i);     		    	 
+      		    	 if((matchedDetailss.getFromDate().equals(applyFromDate))||(matchedDetailss.getFromDate().after(applyFromDate))||(matchedDetailss.getToDate().before(endd))||(matchedDetailss.getToDate().equals(endd)))	    		 
       		    	 {         		    		  
       		    		 Session sessionm = null;
             		    	Transaction transm = null;
@@ -998,9 +1020,7 @@ public class AdminDao {
 								employeeLeaveTransaction.setActionDate(Calendar.getInstance().getTime().toString());
 								sessionm.merge(employeeLeaveTransaction);
 								
-							}
-							/*Integer da = matchedDetailss.getRemainingdays();
-							da=da-days;*/
+							}							
 							Integer elfid = matchedDetailss.getId();
 							Integer eid =matchedDetailss.getEmployee_id();
 							Integer dayy = matchedDetailss.getRemainingdays();
@@ -1029,7 +1049,7 @@ public class AdminDao {
       		       } else {
       		    	   System.out.println("Something went wrong");
       		       }      		                                  	
-                }				
+                }//				
 				if (leaveTransaction != null && !leaveTransaction.isEmpty()) {
 						status.put("result",leaveTransaction.get(0));	
 					} else {
@@ -1131,12 +1151,14 @@ public class AdminDao {
 		     if (financialyears!=null && !financialyears.isEmpty()) {				
 		    	 Integer finid = financialyears.get(0).getFinancialyearid();
 			        Query query3 = session.createQuery("FROM Leavedetails WHERE financialyear_id=:searchA");
-			        List<Leavedetails> leavedetails = query3.setParameter("searchA", finid).list();
+			        List<Leavedetails> leavedetails = query3.setParameter("searchA", finanacialYearId).list();
+			        System.out.println("New Data LEAVE LIST="+leavedetails);			        
 			        tr.commit();	
-			       if (leavedetails!=null && !leavedetails.isEmpty()) {
-			    	   status.put("status",leavedetails);
+			       if (leavedetails!=null && !leavedetails.isEmpty()) {		    	  
+			    	   status.put("LeaveData",leavedetails);
+			    	   status.put("status",true);
 				} else {
-					//status.put("status",new ArrayList<Leavedetails>());
+					
 					status.put("Reason","Admin still not configured Leave details");
 					status.put("status",false);
 				}
@@ -1241,7 +1263,7 @@ public class AdminDao {
 				session = this.sf.getCurrentSession();
 				tr = session.beginTransaction();
 				Criteria crt = session.createCriteria(Staff.class);
-				crt.add(Property.forName("user_id").in(employe.toArray()));
+				crt.add(Property.forName("staffId").in(employe.toArray()));
 				users = crt.list();
 				
 				String json = jsonViewObjectMapper.writeValueAsString(com.monitorjbl.json.JsonView.with(users).onClass(
@@ -1364,7 +1386,7 @@ public class AdminDao {
 						 session = this.sf.getCurrentSession();				
 							td = session.beginTransaction();	
 						 Criteria crt = session.createCriteria(Staff.class);
-						    crt.add(Property.forName("user_id").in(employe.toArray()));
+						    crt.add(Property.forName("staffId").in(employe.toArray()));
 						     users =  crt.list();							     
 						     String json = jsonViewObjectMapper.writeValueAsString(com.monitorjbl.json.JsonView.with(users).onClass(Staff.class, 
 										com.monitorjbl.json.Match.match().exclude("clients")));
@@ -1785,31 +1807,7 @@ public class AdminDao {
 					 * 
 					 */
 					
-					/*if(
-							financialyear.getFinancialYear_From().before(cal_in_fromDate.getTime()) ||
-							cal_in_fromDate.getTime().after(financialyear.getFinancialYear_To())
-							
-					)
-					{
-						System.err.println("they do not overlap");
-					}
-					else
-					{
-						System.err.println("they overlap");
-					}
 					
-					
-					if(
-					   financialyear.getFinancialYear_From().before(cal_in_toDate.getTime()) &&
-					   cal_in_fromDate.getTime().after(financialyear.getFinancialYear_To())
-					)
-					{
-						System.out.println("overlapped");
-					}
-					else
-					{
-						System.out.println("not overlapped");
-					}	*/
 					
 					if(financialyear.getFinancialYear_From().after(cal_in_fromDate.getTime()))
 					{
@@ -1872,11 +1870,11 @@ public class AdminDao {
 			financialyear2.setFromyear(in_fromDate.getYear()+1900);
 			financialyear2.setToyear(cal_in_toDate.get(Calendar.YEAR));
 			
-			System.out.println("Financial year details are addded end");
+			System.out.println("Financial year value ="+financialyear2);
 			
 			session.save(financialyear2);
 		
-			
+			System.out.println("Financial year details are addded end");
 			session.getTransaction().commit();     
 			
 			
@@ -1894,7 +1892,96 @@ public class AdminDao {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public JSONObject listLeaveRequestBetweenDates(JSONObject leaverequest) {
+		JSONObject status = new JSONObject();
+		status.put("status",true);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date from=null;Date  to =null;
+		try {
+			from = sdf.parse((String)leaverequest.get("FromDate"));
+			to= sdf.parse((String)leaverequest.get("ToDate"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		System.out.println("From="+from);
+		/*String applyfrom =leaverequest.get("FromDate").toString();
+		String applytodate =leaverequest.get("ToDate").toString();		
+		long fromdatee = Long.valueOf(applyfrom);
+		long todatee = Long.valueOf(applytodate);
+		LocalDate efromDate = Instant.ofEpochMilli(fromdatee).atZone(ZoneId.of("UTC")).toLocalDate();
+				LocalDate etoDate = Instant.ofEpochMilli(todatee).atZone(ZoneId.of("UTC")).toLocalDate(); 	*/	
+		/*LocalDate fromDate = LocalDate.parse(leaverequest.get("FromDate").toString(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));       
+        LocalDate toDate = LocalDate.parse(leaverequest.get("ToDate").toString(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));    
+				 Date applyFromDatee = Date.from(fromDate.atStartOfDay(ZoneId.of("UTC")).toInstant());        
+			        Date applytoDatee = Date.from(toDate.atStartOfDay(ZoneId.of("UTC")).toInstant());
+				Date applyFromDate = Date.from(efromDate.atStartOfDay(ZoneId.of("UTC")).toInstant());        
+        Date applytoDate = Date.from(etoDate.atStartOfDay(ZoneId.of("UTC")).toInstant());*/
+		Session session = null;			
+		Transaction tra=null;List<EmployeeLeaveTransaction> leaverequestt = null;
+		Integer financialId = getCurrentFinancialYearId();	
+		try {
+			Query query =session.createQuery("FROM EmployeeLeaveTransaction l WHERE finanacialyearid=:searchA AND FromDate >= :searchB AND ToDate <= :searchC");
+			leaverequestt = query.setParameter("searchA", financialId)
+					.setParameter("searchB", from)
+					.setParameter("searchC", to).list();
+			/*Criteria criteria =session.createCriteria(EmployeeLeaveTransaction.class)					
+					.add(Restrictions.eq("financialyearid", financialId))
+					.add(Restrictions.gt("FromDate", from))
+					.add(Restrictions.le("ToDate", to));
+			leaverequestt = criteria.list();*/
+			System.out.println("DATES BETWEEN Request=="+leaverequestt.size());
+			if (leaverequestt!=null && !leaverequestt.isEmpty()) {
+				status.put("status",true);
+				 status.put("LeaveRequest",leaverequestt);	
+			} else {
+				status.put("status",false);
+				 status.put("reason","LeaveRequest table is empty");	
+			}
+			
+		} catch (Exception e) {
+			status.put("status",false);
+			status.put("reason","error happend");
+			status.put("error message",e.getMessage());
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
+	@SuppressWarnings("unchecked")
+	public JSONObject listHolidaysByTypes(JSONObject holidaytypes) {
+		JSONObject status = new JSONObject();
+		status.put("status",true);
+		Session session = null;			
+		Transaction tra=null;List<Holidays> holidaylist = null;
+		String leavetypes = holidaytypes.get("leave_type").toString();
+		Integer financialId = getCurrentFinancialYearId();	
+		
+		 try {
+			
+   		  session = this.sf.getCurrentSession();
+   			tra = session.beginTransaction();
+   			Query query = session.createQuery("FROM Holidays WHERE financialyr_id=:searchA AND leave_type=:searchB");
+   			holidaylist = query.setParameter("searchA", financialId).setParameter("searchB",leavetypes).list();
+   			if (holidaylist!=null&&!holidaylist.isEmpty()) {
+   				status.put("status",true);
+   			 status.put("Holidaydetails",holidaylist);
+   			tra.commit();
+			} else {
+				status.put("status",false);
+				 status.put("reason","Admin not configured Leavedetails");				
+			}
+		 }catch(Exception ex){
+			 status.put("status",false);
+			 status.put("reason","error happend");
+			 status.put("error message",ex.getMessage());
+				ex.printStackTrace();
+		 }finally{
+				if(session!= null && session.isOpen() )
+					session.close();
+			}
+		return status;
+	}
 	@SuppressWarnings("unchecked")
 	public JSONObject  sample(JSONObject financialyear) {		
 		System.out.println("After sample private method");
@@ -2087,7 +2174,7 @@ public class AdminDao {
 			   omp.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			   Holidays	holidayss = omp.convertValue(holidays, Holidays.class);
 			   holidayss.setFinancialyr_id(financialId);
-			
+			   holidayss.setCreatedby("admin");
 			Session session = null;Transaction trn =null;
 			
 			try {
@@ -2172,7 +2259,7 @@ public class AdminDao {
 			status.put("status", true);		
 			Session session =null;
 			Transaction tr = null;
-		Integer leavedataid = (Integer)leaveid.get("leave_id");
+		Integer leavedataid = (Integer)leaveid.get("id");
 		Integer financialId = (Integer)leaveid.get("financialyear_id");
 		List<Leavedetails> leavedetails=null;
 		Leavedetails leavedetails2 = null;
@@ -2681,6 +2768,66 @@ public class AdminDao {
 				status.put("reason", "Error happened");
 				status.put("originalErrorMsg", e.getMessage());
 			} 
+			return status;
+		}
+		@SuppressWarnings("unchecked")
+		public JSONObject getLOPSumByEmpId(JSONObject lopsumdata) {
+			JSONObject status = new JSONObject();
+			status.put("status", true);
+			Session session = null;	
+			Transaction tr=null;
+			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+			
+			Date monthfromDate=null;	Date monthtodate = null;
+			try {
+				monthfromDate = formatter.parse((String)lopsumdata.get("FromDate"));
+				monthtodate = formatter.parse((String)lopsumdata.get("ToDate"));
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+			
+			Integer financialYearId = getCurrentFinancialYearId();	
+			List<Leavedetails> details = null;
+			Leavedetails leavedetails =null;
+		Long totalapplyDays = 0l;
+			try {
+				 session = this.sf.openSession();	
+				 tr=session.beginTransaction();	
+				 
+				 Query query =  session.createQuery("FROM Leavedetails WHERE leave_name=:searchA");
+				 details = query.setParameter("searchA", new String("LOP Leave")).list();
+				 if (details!=null && !details.isEmpty()) {
+					 leavedetails =details.get(0);
+				} else {
+					status.put("status", false);
+					status.put("reason", "Error happened Leave details not configured");
+					
+				}
+				 String sqll ="SELECT SUM(totaldays) FROM `employeeleavetransaction` WHERE FromDate >= '2017-03-01' AND ToDate <= '2017-03-31' AND employee_id=65 AND financialyearid=2135 AND leaveConfigurationId =2520 AND status='approved' ";
+				 Criteria criteria = session.createCriteria(EmployeeLeaveTransaction.class)
+				    .add(Restrictions.eq("employee_id", (int)lopsumdata.get("staffId")))
+				    .add(Restrictions.eq("financialyearid",financialYearId))
+					.add(Restrictions.eq("leaveConfigurationId",leavedetails.getId()))
+					.add(Restrictions.eq("status", new String("approved")))
+					.add(Restrictions.ge("FromDate",monthfromDate ))
+					.add(Restrictions.le("ToDate",monthtodate ))
+					 .setProjection(Projections.sum("totaldays"));
+		             totalapplyDays = (Long)criteria.uniqueResult();
+		             System.out.println("Total approved datys="+totalapplyDays);
+				 tr.commit();
+				 status.put("status", true);
+					status.put("value", totalapplyDays);
+			} catch (Exception e) {
+				e.printStackTrace();
+				status.put("status", false);
+				status.put("reason", "Error happened");
+				status.put("originalErrorMsg", e.getMessage());
+			}finally{
+				if(session!=null&&session.isOpen()){
+					session.close();
+				}
+			}	
+			
 			return status;
 		}
 		@SuppressWarnings("unchecked")

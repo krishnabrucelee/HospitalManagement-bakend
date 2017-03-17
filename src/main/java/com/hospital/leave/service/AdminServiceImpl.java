@@ -142,6 +142,21 @@ public class AdminServiceImpl implements IAdminService {
 	public JSONObject deleteHolidayById(JSONObject holidayid) {
 		return admindao.deleteHolidayById(holidayid);
 	}
+
+	@Override
+	public JSONObject getLOPSumByEmpId(JSONObject lopsumdata) {
+		return admindao.getLOPSumByEmpId(lopsumdata);
+	}
+
+	@Override
+	public JSONObject listHolidaysByTypes(JSONObject holidaytypes) {
+		return admindao.listHolidaysByTypes(holidaytypes);
+	}
+
+	@Override
+	public JSONObject listLeaveRequestBetweenDates(JSONObject leaverequest) {
+		return admindao.listLeaveRequestBetweenDates(leaverequest);
+	}
 	
 	
 }
