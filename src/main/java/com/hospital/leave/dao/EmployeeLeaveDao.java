@@ -572,7 +572,7 @@ System.out.println("getAllDataEmployeeById1");
          try {
         	 session = this.sf.getCurrentSession();
       		td = session.beginTransaction();
-        	 Query querya = session.createQuery("FROM Staff WHERE user_id=:searchA");
+        	 Query querya = session.createQuery("FROM Staff WHERE staffId=:searchA");
              users = querya.setParameter("searchA", empid).list();
  //                   	 
 			String json = jsonViewObjectMapper.writeValueAsString(com.monitorjbl.json.JsonView.with(users).onClass(Staff.class, 
@@ -649,6 +649,51 @@ System.out.println("getAllDataEmployeeById1");
 		return status;
 	}
 	 /////******Bind All Data1 End******/////
+	@SuppressWarnings("unchecked")
+	public JSONObject getFiscalBalanceEmployeeId() {
+		
+		JSONObject status = new JSONObject(); status.put("status",true);
+		//Integer financialId = getCurrentFinancialYearId();		
+		Session session = null; Transaction td = null;
+	
+		List<EmployeeFiscalYearLeaveDetails> fiscalData = null;
+		try {
+		//String sql = "SELECT DISTINCT employee_id FROM EmployeeFiscalYearLeaveDetails";	
+			session = this.sf.getCurrentSession();
+			td = session.beginTransaction();
+			/*Query query = session.createQuery("FROM EmployeeFiscalYearLeaveDetails WHERE employee_id=:searchA");
+			fiscalData =query.setParameter("searchA", financialId).list(); */
+			/*Query query = session.createQuery("FROM EmployeeFiscalYearLeaveDetails");
+			Criteria criteria= session.createCriteria(EmployeeFiscalYearLeaveDetails.class)
+					.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+			fiscalData=criteria.list();*/
+			Query query = session.createQuery("SELECT DISTINCT employee_id FROM EmployeeFiscalYearLeaveDetails");
+			fiscalData = query.list();
+			System.out.println("Employee fiscalData employee_id size="+fiscalData);
+			if (fiscalData!=null &&!fiscalData.isEmpty()) {
+				status.put("status",true);
+				status.put("result", fiscalData);
+			     td.commit();
+			} else {
+				System.err.println("Admin still not configure Financial year && Leave types details.So there is no leave remaining days for this year FiscalLeaveDetails table is empty.");
+				status.put("reason","Admin still not yet to configure Leave details!.So there is no Leave remaining days for this year.FiscalLeaveDetails table is empty.");
+				status.put("status",false);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			status.put("status",false);
+			status.put("reason","Error happend");
+			status.put("originalErrorMsg", ex.getMessage());
+		}finally{
+			if(session!=null&&session.isOpen()){
+				session.close();
+			}
+		}		
+		
+		
+		return status;
+	}
+	
 	///********Fiscal data With leave details*****///
 	@SuppressWarnings("unchecked")
 	public JSONObject getEmployeeFiscalleaveDetailsByEmpId(JSONObject employee) {

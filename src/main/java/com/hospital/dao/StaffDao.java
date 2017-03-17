@@ -545,7 +545,7 @@ public class StaffDao {
 		}
 
 		try {
-			System.out.println("Inside Dao11 PATIENT");
+			System.out.println("Inside Dao11 STAFF");
 			session.save(appoint);
 			
 			if (staff.containsKey("Doctor"))
@@ -792,18 +792,18 @@ public class StaffDao {
 		}
 		return financialYearId;
 	}
-	
+	@SuppressWarnings("unchecked")
 	public JSONObject listStaff() {
 		System.out.println("Inside Dao1Staff");
 		JSONObject status = new JSONObject();
 		status.put("status", true);
 		session = sessionFactory.openSession();
-		transaction = session.beginTransaction();
+		
 		List<Staff> staffList = null;
 		try {
+			transaction = session.beginTransaction();
 			Query query = session.createQuery("FROM Staff");
-			staffList = query.list();
-			System.out.println("Staff size=$$$="+staffList.size());
+			staffList = query.list();		
 			status.put("Staff", staffList);
 			status.put("result", true);
 			transaction.commit();

@@ -121,4 +121,9 @@ public class EmployeeLeaveRequestImpl implements IEmployeeLeaveRequest {
 		return leaverequestdao.getEmployeeFiscalyearleaveBalance(employeedata);
 	}
 
+	@Override
+	public JSONObject getFiscalBalanceEmployeeId() {
+		return employeedao.getFiscalBalanceEmployeeId();
+	}
+
 }

@@ -27,7 +27,11 @@ public class StaffPayrollController {
 	public @ResponseBody JSONObject createSalaryComponents(@RequestBody JSONObject salaryDetails) {
 		return staffPayrollService.createSalaryComponents(salaryDetails);
 	}
-
+	
+	@RequestMapping(value="/listSalaryComponents")
+	public @ResponseBody JSONObject getSalaryComponents() {
+		return staffPayrollService.getAllSalaryComponents();
+	}
 	@RequestMapping(value="/createSalaryConfigurationForStaff",method=RequestMethod.POST)
 	public @ResponseBody JSONObject createSalaryConfigurationForStaff(@RequestBody JSONObject salary_staff_details) {
 		return staffPayrollService.createSalaryConfigurationForStaff(salary_staff_details);
@@ -40,6 +44,7 @@ public class StaffPayrollController {
 	
 	@RequestMapping(value="/addHikeForStaff",method=RequestMethod.POST)
 	public @ResponseBody JSONObject addHikeForStaff(@RequestBody JSONObject hikeDetails) {
+		System.out.println("Inside web services addHikeForStaff controller");
 		return staffPayrollService.addHikeForStaff(hikeDetails);
 	}
 
@@ -66,5 +71,17 @@ public class StaffPayrollController {
 	@RequestMapping(value="/generatePayrollForMonth",method=RequestMethod.POST)
 	public @ResponseBody JSONObject generatePayrollForMonth(@RequestBody JSONObject payrollMonthDetails) {
 		return staffPayrollService.generatePayrollForMonth(payrollMonthDetails);
+	}
+	
+	/*@RequestMapping(value="/listSalaryPaySlipForMonth")
+	public @ResponseBody JSONObject listSalaryPaySlipForMonth() {
+		return staffPayrollService.listSalaryPaySlipForMonth();
+				
+	}*/
+	
+	@RequestMapping(value="/listAllSalaryPaySlipForMonth")
+	public @ResponseBody JSONObject listAllSalaryPaySlipForMonth() {
+		return staffPayrollService.listAllSalaryPaySlipForMonth();
+				
 	}
 }

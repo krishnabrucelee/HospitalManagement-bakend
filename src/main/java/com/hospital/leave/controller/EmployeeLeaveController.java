@@ -34,7 +34,7 @@ public class EmployeeLeaveController {
 	
 	@RequestMapping(value = "/employeeApplyLeave",method=RequestMethod.POST)
 	public 	@ResponseBody JSONObject employeeApplyLeave(@RequestBody JSONObject  employeerequestLeave){
-		System.out.println("Inside employeeRequestLeave controller new type with two range");
+		
 		return iemployee.employeeApplyLeave(employeerequestLeave);		
 	}
 	//////******Get EmployeeLeaveTrans ByEmpId******//////
@@ -76,6 +76,12 @@ public class EmployeeLeaveController {
 	public @ResponseBody  JSONObject getAllDataEmployeeById(@RequestBody JSONObject employid) {
 		System.out.println("Inside employee  getAllDataEmployeeById controller");
 		return iemployee.getAllDataEmployeeById(employid);
+	}
+	
+	//getFiscalBalanceEmployeeId
+	@RequestMapping(value = "/getFiscalBalanceEmployeeId",method=RequestMethod.POST)
+	public @ResponseBody JSONObject getFiscalBalanceEmployeeId(){
+		return iemployee.getFiscalBalanceEmployeeId();
 	}
 	//All leave details and All type remaining days
 	@RequestMapping(value = "/getFiscalLeaveDetailsByEmpId",method=RequestMethod.POST)

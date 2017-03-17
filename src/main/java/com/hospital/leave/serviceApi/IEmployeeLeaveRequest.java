@@ -26,6 +26,10 @@ public interface IEmployeeLeaveRequest {
 	//particular leave balance
 	public JSONObject getEmployeeFiscalyearleaveBalance(JSONObject employeedata);
 	
+	
+	  //getFiscalBalanceEmployeeId
+    public JSONObject getFiscalBalanceEmployeeId();
+    
 	//employeeApplyLeave
 	public JSONObject employeeApplyLeave(JSONObject employeerequestLeave);
 	

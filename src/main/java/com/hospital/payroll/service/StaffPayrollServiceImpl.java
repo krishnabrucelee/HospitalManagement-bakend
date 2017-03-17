@@ -65,4 +65,19 @@ public class StaffPayrollServiceImpl implements IStaffPayrollService {
 		return payrollDao.generatePayrollForMonth(payrollMonthDetails);
 	}
 
+	@Override
+	public JSONObject getAllSalaryComponents() {
+		return payrollDao.getAllSalaryComponents();
+	}
+
+	@Override
+	public JSONObject listSalaryPaySlipForMonth() {
+		return payrollDao.listSalaryPaySlipForMonth();
+	}
+
+	@Override
+	public JSONObject listAllSalaryPaySlipForMonth() {
+		return payrollDao.listAllSalaryPaySlipForMonth();
+	}
+
 }

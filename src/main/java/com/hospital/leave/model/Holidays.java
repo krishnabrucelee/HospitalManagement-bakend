@@ -19,19 +19,30 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Table
 @Component
 public class Holidays implements Serializable{
+	
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
 	private Integer holidayId;
+	
 	@Column
 	private String leave_type;
+	
 	@Column
 	private String leave_name;
+	
 	@Column 
 	private String day_name;
+	
 	@Column
 	private Integer day_value;
+	
 	@Column
 	private Integer financialyr_id;
+	
+	@Column
+	private Integer numberofDays;
+	
+	
 	
 	@JsonFormat(pattern="dd-MM-yyyy")	
 	@Temporal(TemporalType.DATE)
@@ -40,6 +51,7 @@ public class Holidays implements Serializable{
 	
 	@Column 
 	private String createdby;
+	
 	public Holidays() {
 		super();
 	}
@@ -96,14 +108,33 @@ public class Holidays implements Serializable{
 		this.createdby = createdby;
 	}
 
+	/**
+	 * @return the numberofDays
+	 */
+	public Integer getNumberofDays() {
+		return numberofDays;
+	}
+
+	/**
+	 * @param numberofDays the numberofDays to set
+	 */
+	public void setNumberofDays(Integer numberofDays) {
+		this.numberofDays = numberofDays;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Holidays [holidayId=" + holidayId + ", leave_type="
 				+ leave_type + ", leave_name=" + leave_name + ", day_name="
 				+ day_name + ", day_value=" + day_value + ", financialyr_id="
-				+ financialyr_id + ", daate=" + daate + ", createdby="
-				+ createdby + "]";
+				+ financialyr_id + ", numberofDays=" + numberofDays
+				+ ", daate=" + daate + ", createdby=" + createdby + "]";
 	}
+
+	
 	
 	
 	
