@@ -77,4 +77,15 @@ public class PurchaseOrderController {
 	public @ResponseBody JSONObject getItemsByDepartment(@RequestBody JSONObject department) {
 		return purchaseOrderService.getItemsByDepartment(department);
 	}
+	
+	/**
+	 * List purchaseOrder.
+	 * 
+	 * @param purchaseOrder
+	 * @return purchaseOrder
+	 */
+	@RequestMapping(value = "/listPurchaseOrderTransaction")
+	public @ResponseBody JSONObject listPurchaseOrderTransaction() {
+		return purchaseOrderService.listPurchaseOrderTransaction();
+	}
 }

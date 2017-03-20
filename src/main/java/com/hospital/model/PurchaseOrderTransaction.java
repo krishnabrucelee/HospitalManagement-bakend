@@ -46,9 +46,9 @@ public class PurchaseOrderTransaction {
 	@Column(name = "price")
 	private Double price;
 	
-	@OneToOne(targetEntity = MaterialRecieveNote.class)
-	@JoinColumn(name = "materialRecieveNote", referencedColumnName = "material_recieve_note_id", foreignKey = @ForeignKey(name = "materialRecieveNote_POT_FK"))
-	private MaterialRecieveNote materialRecieveNote;
+//	@OneToOne(targetEntity = MaterialRecieveNote.class)
+//	@JoinColumn(name = "materialRecieveNote", referencedColumnName = "material_recieve_note_id", foreignKey = @ForeignKey(name = "materialRecieveNote_POT_FK"))
+//	private MaterialRecieveNote materialRecieveNote;
 	
 	@Column(name = "ship_to")
 	private String shipTo;
@@ -133,23 +133,23 @@ public class PurchaseOrderTransaction {
 	}
 
 
-	/**
-	 * Get the materialRecieveNote of PurchaseOrderTransaction.
-	 *
-	 * @return the materialRecieveNote
-	 */
-	public MaterialRecieveNote getMaterialRecieveNote() {
-		return materialRecieveNote;
-	}
-
-	/**
-	 * Set the materialRecieveNote of PurchaseOrderTransaction.
-	 *
-	 * @param materialRecieveNote the materialRecieveNote to set
-	 */
-	public void setMaterialRecieveNote(MaterialRecieveNote materialRecieveNote) {
-		this.materialRecieveNote = materialRecieveNote;
-	}
+//	/**
+//	 * Get the materialRecieveNote of PurchaseOrderTransaction.
+//	 *
+//	 * @return the materialRecieveNote
+//	 */
+//	public MaterialRecieveNote getMaterialRecieveNote() {
+//		return materialRecieveNote;
+//	}
+//
+//	/**
+//	 * Set the materialRecieveNote of PurchaseOrderTransaction.
+//	 *
+//	 * @param materialRecieveNote the materialRecieveNote to set
+//	 */
+//	public void setMaterialRecieveNote(MaterialRecieveNote materialRecieveNote) {
+//		this.materialRecieveNote = materialRecieveNote;
+//	}
 
 	/**
 	 * Get the createdDate of PurchaseOrderTransaction.

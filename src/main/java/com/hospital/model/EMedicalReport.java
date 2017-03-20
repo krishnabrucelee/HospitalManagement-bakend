@@ -61,10 +61,6 @@ public class EMedicalReport implements Serializable {
 	@JoinColumn(name = "laboratory_id", referencedColumnName = "laboratory_id", foreignKey = @ForeignKey(name = "laboratory_EMR_FK"))
 	private Laboratory laboratory;
 	
-	@OneToOne(targetEntity = PharmacyMedicine.class)
-	@JoinColumn(name = "pharmacy_medicine_id", referencedColumnName = "pharmacy_medicine_id", foreignKey = @ForeignKey(name = "pharmacy_EMR_FK"))
-	private PharmacyMedicine department;
-	
 	@Column(name = "time_shedule")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timeShedule;
@@ -139,24 +135,6 @@ public class EMedicalReport implements Serializable {
 	 */
 	public void setLaboratory(Laboratory laboratory) {
 		this.laboratory = laboratory;
-	}
-
-	/**
-	 * Get the department of EMedicalReport.
-	 *
-	 * @return the department
-	 */
-	public PharmacyMedicine getDepartment() {
-		return department;
-	}
-
-	/**
-	 * Set the department of EMedicalReport.
-	 *
-	 * @param department the department to set
-	 */
-	public void setDepartment(PharmacyMedicine department) {
-		this.department = department;
 	}
 
 	/**

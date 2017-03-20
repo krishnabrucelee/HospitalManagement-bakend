@@ -230,7 +230,7 @@ public class AdminFinanceDao {
 			session.beginTransaction();
 			
 			Criteria cri = session.createCriteria(AccountDetailType.class);
-			cri.add(Restrictions.eq("accountDetailTypeId", accountDetailType.get("accountDetailTypeId")));
+			cri.add(Restrictions.eq("accountDetailTypeId", Integer.parseInt(accountDetailType.get("accountDetailTypeId").toString())));
 			
 			
 			List<AccountDetailType> accountDetailsTypes = cri.list();

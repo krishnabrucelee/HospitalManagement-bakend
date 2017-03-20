@@ -49,4 +49,9 @@ public interface PurchaseOrderService {
 	 */
 	public JSONObject getItemsByDepartment(JSONObject department);
 
+	/**
+	 * @return
+	 */
+	public JSONObject listPurchaseOrderTransaction();
+
 }

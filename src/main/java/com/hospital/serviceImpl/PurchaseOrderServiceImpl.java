@@ -48,4 +48,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 		return purchaseOrderdao.getItemsByDepartment(department);
 	}
 
+	@Override
+	public JSONObject listPurchaseOrderTransaction() {
+		return purchaseOrderdao.listPurchaseOrderTransaction();
+	}
+
 }

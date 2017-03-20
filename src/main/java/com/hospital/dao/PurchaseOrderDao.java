@@ -215,4 +215,31 @@ public class PurchaseOrderDao {
 		return status;
 	}
 
+	/**
+	 * @return
+	 */
+	public JSONObject listPurchaseOrderTransaction() {
+		System.out.println("Inside Dao1PurchaseOrder");
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		List<PurchaseOrder> purchaseOrderList = null;
+		try {
+			Query query = session.createQuery("FROM PurchaseOrderTransaction");
+			purchaseOrderList = query.list();
+			status.put("PurchaseOrderTransaction", purchaseOrderList);
+			status.put("result", true);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return status;
+	}
+
 }
