@@ -43,4 +43,8 @@ public class PurchaseBillingServiceImpl implements PurchaseBillingService {
 		return purchaseBillingdao.deletePurchaseBilling(purchaseBillingId);
 	}
 
+	@Override
+	public JSONObject getPurchaseBilling(JSONObject purchaseBillingId) {
+		return purchaseBillingdao.getPurchaseBilling(purchaseBillingId);
+	}
 }

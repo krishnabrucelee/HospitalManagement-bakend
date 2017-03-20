@@ -69,4 +69,11 @@ public class PurchaseBillingController {
 	public @ResponseBody JSONObject deletePurchaseBilling(@RequestBody JSONObject purchaseBillingId) {
 		return purchaseBillingService.deletePurchaseBilling(purchaseBillingId);
 	}
+	
+	@RequestMapping(value = "/getPurchaseBilling", method = RequestMethod.POST)
+	public @ResponseBody JSONObject getPurchaseBilling(@RequestBody JSONObject patient) {
+	
+		System.out.println(patient);
+		return purchaseBillingService.getPurchaseBilling(patient);
+	}
 }

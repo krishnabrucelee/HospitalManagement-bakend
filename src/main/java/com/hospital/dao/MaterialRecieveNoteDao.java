@@ -71,7 +71,7 @@ public class MaterialRecieveNoteDao {
 		stock.setPurchaseOrder(appoint.getPurchaseOrder());
 		stock.setMaterialRecieveNote(appoint);
 		for (PurchaseOrderTransaction purchase : purchaseOrderList) {
-			purchase.setMaterialRecieveNote(appoint);
+//			purchase.setMaterialRecieveNote(appoint);
 //			MedicineItemMaster medicine = purchase.getMedicineItemMaster();
 //			stock.setMedicineItemMaster(medicine);
 //			stock.setBatchId("STK" + String.valueOf(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)));

@@ -15,17 +15,16 @@ import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hospital.model.PurchaseBilling;
-import com.hospital.model.Doctor;
-import com.hospital.model.ExpenseApproval;
-import com.hospital.model.Patient;
+import com.hospital.model.BloodBank;
+import com.hospital.model.EMedicalReport;
+import com.hospital.model.IssueBlood;
 
 /**
  * @author Krishna
  *
  */
 @Repository
-public class PurchaseBillingDao {
+public class IssueBloodDao {
 
 	/**
 	 * The internal state of a SessionFactory is immutable. Once it is created
@@ -36,26 +35,47 @@ public class PurchaseBillingDao {
 	SessionFactory sessionFactory;
 
 	static {
-		System.out.println("class PurchaseBillingDao executed");
+		System.out.println("class IssueBloodDao executed");
 	}
 
 	private Session session = null;
 	private Transaction transaction = null;
 
 	@SuppressWarnings("unchecked")
-	public JSONObject addPurchaseBilling(JSONObject purchaseBilling) {
+	public JSONObject addIssueBlood(JSONObject issueBlood) {
 		JSONObject status = new JSONObject();
 		status.put("status", true);
 		session = sessionFactory.openSession();
 		transaction = session.beginTransaction();
 		ObjectMapper om = new ObjectMapper();
 		om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		PurchaseBilling appoint = om.convertValue(purchaseBilling, PurchaseBilling.class);
+		IssueBlood appoint = om.convertValue(issueBlood, IssueBlood.class);
+
+		
+		List<BloodBank> bloodBankList = null;
+			Query query = session.createQuery("FROM BloodBank WHERE bloodGroup = :bloodGroup");
+			query.setParameter("bloodGroup", issueBlood.get("bloodGroup"));
+			bloodBankList = query.list();
+			Integer bloodQ = null;
+		for (BloodBank blood : bloodBankList) {
+			Integer bq = Integer.parseInt(issueBlood.get("bloodQuantity").toString());
+			if (bq > blood.getBloodQuantity()) {
+				if ((bq - blood.getBloodQuantity()) > 0) {
+					bloodQ = bq - blood.getBloodQuantity();
+					blood.setBloodQuantity(bloodQ);
+					session.save(blood);
+				}
+			} else {
+				bloodQ = blood.getBloodQuantity() - bq;
+				blood.setBloodQuantity(bloodQ);
+				session.save(blood);
+			}
+		}
 		try {
 			System.out.println("Inside Dao11 PATIENT");
 			session.save(appoint);
 			transaction.commit();
-			System.out.println("Save purchaseBillings");
+			System.out.println("Save issueBloods");
 			status.put("success", "User details saved");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,17 +87,17 @@ public class PurchaseBillingDao {
 		return status;
 	}
 
-	public JSONObject listPurchaseBilling() {
-		System.out.println("Inside Dao1PurchaseBilling");
+	public JSONObject listIssueBlood() {
+		System.out.println("Inside Dao1IssueBlood");
 		JSONObject status = new JSONObject();
 		status.put("status", true);
 		session = sessionFactory.openSession();
 		transaction = session.beginTransaction();
-		List<PurchaseBilling> purchaseBillingList = null;
+		List<IssueBlood> issueBloodList = null;
 		try {
-			Query query = session.createQuery("FROM PurchaseBilling");
-			purchaseBillingList = query.list();
-			status.put("PurchaseBilling", purchaseBillingList);
+			Query query = session.createQuery("FROM IssueBlood");
+			issueBloodList = query.list();
+			status.put("IssueBlood", issueBloodList);
 			status.put("result", true);
 			transaction.commit();
 		} catch (Exception e) {
@@ -91,15 +111,15 @@ public class PurchaseBillingDao {
 		return status;
 	}
 
-	public JSONObject updatePurchaseBilling(JSONObject purchaseBilling) {
+	public JSONObject updateIssueBlood(JSONObject issueBlood) {
 		JSONObject status = new JSONObject();
 		status.put("status", true);
 		try {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
-			PurchaseBilling purchaseBillingDetails = session.load(PurchaseBilling.class,
-					(Integer) purchaseBilling.get("purchaseBillingId"));
-			session.update(purchaseBillingDetails);
+			IssueBlood issueBloodDetails = session.load(IssueBlood.class,
+					(Integer) issueBlood.get("issueBloodId"));
+			session.update(issueBloodDetails);
 			transaction.commit();
 		} catch (Exception e) {
 			status.put("status", false);
@@ -114,12 +134,12 @@ public class PurchaseBillingDao {
 		return status;
 	}
 
-	public PurchaseBilling getPurchaseBilling(Integer purchaseBillingId) {
-		PurchaseBilling purchaseBilling = null;
+	public IssueBlood getIssueBlood(Integer issueBloodId) {
+		IssueBlood issueBlood = null;
 		try {
 			session.beginTransaction();
-			session.get(PurchaseBilling.class, purchaseBillingId);
-			purchaseBilling = (PurchaseBilling) session.get(PurchaseBilling.class, purchaseBillingId);
+			session.get(IssueBlood.class, issueBloodId);
+			issueBlood = (IssueBlood) session.get(IssueBlood.class, issueBloodId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -127,22 +147,22 @@ public class PurchaseBillingDao {
 				// session.close();
 			}
 		}
-		if (purchaseBilling != null) {
-			return purchaseBilling;
+		if (issueBlood != null) {
+			return issueBlood;
 		} else {
 			return null;
 		}
 	}
 
-	public JSONObject deletePurchaseBilling(JSONObject purchaseBillingId) {
+	public JSONObject deleteIssueBlood(JSONObject issueBloodId) {
 		JSONObject status = new JSONObject();
 		status.put("status", true);
 		try {
 			session = sessionFactory.openSession();
 			transaction = session.beginTransaction();
-			PurchaseBilling purchaseBillingDetails = session.load(PurchaseBilling.class,
-					(Integer) purchaseBillingId.get("purchaseBillingId"));
-			session.delete(purchaseBillingDetails);
+			IssueBlood issueBloodDetails = session.load(IssueBlood.class,
+					(Integer) issueBloodId.get("issueBloodId"));
+			session.delete(issueBloodDetails);
 			transaction.commit();
 		} catch (Exception e) {
 			status.put("status", false);
@@ -158,51 +178,45 @@ public class PurchaseBillingDao {
 	}
 
 	/**
-	 * @param purchaseBillingId
+	 * @param issueBloodId
 	 * @return
 	 */
-	public JSONObject getPurchaseBilling(JSONObject purchaseBillingId) {
-		JSONObject status = new JSONObject();
-		status.put("status", true);
-		session = sessionFactory.openSession();
-		transaction = session.beginTransaction();
-		List<PurchaseBilling> purchaseBillingList = null;
-//		  ObjectMapper mapper = new ObjectMapper();
-//        SimpleModule module = new SimpleModule();        
-//        module.addSerializer(com.monitorjbl.json.JsonView.class,new JsonViewSerializer());
-//        mapper.registerModule(module);
-		Integer patientId = Integer.parseInt(purchaseBillingId.get("id").toString());
+	public IssueBlood updateIssueBloodById(IssueBlood issueBlood) {
 		try {
-			Query query = session.createQuery("FROM PurchaseBilling WHERE purchase_billing_id = :id");
-			query.setParameter("id", patientId);
-			purchaseBillingList = query.list();
-//			String json = mapper.writeValueAsString(JsonView.with(patientDetailsList)
-//					.onClass(BusAvailability.class,com.monitorjbl.json.Match.match().exclude("busDetails")));  
-//			
-//			
-//			System.out.println(json);
-//             ArrayList<Object> convertedValue = mapper.readValue(json,new TypeReference<ArrayList<Object>>() {});
-//                   
-//			if(convertedValue.isEmpty() | convertedValue == null)
-//			{
-//				status.put("status",false);
-//				return status;
-//			}		
-//			status.put("Buses", convertedValue.iterator());
-			status.put("PurchaseBilling", purchaseBillingList.iterator());
-			System.out.println(" Inside Rest DAO Bus Status="+status);
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+			IssueBlood issueBloodDetails = session.load(IssueBlood.class, issueBlood.getIssueBloodId());
+			session.update(issueBloodDetails);
 			transaction.commit();
-			return status;	
-			
 		} catch (Exception e) {
 			e.printStackTrace();
-			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
 				// session.close();
 			}
 		}
-		return status;
+		return issueBlood;
+	}
+
+	/**
+	 * @param issueBloodId
+	 * @return
+	 */
+	public Integer deleteIssueBloodById(Integer issueBloodId) {
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+			IssueBlood issueBloodDetails = session.load(IssueBlood.class, issueBloodId);
+			session.delete(issueBloodDetails);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return issueBloodId;
 	}
 
 }

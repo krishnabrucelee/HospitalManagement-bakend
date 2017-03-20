@@ -51,32 +51,10 @@ public class Donor {
 	@Column(name = "donor_email_id")
 	private String donorEmailId;
 	
-	@Column(name = "donor_jaundice")
-	private Boolean jaundice;
-	
-	@Column(name = "donor_blood_test")
-	private Boolean bloodTest;
-	
-	@Column(name = "donor_chest_cardiac")
-	private Boolean chestCardiac;
-	
-	@Column(name = "donor_blading_disorder")
-	private Boolean bladingDisorder;
-	
-	@Column(name = "donor_fainting_spells")
-	private Boolean faintingSpells;
-	
-	@Column(name = "donor_blood_transfusion")
-	private Boolean bloodTransfusion;
-	
-	@Column(name = "donor_hyper_tension_diabates")
-	private Boolean hyperTensionDiabates;
-	
-	@Column(name = "donor_taring_medicines")
-	private Boolean taringMedicines;
+	@Column(name = "donor_disease")
+	private String donorDisease;
 	
 	@Column(name="date_of_register")
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dateOfRegister;
 	
@@ -246,156 +224,30 @@ public class Donor {
 	}
 
 	/**
-	 * Get the jaundice of Donor.
-	 *
-	 * @return the jaundice
-	 */
-	public Boolean getJaundice() {
-		return jaundice;
-	}
-
-	/**
-	 * Set the jaundice of Donor.
-	 *
-	 * @param jaundice the jaundice to set
-	 */
-	public void setJaundice(Boolean jaundice) {
-		this.jaundice = jaundice;
-	}
-
-	/**
-	 * Get the bloodTest of Donor.
-	 *
-	 * @return the bloodTest
-	 */
-	public Boolean getBloodTest() {
-		return bloodTest;
-	}
-
-	/**
-	 * Set the bloodTest of Donor.
-	 *
-	 * @param bloodTest the bloodTest to set
-	 */
-	public void setBloodTest(Boolean bloodTest) {
-		this.bloodTest = bloodTest;
-	}
-
-	/**
-	 * Get the chestCardiac of Donor.
-	 *
-	 * @return the chestCardiac
-	 */
-	public Boolean getChestCardiac() {
-		return chestCardiac;
-	}
-
-	/**
-	 * Set the chestCardiac of Donor.
-	 *
-	 * @param chestCardiac the chestCardiac to set
-	 */
-	public void setChestCardiac(Boolean chestCardiac) {
-		this.chestCardiac = chestCardiac;
-	}
-
-	/**
-	 * Get the bladingDisorder of Donor.
-	 *
-	 * @return the bladingDisorder
-	 */
-	public Boolean getBladingDisorder() {
-		return bladingDisorder;
-	}
-
-	/**
-	 * Set the bladingDisorder of Donor.
-	 *
-	 * @param bladingDisorder the bladingDisorder to set
-	 */
-	public void setBladingDisorder(Boolean bladingDisorder) {
-		this.bladingDisorder = bladingDisorder;
-	}
-
-	/**
-	 * Get the faintingSpells of Donor.
-	 *
-	 * @return the faintingSpells
-	 */
-	public Boolean getFaintingSpells() {
-		return faintingSpells;
-	}
-
-	/**
-	 * Set the faintingSpells of Donor.
-	 *
-	 * @param faintingSpells the faintingSpells to set
-	 */
-	public void setFaintingSpells(Boolean faintingSpells) {
-		this.faintingSpells = faintingSpells;
-	}
-
-	/**
-	 * Get the bloodTransfusion of Donor.
-	 *
-	 * @return the bloodTransfusion
-	 */
-	public Boolean getBloodTransfusion() {
-		return bloodTransfusion;
-	}
-
-	/**
-	 * Set the bloodTransfusion of Donor.
-	 *
-	 * @param bloodTransfusion the bloodTransfusion to set
-	 */
-	public void setBloodTransfusion(Boolean bloodTransfusion) {
-		this.bloodTransfusion = bloodTransfusion;
-	}
-
-	/**
-	 * Get the hyperTensionDiabates of Donor.
-	 *
-	 * @return the hyperTensionDiabates
-	 */
-	public Boolean getHyperTensionDiabates() {
-		return hyperTensionDiabates;
-	}
-
-	/**
-	 * Set the hyperTensionDiabates of Donor.
-	 *
-	 * @param hyperTensionDiabates the hyperTensionDiabates to set
-	 */
-	public void setHyperTensionDiabates(Boolean hyperTensionDiabates) {
-		this.hyperTensionDiabates = hyperTensionDiabates;
-	}
-
-	/**
-	 * Get the taringMedicines of Donor.
-	 *
-	 * @return the taringMedicines
-	 */
-	public Boolean getTaringMedicines() {
-		return taringMedicines;
-	}
-
-	/**
-	 * Set the taringMedicines of Donor.
-	 *
-	 * @param taringMedicines the taringMedicines to set
-	 */
-	public void setTaringMedicines(Boolean taringMedicines) {
-		this.taringMedicines = taringMedicines;
-	}
-
-	/**
 	 * Get the dateOfRegister of Donor.
 	 *
 	 * @return the dateOfRegister
 	 */
 	public Date getDateOfRegister() {
 		return dateOfRegister;
+	}
+
+	/**
+	 * Get the donorDisease of Donor.java.
+	 *
+	 * @return the donorDisease
+	 */
+	public String getDonorDisease() {
+		return donorDisease;
+	}
+
+	/**
+	 * Set the donorDisease of Donor.java.
+	 *
+	 * @param donorDisease the donorDisease to set
+	 */
+	public void setDonorDisease(String donorDisease) {
+		this.donorDisease = donorDisease;
 	}
 
 	/**

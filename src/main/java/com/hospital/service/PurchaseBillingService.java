@@ -43,4 +43,10 @@ public interface PurchaseBillingService {
 	 */
 	public JSONObject deletePurchaseBilling(JSONObject purchaseBillingId);
 
+	/**
+	 * @param patient
+	 * @return
+	 */
+	public JSONObject getPurchaseBilling(JSONObject patient);
+
 }

@@ -3,12 +3,19 @@
  */
 package com.hospital.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @author Krishna
@@ -27,14 +34,22 @@ public class BloodBank {
 	private Integer bloodBagNumber;
 	
 	@Column(name = "blood_quantity")
-	private String bloodQuantity;
+	private Integer bloodQuantity;
 	
 	@Column(name = "blood_group")
 	private String bloodGroup;
 	
 	@Column(name = "blood_unit")
-	private String bloodUnit;
+	private Integer bloodUnit;
+	
+	@Column(name = "created_date")	
+	@Temporal(TemporalType.DATE)
+	private Date createdDate;
 
+	@OneToOne(targetEntity = Donor.class)
+	@JoinColumn(name = "donor", referencedColumnName = "donor_id", foreignKey = @ForeignKey(name = "donor_id_bloodBank_FK"))
+	private Donor donor;
+	
 	/**
 	 * Get the bloodBankId of BloodBank.
 	 *
@@ -95,7 +110,7 @@ public class BloodBank {
 	 *
 	 * @return the bloodQuantity
 	 */
-	public String getBloodQuantity() {
+	public Integer getBloodQuantity() {
 		return bloodQuantity;
 	}
 
@@ -104,7 +119,7 @@ public class BloodBank {
 	 *
 	 * @param bloodQuantity the bloodQuantity to set
 	 */
-	public void setBloodQuantity(String bloodQuantity) {
+	public void setBloodQuantity(Integer bloodQuantity) {
 		this.bloodQuantity = bloodQuantity;
 	}
 
@@ -113,7 +128,7 @@ public class BloodBank {
 	 *
 	 * @return the bloodUnit
 	 */
-	public String getBloodUnit() {
+	public Integer getBloodUnit() {
 		return bloodUnit;
 	}
 
@@ -122,8 +137,44 @@ public class BloodBank {
 	 *
 	 * @param bloodUnit the bloodUnit to set
 	 */
-	public void setBloodUnit(String bloodUnit) {
+	public void setBloodUnit(Integer bloodUnit) {
 		this.bloodUnit = bloodUnit;
+	}
+
+	/**
+	 * Get the createdDate of BloodBank.
+	 *
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	/**
+	 * Set the createdDate of BloodBank.
+	 *
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	/**
+	 * Get the donor of BloodBank.
+	 *
+	 * @return the donor
+	 */
+	public Donor getDonor() {
+		return donor;
+	}
+
+	/**
+	 * Set the donor of BloodBank.
+	 *
+	 * @param donor the donor to set
+	 */
+	public void setDonor(Donor donor) {
+		this.donor = donor;
 	}
 	
 }
