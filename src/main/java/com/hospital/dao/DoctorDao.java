@@ -229,5 +229,33 @@ public class DoctorDao {
 		}
 		return status;
 	}
+	
+	/**
+	 * @return
+	 */
+	public JSONObject listConsultant() {
+		System.out.println("Inside Dao1Doctor");
+		JSONObject status = new JSONObject();
+		status.put("status", true);		
+		List<Doctor> doctorList = null;
+		try {
+			session = sessionFactory.openSession();
+			transaction = session.beginTransaction();
+			Query query = session.createQuery("FROM Doctor WHERE doctor_type = :doctorType");
+			query.setParameter("doctorType", 2);
+			doctorList = query.list();
+			status.put("Consultant", doctorList);
+			status.put("result", true);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return status;
+	}
 
 }

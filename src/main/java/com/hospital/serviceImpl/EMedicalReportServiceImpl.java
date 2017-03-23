@@ -59,4 +59,9 @@ public class EMedicalReportServiceImpl implements EMedicalReportService {
 		return eMedicalReportdao.listEmrByPatientId(patientId);
 	}
 
+	@Override
+	public JSONObject listByDoctorId(JSONObject patientId) {
+		return eMedicalReportdao.listByDoctorId(patientId);
+	}
+
 }

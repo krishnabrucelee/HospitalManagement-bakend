@@ -56,4 +56,9 @@ public interface DoctorService {
 	 * @return
 	 */
 	public JSONObject getDoctorByEmail(JSONObject doctorEmail);
+
+	/**
+	 * @return
+	 */
+	public JSONObject listConsultant();
 }

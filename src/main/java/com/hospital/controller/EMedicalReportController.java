@@ -80,4 +80,15 @@ public class EMedicalReportController {
 	public @ResponseBody JSONObject listByPatientId(@RequestBody JSONObject patientId) {
 		return eMedicalReportService.listByPatientId(patientId);
 	}
+	
+	/**
+	 * list EMR by Patient Id.
+	 * 
+	 * @param eMedicalReport
+	 * @return eMedicalReport
+	 */
+	@RequestMapping(value = "/listByDoctorId")
+	public @ResponseBody JSONObject listByDoctorId(@RequestBody JSONObject patientId) {
+		return eMedicalReportService.listByDoctorId(patientId);
+	}
 }

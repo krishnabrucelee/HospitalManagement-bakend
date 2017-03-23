@@ -74,4 +74,9 @@ public class DoctorController {
 	public @ResponseBody JSONObject getDoctorByEmail(@RequestBody JSONObject doctorEmail) {
 		return doctorService.getDoctorByEmail(doctorEmail);
 	}
+	
+	@RequestMapping(value = "/listConsultant")
+	public @ResponseBody JSONObject listConsultant() {
+		return doctorService.listConsultant();
+	}
 }

@@ -56,4 +56,10 @@ public interface EMedicalReportService {
 
 	public EMedicalReport listEmrByPatientId(Integer patientId);
 
+	/**
+	 * @param patientId
+	 * @return
+	 */
+	public JSONObject listByDoctorId(JSONObject patientId);
+
 }

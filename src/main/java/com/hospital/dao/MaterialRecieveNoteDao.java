@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hospital.model.Department;
 import com.hospital.model.MaterialRecieveNote;
 import com.hospital.model.MedicineItemMaster;
+import com.hospital.model.Patient;
 import com.hospital.model.PurchaseOrder;
 import com.hospital.model.PurchaseOrderTransaction;
 import com.hospital.model.StockMedicine;
@@ -191,6 +192,38 @@ public class MaterialRecieveNoteDao {
 			status.put("reason", "Error happend");
 			status.put("originalErrorMsg", e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * @param patient
+	 * @return
+	 */
+	public JSONObject getMrnByPurchaseId(JSONObject patient) {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		List<MaterialRecieveNote> patientDetailsList = null;
+		
+		PurchaseOrder purchaseId = session.load(PurchaseOrder.class, Integer.parseInt(patient.get("id").toString()));
+		try {
+			Query query = session.createQuery("FROM MaterialRecieveNote WHERE purchaseOrder = :id");
+			query.setParameter("id", purchaseId);
+			patientDetailsList = query.list();
+			status.put("MaterialRecieveNote", patientDetailsList);
+			System.out.println(" Inside Rest DAO Bus Status="+status);
+			transaction.commit();
+			return status;	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
 		} finally {
 			if (session.isOpen()) {
 				// session.close();

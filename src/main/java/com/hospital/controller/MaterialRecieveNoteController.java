@@ -69,4 +69,11 @@ public class MaterialRecieveNoteController {
 	public @ResponseBody JSONObject deleteMaterialRecieveNote(@RequestBody JSONObject materialRecieveNoteId) {
 		return materialRecieveNoteService.deleteMaterialRecieveNote(materialRecieveNoteId);
 	}
+	
+	@RequestMapping(value = "/getMrnByPurchaseId")
+	public @ResponseBody JSONObject getMrnByPurchaseId(@RequestBody JSONObject patient) {
+	
+		System.out.println(patient);
+		return materialRecieveNoteService.getMrnByPurchaseId(patient);
+	}
 }

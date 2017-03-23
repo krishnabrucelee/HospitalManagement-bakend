@@ -228,4 +228,32 @@ public class EMedicalReportDao {
 		return eMedicalReport;
 	}
 
+	/**
+	 * @param patientId
+	 * @return
+	 */
+	public JSONObject listByDoctorId(JSONObject patientId) {
+		JSONObject status = new JSONObject();
+		status.put("status", true);
+		session = sessionFactory.openSession();
+		transaction = session.beginTransaction();
+		List<EMedicalReport> eMedicalReportList = null;
+		try {
+			Query query = session.createQuery("FROM EMedicalReport WHERE doctor_id = :id");
+			query.setParameter("id", patientId.get("id"));
+			eMedicalReportList = query.list();
+			status.put("Consultant", eMedicalReportList);
+			status.put("result", true);
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			status.put("result", false);
+		} finally {
+			if (session.isOpen()) {
+				// session.close();
+			}
+		}
+		return status;
+	}
+
 }

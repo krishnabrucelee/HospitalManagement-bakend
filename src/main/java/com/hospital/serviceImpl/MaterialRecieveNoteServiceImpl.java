@@ -43,4 +43,9 @@ public class MaterialRecieveNoteServiceImpl implements MaterialRecieveNoteServic
 		return materialRecieveNotedao.deleteMaterialRecieveNote(materialRecieveNoteId);
 	}
 
+	@Override
+	public JSONObject getMrnByPurchaseId(JSONObject patient) {
+		return materialRecieveNotedao.getMrnByPurchaseId(patient);
+	}
+
 }

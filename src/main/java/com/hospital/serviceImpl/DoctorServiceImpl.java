@@ -54,4 +54,9 @@ public class DoctorServiceImpl implements DoctorService {
 		return doctordao.getDoctorByEmail(doctorEmail);
 	}
 
+	@Override
+	public JSONObject listConsultant() {
+		return doctordao.listConsultant();
+	}
+
 }

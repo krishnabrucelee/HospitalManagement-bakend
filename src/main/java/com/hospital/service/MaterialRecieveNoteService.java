@@ -43,4 +43,10 @@ public interface MaterialRecieveNoteService {
 	 */
 	public JSONObject deleteMaterialRecieveNote(JSONObject materialRecieveNoteId);
 
+	/**
+	 * @param patient
+	 * @return
+	 */
+	public JSONObject getMrnByPurchaseId(JSONObject patient);
+
 }
